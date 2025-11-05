@@ -1,0 +1,47 @@
+package ucb.app.esculapy.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "enderecos")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Endereco {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String cep;
+    private String logradouro;
+    private String numero;
+    private String complemento;
+    private String bairro;
+    private String cidade;
+    private String estado;
+
+    /**
+     * Tipo do endereço, ex: "ENTREGA", "COBRANCA" (para Cliente)
+     * ou "COMERCIAL" (para Farmacia)
+     */
+    private String tipo;
+
+    /**
+     * Relação de volta para o Cliente (um cliente pode ter muitos endereços)
+     * A entidade Farmacia também pode ter uma relação OneToOne com Endereco.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+}
