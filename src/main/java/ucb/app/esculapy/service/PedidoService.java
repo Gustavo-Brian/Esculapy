@@ -11,7 +11,7 @@ import ucb.app.esculapy.exception.ResourceNotFoundException;
 import ucb.app.esculapy.model.*;
 import ucb.app.esculapy.model.enums.PedidoStatus;
 import ucb.app.esculapy.model.enums.ReceitaStatus;
-import ucb.app.esculapy.model.enums.TipoReceita; // <-- IMPORTAR
+import ucb.app.esculapy.model.enums.TipoReceita;
 import ucb.app.esculapy.repository.EstoqueLojistaRepository;
 import ucb.app.esculapy.repository.PedidoRepository;
 import ucb.app.esculapy.repository.ReceitaRepository;
@@ -33,7 +33,6 @@ public class PedidoService {
 
     @Transactional
     public Pedido criarPedido(CarrinhoRequest request) {
-        // 1. Pegar o Cliente logado
         Cliente cliente = authenticationService.getClienteLogado();
 
         Pedido pedido = new Pedido();
@@ -42,28 +41,24 @@ public class PedidoService {
 
         BigDecimal valorTotal = BigDecimal.ZERO;
         List<ItemPedido> itensPedido = new ArrayList<>();
-
-        // --- INÍCIO DA LÓGICA MOVIDA ---
-        boolean receitaExigida = false; // Flag para controlar a verificação
-        // --- FIM DA LÓGICA MOVIDA ---
+        boolean receitaExigida = false;
 
         // 2. Processar itens do carrinho
         for (ItemCarrinho itemDTO : request.getItens()) {
             EstoqueLojista estoque = estoqueLojistaRepository.findById(itemDTO.getEstoqueLojistaId())
                     .orElseThrow(() -> new ResourceNotFoundException("Item de estoque " + itemDTO.getEstoqueLojistaId() + " não encontrado."));
 
+            // Valida o estoque
             if (estoque.getQuantidade() < itemDTO.getQuantidade()) {
                 throw new ForbiddenException("Estoque insuficiente para o produto " + estoque.getProduto().getNome());
             }
 
-            // --- INÍCIO DA LÓGICA MOVIDA ---
-            // Verificamos o tipo de receita AQUI, pois já temos o produto em mãos
-            // (evitando a lazy query N+1)
+            // Checagem de Receita (Lógica de Performance)
             if (estoque.getProduto().getTipoReceita() != TipoReceita.NAO_EXIGIDO) {
                 receitaExigida = true;
             }
-            // --- FIM DA LÓGICA MOVIDA ---
 
+            // Cria o ItemPedido
             ItemPedido itemPedido = new ItemPedido();
             itemPedido.setPedido(pedido);
             itemPedido.setEstoqueLojista(estoque);
@@ -88,15 +83,16 @@ public class PedidoService {
             pedido.setStatus(PedidoStatus.AGUARDANDO_PAGAMENTO);
         }
 
-        // 5. Salvar o pedido (os itens vão por cascade)
+        // 5. Salvar o pedido
         return pedidoRepository.save(pedido);
     }
 
-    // ... (Restante da classe PedidoService que já implementamos)
-
     @Transactional
     public Pedido anexarReceita(Long pedidoId, MultipartFile arquivo) {
+        // 1. Pegar o Cliente logado
         Cliente cliente = authenticationService.getClienteLogado();
+
+        // 2. Buscar e validar o pedido
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido " + pedidoId + " não encontrado."));
 
@@ -107,8 +103,10 @@ public class PedidoService {
             throw new ForbiddenException("Este pedido não está aguardando validação de receita.");
         }
 
+        // 3. Fazer o upload do arquivo
         String urlArquivo = storageService.upload(arquivo);
 
+        // 4. Criar e salvar a entidade Receita
         Receita receita = new Receita();
         receita.setPedido(pedido);
         receita.setArquivoUrl(urlArquivo);
@@ -116,7 +114,12 @@ public class PedidoService {
         receita.setDataUpload(LocalDateTime.now());
         receitaRepository.save(receita);
 
+        // 5. Linkar a receita ao pedido
         pedido.setReceita(receita);
+
+        // 6. [CORREÇÃO] O STATUS PERMANECE AGUARDANDO_VALIDACAO_FARMACEUTICA.
+        // A próxima alteração será feita pelo ReceitaService.aprovarReceita.
+
         return pedido;
     }
 
