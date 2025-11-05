@@ -1,0 +1,1602 @@
+{
+	"log": {
+		"version": "1.2",
+		"creator": {
+			"name": "Insomnia REST Client",
+			"version": "insomnia.desktop.app:v11.0.2"
+		},
+		"entries": [
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 444.03700000000003,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/auth/login",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"email\": \"admin_c6a6e9e1@esculapy.com\",\n\t\"senha\": \"24a0eeea\"\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Vary",
+							"value": "Origin"
+						},
+						{
+							"name": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"name": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:26:15 GMT"
+						}
+					],
+					"content": {
+						"size": 236,
+						"mimeType": "application/json",
+						"text": "{\"token\":\"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImFkbWluX2M2YTZlOWUxQGVzY3VsYXB5LmNvbSIsImlhdCI6MTc2MjMzMTE3NSwiZXhwIjoxNzYyNDE3NTc1fQ.FF83x3bgc3bk5DCRK7goI4bYkCjI0S5a2bhyHhUW1dU\",\"userId\":1,\"email\":\"admin_c6a6e9e1@esculapy.com\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 444.03700000000003,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "1. PÚBLICO: (Login)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 9.495,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/auth/register/cliente",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"nome\": \"Cliente Web\",\n\t\"email\": \"cliente@web.com\",\n\t\"senha\": \"web123\",\n\t\"cpf\": \"11122233344\",\n\t\"numeroCelular\": \"11911112222\"\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 400,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Vary",
+							"value": "Origin"
+						},
+						{
+							"name": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"name": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "29"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:30:22 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "close"
+						}
+					],
+					"content": {
+						"size": 29,
+						"mimeType": "text/plain;charset=UTF-8",
+						"text": "Erro: Email já está em uso!"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 9.495,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "2. CLIENTE (Cadastro)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 48.821000000000005,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/farmacia-admin/estoque",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsInN1YiI6ImZhcm1hY2lhQHZlbmRlLmNvbSIsImlhdCI6MTc2MjMzMTQzNSwiZXhwIjoxNzYyNDE3ODM1fQ.WnxC239unGEk0niswjAI19my9nvyig_GVEdnYhzd5C0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"produtoId\": 2,\n\t\"preco\": 10.00,\n\t\"quantidade\": 500\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:32:36 GMT"
+						}
+					],
+					"content": {
+						"size": 52,
+						"mimeType": "application/json",
+						"text": "{\"id\":1,\"preco\":10.00,\"quantidade\":500,\"ativo\":true}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 48.821000000000005,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "1. FARMÁCIA: (Adicionar Item)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 74.51299999999999,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/pedidos",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6ImNsaWVudGVAd2ViLmNvbSIsImlhdCI6MTc2MjMzMTU2OCwiZXhwIjoxNzYyNDE3OTY4fQ.KU1uVWB-X5fa6tVdtYqkMpUXbprhQ-wrOZ0b4hIkN8w"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"itens\": [\n\t\t{\n\t\t\t\"estoqueLojistaId\": 1,\n\t\t\t\"quantidade\": 2\n\t\t}\n\t]\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:32:58 GMT"
+						}
+					],
+					"content": {
+						"size": 125,
+						"mimeType": "application/json",
+						"text": "{\"id\":1,\"status\":\"AGUARDANDO_PAGAMENTO\",\"valorTotal\":20.00,\"dataPedido\":\"2025-11-05T05:32:58.0987074\",\"receitaExigida\":false}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 74.51299999999999,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "1. CLIENTE: (Criar Pedido)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 27.118,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/produtos",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImFkbWluX2M2YTZlOWUxQGVzY3VsYXB5LmNvbSIsImlhdCI6MTc2MjMzMTE3NSwiZXhwIjoxNzYyNDE3NTc1fQ.FF83x3bgc3bk5DCRK7goI4bYkCjI0S5a2bhyHhUW1dU"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"ean\": \"1111111111111\",\n\t\"nome\": \"Analgésico Comum 500mg\",\n\t\"principioAtivo\": \"Paracetamol\",\n\t\"laboratorio\": \"Generico Labs\",\n\t\"descricao\": \"Medicação analgésica e antitérmica para alívio de dores leves e febre. Venda sob retenção de receita.\",\n\t\"codigoRegistroMS\": \"10001\",\n\t\"bulaUrl\": \"https://catalogo.esculapy.com/bulas/analgesico_comum.pdf\",\n\t\"tipoProduto\": \"MEDICAMENTO_COMUM\",\n\t\"tipoReceita\": \"RECEITA_SIMPLES_2_VIAS\"\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 201,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:29:28 GMT"
+						}
+					],
+					"content": {
+						"size": 416,
+						"mimeType": "application/json",
+						"text": "{\"id\":3,\"ean\":\"1111111111111\",\"nome\":\"Analgésico Comum 500mg\",\"principioAtivo\":\"Paracetamol\",\"laboratorio\":\"Generico Labs\",\"descricao\":\"Medicação analgésica e antitérmica para alívio de dores leves e febre. Venda sob retenção de receita.\",\"codigoRegistroMS\":\"10001\",\"bulaUrl\":\"https://catalogo.esculapy.com/bulas/analgesico_comum.pdf\",\"tipoProduto\":\"MEDICAMENTO_COMUM\",\"tipoReceita\":\"RECEITA_SIMPLES_2_VIAS\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 27.118,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "1. ADMIN: (Cadastrar Produto)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 9.031,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/auth/register/farmacia",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"email\": \"farmacia@vende.com\",\n\t\"senha\": \"senha123\",\n\t\"cnpj\": \"75148689000173\",\n\t\"razaoSocial\": \"Drogaria Modelo S.A.\",\t\"nomeFantasia\": \"Farmacia Central\",\n\t\"crfJ\": \"654321\",\n\t\"emailContato\": \"contato@central.com\",\n\t\"numeroCelularContato\": \"11933334444\"\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 400,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Vary",
+							"value": "Origin"
+						},
+						{
+							"name": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"name": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"name": "Content-Length",
+							"value": "29"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:30:26 GMT"
+						},
+						{
+							"name": "Connection",
+							"value": "close"
+						}
+					],
+					"content": {
+						"size": 29,
+						"mimeType": "text/plain;charset=UTF-8",
+						"text": "Erro: Email já está em uso!"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 9.031,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "3. FARMÁCIA (Cadastro)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 22.247,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/pedidos/1/receita",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "multipart/form-data"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6ImNsaWVudGVAd2ViLmNvbSIsImlhdCI6MTc2MjMzMTU2OCwiZXhwIjoxNzYyNDE3OTY4fQ.KU1uVWB-X5fa6tVdtYqkMpUXbprhQ-wrOZ0b4hIkN8w"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "multipart/form-data",
+						"params": [
+							{
+								"name": "arquivo",
+								"fileName": "C:\\Users\\gbmrp\\Downloads\\teste.txt"
+							}
+						]
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 403,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Length",
+							"value": "0"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:33:12 GMT"
+						}
+					],
+					"content": {
+						"size": 0,
+						"mimeType": "",
+						"text": ""
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 22.247,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "2. CLIENTE: (Upload Receita)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 25.415,
+				"request": {
+					"method": "PUT",
+					"url": "http://localhost:8080/api/farmacia-admin/estoque/2",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsInN1YiI6ImZhcm1hY2lhQHZlbmRlLmNvbSIsImlhdCI6MTc2MjMyNjAwMSwiZXhwIjoxNzYyNDEyNDAxfQ.hcXRzLLB4U4paMzJaez5m-Q2lRlyv3_NftcNynxPJTo"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"produtoId\": 1,\n\t\"preco\": 60.00,\n\t\"quantidade\": 90\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 07:01:50 GMT"
+						}
+					],
+					"content": {
+						"size": 51,
+						"mimeType": "application/json",
+						"text": "{\"id\":2,\"preco\":60.00,\"quantidade\":90,\"ativo\":true}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 25.415,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "2. FARMÁCIA: (Atualizar Item)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 89.693,
+				"request": {
+					"method": "DELETE",
+					"url": "http://localhost:8080/api/farmacia-admin/estoque/1",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsInN1YiI6ImZhcm1hY2lhQHZlbmRlLmNvbSIsImlhdCI6MTc2MjMwNTUyMiwiZXhwIjoxNzYyMzkxOTIyfQ.cEFEXQjyMqY3sXTDNt0FaBcFOPqB2CFP6_tQ4Ref9Nw"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 204,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 01:26:46 GMT"
+						}
+					],
+					"content": {
+						"size": 0,
+						"mimeType": "",
+						"text": ""
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 89.693,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "3. FARMÁCIA: (Deletar Item)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 0,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/pedidos/1/receita/aprovar",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/11.0.2"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 0,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [],
+					"content": {
+						"size": 0,
+						"mimeType": ""
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 0,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "3. FARMACÊUTICO: (Aprovar Receita)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 110.462,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/farmacia-admin/farmaceuticos",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsInN1YiI6ImZhcm1hY2lhQHZlbmRlLmNvbSIsImlhdCI6MTc2MjMzMTQzNSwiZXhwIjoxNzYyNDE3ODM1fQ.WnxC239unGEk0niswjAI19my9nvyig_GVEdnYhzd5C0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"nome\": \"Gregory House\",\n\t\"email\": \"house@farmacia.com\",\n\t\"senha\": \"house123\",\n\t\"cpf\": \"55544433322\",\n\t\"crfP\": \"123456\",\n\t\"numeroCelular\": \"11955556666\"\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:31:41 GMT"
+						}
+					],
+					"content": {
+						"size": 142,
+						"mimeType": "application/json",
+						"text": "{\"id\":1,\"nome\":\"Gregory House\",\"cpf\":\"55544433322\",\"crfP\":\"123456\",\"numeroCelular\":\"11955556666\",\"dataCadastro\":\"2025-11-05T05:31:41.3584777\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 110.462,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "4. FARMÁCIA: (Cadastrar Farmacêutico)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 35.275,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/farmaceutico/pedidos/1/receita/rejeitar",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsInN1YiI6ImhvdXNlQGZhcm1hY2lhLmNvbSIsImlhdCI6MTc2MjMzMDA2OCwiZXhwIjoxNzYyNDE2NDY4fQ.iDGZVBvT1j__CDsYmdrb_MvYYrNBSz605JesaFXzjC0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"justificativa\": \"Receita vencida/ilegível.\"\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:08:13 GMT"
+						}
+					],
+					"content": {
+						"size": 112,
+						"mimeType": "application/json",
+						"text": "{\"id\":2,\"status\":\"CANCELADO\",\"valorTotal\":277.50,\"dataPedido\":\"2025-11-05T05:02:54.49177\",\"receitaExigida\":true}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 35.275,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "4. FARMACÊUTICO: (Rejeitar Receita)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 17.807,
+				"request": {
+					"method": "POST",
+					"url": "http://localhost:8080/api/api/pedidos/1/pagar",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/11.0.2"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6ImNsaWVudGVAd2ViLmNvbSIsImlhdCI6MTc2MjMyOTY5MywiZXhwIjoxNzYyNDE2MDkzfQ.0nXtEertYPLgU4Ib8fyryuGwGSvALkkfUWUq0hMJJyw"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 403,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Vary",
+							"value": "Origin"
+						},
+						{
+							"name": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"name": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Length",
+							"value": "0"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:33:47 GMT"
+						}
+					],
+					"content": {
+						"size": 0,
+						"mimeType": "",
+						"text": ""
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 17.807,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "5. CLIENTE: (Pagar) *"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 25.872,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:8080/api/farmaceutico/pedidos/pendentes",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsInN1YiI6ImhvdXNlQGZhcm1hY2lhLmNvbSIsImlhdCI6MTc2MjMxODA0MiwiZXhwIjoxNzYyNDA0NDQyfQ.ttVyFowbHk1xDvehwy_VOiSVsR5-Phj7XdtSFQyYvRE"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 07:15:42 GMT"
+						}
+					],
+					"content": {
+						"size": 2,
+						"mimeType": "application/json",
+						"text": "[]"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 25.872,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "6. FARMACÊUTICO: (Ver Fila)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 10.383999999999999,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:8080/api/produtos",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/11.0.2"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 08:29:14 GMT"
+						}
+					],
+					"content": {
+						"size": 839,
+						"mimeType": "application/json",
+						"text": "[{\"id\":1,\"ean\":\"2222222222222\",\"nome\":\"Antibiótico Potente\",\"principioAtivo\":\"Amoxicilina Tri-hidratada\",\"laboratorio\":\"Generico Pharma\",\"descricao\":\"Antibiótico de amplo espectro para tratamento de infecções bacterianas graves. Uso restrito e sob controle especial da ANVISA.\",\"codigoRegistroMS\":\"10002\",\"bulaUrl\":\"https://catalogo.esculapy.com/bulas/amoxicilina-potente-10002.pdf\",\"tipoProduto\":\"MEDICAMENTO_ANTIBIOTICO\",\"tipoReceita\":\"RECEITA_CONTROLE_ESPECIAL\"},{\"id\":2,\"ean\":\"9876543219999\",\"nome\":\"Sabonete Líquido Antisséptico\",\"principioAtivo\":\"Cloreto de Benzalônio\",\"laboratorio\":\"Higiene Labs\",\"descricao\":\"Sabonete para uso diário com proteção contra 99.9% das bactérias. PH neutro.\",\"codigoRegistroMS\":\"30005\",\"bulaUrl\":\"http://catalogo.com/higiene/sabonete\",\"tipoProduto\":\"PERFUMARIA\",\"tipoReceita\":\"NAO_EXIGIDO\"}]"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 10.383999999999999,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "2. PÚBLICO: (Ver Catálogo)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 40.283,
+				"request": {
+					"method": "PUT",
+					"url": "http://localhost:8080/api/produtos/2",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "User-Agent",
+							"value": "insomnia/11.0.2"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImFkbWluX2YxNzc3Y2Q0QGVzY3VsYXB5LmNvbSIsImlhdCI6MTc2MjMyODYwNiwiZXhwIjoxNzYyNDE1MDA2fQ.j1yE6mP95LLgvcl58PEETY4eY-_hka33n7rHZ5d51FA"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "application/json",
+						"text": "{\n\t\"ean\": \"2222222222222\",\n\t\"nome\": \"Antibiótico Potente (Fórmula MAX)\",\n\t\"principioAtivo\": \"Amoxicilina\",\n\t\"laboratorio\": \"Pharma Global\",\n\t\"descricao\": \"Nova formulação de amplo espectro, com cápsulas de liberação lenta. Uso estritamente controlado conforme RDC.\",\n\t\"codigoRegistroMS\": \"10002\",\n\t\"bulaUrl\": \"https://catalogo.esculapy.com/bulas/amoxicilina-potente-FMAX.pdf\",\n\t\"tipoProduto\": \"MEDICAMENTO_ANTIBIOTICO\",\n\t\"tipoReceita\": \"RECEITA_CONTROLE_ESPECIAL\"\n}"
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 07:44:06 GMT"
+						}
+					],
+					"content": {
+						"size": 451,
+						"mimeType": "application/json",
+						"text": "{\"id\":2,\"ean\":\"2222222222222\",\"nome\":\"Antibiótico Potente (Fórmula MAX)\",\"principioAtivo\":\"Amoxicilina\",\"laboratorio\":\"Pharma Global\",\"descricao\":\"Nova formulação de amplo espectro, com cápsulas de liberação lenta. Uso estritamente controlado conforme RDC.\",\"codigoRegistroMS\":\"10002\",\"bulaUrl\":\"https://catalogo.esculapy.com/bulas/amoxicilina-potente-FMAX.pdf\",\"tipoProduto\":\"MEDICAMENTO_ANTIBIOTICO\",\"tipoReceita\":\"RECEITA_CONTROLE_ESPECIAL\"}"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 40.283,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "3. ADMIN: (Atualizar Produto)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 22.365,
+				"request": {
+					"method": "GET",
+					"url": "http://localhost:8080/api/pedidos/meus-pedidos",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6ImNsaWVudGVAd2ViLmNvbSIsImlhdCI6MTc2MjMxODMxNSwiZXhwIjoxNzYyNDA0NzE1fQ.MxzAPGd64_AY4bcZQP6alP7Fj-lMgtGht_tNwsyoeLY"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 200,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"name": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 07:15:45 GMT"
+						}
+					],
+					"content": {
+						"size": 240,
+						"mimeType": "application/json",
+						"text": "[{\"id\":1,\"status\":\"AGUARDANDO_PAGAMENTO\",\"valorTotal\":120.00,\"dataPedido\":\"2025-11-05T04:07:26.748068\",\"receitaExigida\":true},{\"id\":2,\"status\":\"CANCELADO\",\"valorTotal\":300.00,\"dataPedido\":\"2025-11-05T04:08:05.675279\",\"receitaExigida\":true}]"
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 22.365,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "7. CLIENTE: (Meus Pedidos)"
+			},
+			{
+				"startedDateTime": "2025-11-05T09:01:27.188Z",
+				"time": 34.126999999999995,
+				"request": {
+					"method": "DELETE",
+					"url": "http://localhost:8080/api/produtos/1",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "User-Agent",
+							"value": "insomnia/11.0.2"
+						},
+						{
+							"name": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6ImFkbWluX2E4OTg0NTgzQGVzY3VsYXB5LmNvbSIsImlhdCI6MTc2MjMyNTc1MywiZXhwIjoxNzYyNDEyMTUzfQ.iLW_MJYfEKFiPPBV5gyUhyVSmNsJ3_B5ZvpYxiahXa0"
+						}
+					],
+					"queryString": [],
+					"postData": {
+						"mimeType": "",
+						"text": ""
+					},
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"response": {
+					"status": 204,
+					"statusText": "",
+					"httpVersion": "HTTP/1.1",
+					"cookies": [],
+					"headers": [
+						{
+							"name": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"name": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"name": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"name": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"name": "Expires",
+							"value": "0"
+						},
+						{
+							"name": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"name": "Date",
+							"value": "Wed, 05 Nov 2025 06:57:01 GMT"
+						}
+					],
+					"content": {
+						"size": 0,
+						"mimeType": "",
+						"text": ""
+					},
+					"redirectURL": "",
+					"headersSize": -1,
+					"bodySize": -1
+				},
+				"cache": {},
+				"timings": {
+					"blocked": -1,
+					"dns": -1,
+					"connect": -1,
+					"send": 0,
+					"wait": 34.126999999999995,
+					"receive": 0,
+					"ssl": -1
+				},
+				"comment": "4: ADMIN: (Deletar Produto)"
+			}
+		]
+	}
+}
