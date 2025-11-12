@@ -1,0 +1,752 @@
+{
+	"__export_format": 4,
+	"__export_date": "2025-11-12T09:30:00.000Z",
+	"__export_source": "gemini",
+	"resources": [
+		{
+			"_id": "wrk_esculapyvf_1",
+			"parentId": null,
+			"modified": 1678886400000,
+			"created": 1678886400000,
+			"name": "EsculapyVF",
+			"description": "Coleção completa da API Esculapy (V5 - Admin Farmácia Corrigido)",
+			"scope": "collection",
+			"_type": "workspace"
+		},
+		{
+			"_id": "fld_geral",
+			"parentId": "wrk_esculapyvf_1",
+			"modified": 1678891000000,
+			"created": 1678891000000,
+			"name": "GERAL (Autenticação e Marketplace)",
+			"description": "Endpoints públicos ou usados por múltiplos perfis.",
+			"environment": {},
+			"environmentPropertyOrder": null,
+			"metaSortKey": -100,
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_register_cliente",
+			"parentId": "fld_geral",
+			"modified": 1678891010000,
+			"created": 1678891010000,
+			"url": "http://localhost:8080/api/auth/register/cliente",
+			"name": "GERAL: Registrar (Cliente)",
+			"description": "",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"nome\": \"Cliente Teste da Silva\",\n\t\"email\": \"cliente@teste.com\",\n\t\"senha\": \"password123\",\n\t\"cpf\": \"85503896081\",\n\t\"numeroCelular\": \"61999999999\",\n\t\"dataNascimento\": \"1990-01-01\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -100,
+			"_type": "request"
+		},
+		{
+			"_id": "req_register_farmacia",
+			"parentId": "fld_geral",
+			"modified": 1678891020000,
+			"created": 1678891020000,
+			"url": "http://localhost:8080/api/auth/register/farmacia",
+			"name": "GERAL: Registrar (Farmácia)",
+			"description": "",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"email\": \"farmacia_admin@teste.com\",\n\t\"senha\": \"password123\",\n\t\"cnpj\": \"00440025000181\",\n\t\"razaoSocial\": \"Drogaria Teste Esculapy Ltda\",\n\t\"nomeFantasia\": \"Farmácia do Teste\",\n\t\"crfJ\": \"DF-12345\",\n\t\"emailContato\": \"contato@farmaciateste.com\",\n\t\"numeroCelularContato\": \"61988888888\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -90,
+			"_type": "request"
+		},
+		{
+			"_id": "req_login",
+			"parentId": "fld_geral",
+			"modified": 1678891030000,
+			"created": 1678891030000,
+			"url": "http://localhost:8080/api/auth/login",
+			"name": "GERAL: Login (email, senha)",
+			"description": "",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"email\": \"cliente@teste.com\",\n\t\"senha\": \"password123\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -80,
+			"_type": "request"
+		},
+		{
+			"_id": "req_get_me",
+			"parentId": "fld_geral",
+			"modified": 1678891040000,
+			"created": 1678891040000,
+			"url": "http://localhost:8080/api/user/me",
+			"name": "GERAL: Ver Meu Perfil (Autenticado)",
+			"description": "Funciona para qualquer usuário logado (Cliente, Admin, etc)",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -70,
+			"_type": "request"
+		},
+		{
+			"_id": "req_buscar_produtos",
+			"parentId": "fld_geral",
+			"modified": 1678891050000,
+			"created": 1678891050000,
+			"url": "http://localhost:8080/api/produtos/buscar",
+			"name": "GERAL: Buscar Ofertas (nome)",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [
+				{
+					"id": "param_nome",
+					"name": "nome",
+					"value": "Dipirona",
+					"description": "",
+					"disabled": false
+				}
+			],
+			"headers": [],
+			"authentication": {},
+			"metaSortKey": -60,
+			"_type": "request"
+		},
+		{
+			"_id": "req_get_produto_catalogo",
+			"parentId": "fld_geral",
+			"modified": 1678891060000,
+			"created": 1678891060000,
+			"url": "http://localhost:8080/api/produtos/1",
+			"name": "GERAL: Ver Detalhes (Catálogo)",
+			"description": "Altere o '1' na URL para o ID do produto que deseja ver.",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {},
+			"metaSortKey": -50,
+			"_type": "request"
+		},
+		{
+			"_id": "req_get_ofertas_produto",
+			"parentId": "fld_geral",
+			"modified": 1678891070000,
+			"created": 1678891070000,
+			"url": "http://localhost:8080/api/produtos/1/ofertas",
+			"name": "GERAL: Ver Ofertas (Produto Específico)",
+			"description": "Altere o '1' na URL para o ID do produto que deseja ver as ofertas.",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {},
+			"metaSortKey": -40,
+			"_type": "request"
+		},
+		{
+			"_id": "fld_cliente",
+			"parentId": "wrk_esculapyvf_1",
+			"modified": 1678888000000,
+			"created": 1678888000000,
+			"name": "CLIENTE (Exige Auth)",
+			"description": "",
+			"environment": {},
+			"environmentPropertyOrder": null,
+			"metaSortKey": -90,
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_get_meus_pedidos",
+			"parentId": "fld_cliente",
+			"modified": 1678888020000,
+			"created": 1678888020000,
+			"url": "http://localhost:8080/api/pedidos/meus-pedidos",
+			"name": "CLIENTE: Ver Histórico de Pedidos",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_CLIENTE_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -50,
+			"_type": "request"
+		},
+		{
+			"_id": "req_criar_pedido",
+			"parentId": "fld_cliente",
+			"modified": 1678888030000,
+			"created": 1678888030000,
+			"url": "http://localhost:8080/api/pedidos",
+			"name": "CLIENTE: Criar Pedido (Checkout)",
+			"description": "Você precisa ter um item de estoque cadastrado (ID 1) para que funcione.",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"itens\": [\n\t\t{\n\t\t\t\"estoqueLojistaId\": 1,\n\t\t\t\"quantidade\": 1\n\t\t}\n\t]\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_CLIENTE_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": 0,
+			"_type": "request"
+		},
+		{
+			"_id": "req_anexar_receita",
+			"parentId": "fld_cliente",
+			"modified": 1678888040000,
+			"created": 1678888040000,
+			"url": "http://localhost:8080/api/pedidos/1/receita",
+			"name": "CLIENTE: Anexar Receita (Upload)",
+			"description": "Altere o '1' na URL para o ID do pedido criado. Selecione o arquivo no 'Body'.",
+			"method": "POST",
+			"body": {
+				"mimeType": "multipart/form-data",
+				"params": [
+					{
+						"id": "file_1",
+						"name": "arquivo",
+						"value": "",
+						"description": "",
+						"type": "file",
+						"disabled": false,
+						"fileName": ""
+					}
+				]
+			},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_CLIENTE_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": 50,
+			"_type": "request"
+		},
+		{
+			"_id": "fld_farmacia_admin",
+			"parentId": "wrk_esculapyvf_1",
+			"modified": 1678889000000,
+			"created": 1678889000000,
+			"name": "FARMÁCIA-ADMIN (Exige Auth)",
+			"description": "",
+			"environment": {},
+			"environmentPropertyOrder": null,
+			"metaSortKey": -80,
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_fa_add_farmaceutico",
+			"parentId": "fld_farmacia_admin",
+			"modified": 1678889010000,
+			"created": 1678889010000,
+			"url": "http://localhost:8080/api/farmacia-admin/farmaceuticos",
+			"name": "FARMÁCIA-ADMIN: Adicionar Farmacêutico",
+			"description": "",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"nome\": \"Farmacêutico Teste\",\n\t\"email\": \"farmaceutico@teste.com\",\n\t\"senha\": \"password123\",\n\t\"cpf\": \"99650310019\",\n\t\"crfP\": \"DF-99999\",\n\t\"numeroCelular\": \"61977777777\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_FARMACIA_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -100,
+			"_type": "request"
+		},
+		{
+			"_id": "req_fa_add_estoque",
+			"parentId": "fld_farmacia_admin",
+			"modified": 1678889020000,
+			"created": 1678889020000,
+			"url": "http://localhost:8080/api/farmacia-admin/estoque",
+			"name": "FARMÁCIA-ADMIN: Adicionar Item ao Estoque",
+			"description": "Altere o 'produtoId' para um ID de Produto do Catálogo.",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"produtoId\": 1,\n\t\"preco\": 10.99,\n\t\"quantidade\": 100\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_FARMACIA_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -50,
+			"_type": "request"
+		},
+		{
+			"_id": "req_fa_update_estoque",
+			"parentId": "fld_farmacia_admin",
+			"modified": 1678889030000,
+			"created": 1678889030000,
+			"url": "http://localhost:8080/api/farmacia-admin/estoque/1",
+			"name": "FARMÁCIA-ADMIN: Atualizar Item de Estoque",
+			"description": "Altere o '1' na URL para o ID do EstoqueLojista. O 'produtoId' é obrigatório no body.",
+			"method": "PUT",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"produtoId\": 1,\n\t\"preco\": 12.50,\n\t\"quantidade\": 99\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_FARMACIA_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": 0,
+			"_type": "request"
+		},
+		{
+			"_id": "req_fa_delete_estoque",
+			"parentId": "fld_farmacia_admin",
+			"modified": 1678889040000,
+			"created": 1678889040000,
+			"url": "http://localhost:8080/api/farmacia-admin/estoque/1",
+			"name": "FARMÁCIA-ADMIN: Deletar Item de Estoque",
+			"description": "Altere o '1' na URL para o ID do EstoqueLojista.",
+			"method": "DELETE",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_FARMACIA_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": 50,
+			"_type": "request"
+		},
+		{
+			"_id": "fld_farmaceutico",
+			"parentId": "wrk_esculapyvf_1",
+			"modified": 1678890000000,
+			"created": 1678890000000,
+			"name": "FARMACÊUTICO (Exige Auth)",
+			"description": "",
+			"environment": {},
+			"environmentPropertyOrder": null,
+			"metaSortKey": -70,
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_f_pedidos_pendentes",
+			"parentId": "fld_farmaceutico",
+			"modified": 1678890010000,
+			"created": 1678890010000,
+			"url": "http://localhost:8080/api/farmaceutico/pedidos/pendentes",
+			"name": "FARMACÊUTICO: Ver Pedidos Pendentes",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_FARMACEUTICO_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -100,
+			"_type": "request"
+		},
+		{
+			"_id": "req_f_aprovar_receita",
+			"parentId": "fld_farmaceutico",
+			"modified": 1678890020000,
+			"created": 1678890020000,
+			"url": "http://localhost:8080/api/farmaceutico/pedidos/1/receita/aprovar",
+			"name": "FARMACÊUTICO: Aprovar Receita",
+			"description": "Altere o '1' na URL para o ID do Pedido pendente.",
+			"method": "POST",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_FARMACEUTICO_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -50,
+			"_type": "request"
+		},
+		{
+			"_id": "req_f_rejeitar_receita",
+			"parentId": "fld_farmaceutico",
+			"modified": 1678890030000,
+			"created": 1678890030000,
+			"url": "http://localhost:8080/api/farmaceutico/pedidos/1/receita/rejeitar",
+			"name": "FARMACÊUTICO: Rejeitar Receita",
+			"description": "Altere o '1' na URL para o ID do Pedido pendente.",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"justificativa\": \"A dosagem na receita está ilegível.\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_FARMACEUTICO_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": 0,
+			"_type": "request"
+		},
+		{
+			"_id": "fld_admin",
+			"parentId": "wrk_esculapyvf_1",
+			"modified": 1678892000000,
+			"created": 1678892000000,
+			"name": "ADMIN (Exige Auth)",
+			"description": "Endpoints de gerenciamento da plataforma.",
+			"environment": {},
+			"environmentPropertyOrder": null,
+			"metaSortKey": -60,
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_admin_add_catalogo",
+			"parentId": "fld_admin",
+			"modified": 1678892010000,
+			"created": 1678892010000,
+			"url": "http://localhost:8080/api/produtos",
+			"name": "ADMIN: Cadastrar Produto no Catálogo",
+			"description": "Cria um novo produto mestre no catálogo da plataforma.",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n    \"ean\": \"7891000123456\",\n    \"nome\": \"Dipirona Monoidratada 500mg 10cpr\",\n    \"principioAtivo\": \"Dipirona Monoidratada\",\n    \"laboratorio\": \"Medley\",\n    \"descricao\": \"Analgésico e antitérmico.\",\n    \"codigoRegistroMS\": \"1234567890123\",\n    \"bulaUrl\": \"http://site.com/bula/dipirona\",\n    \"tipoProduto\": \"MEDICAMENTO\",\n    \"tipoReceita\": \"NAO_EXIGIDO\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -100,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_update_catalogo",
+			"parentId": "fld_admin",
+			"modified": 1678892020000,
+			"created": 1678892020000,
+			"url": "http://localhost:8080/api/produtos/1",
+			"name": "ADMIN: Atualizar Produto no Catálogo",
+			"description": "Atualiza um produto mestre. Altere o '1' na URL.",
+			"method": "PUT",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n    \"ean\": \"7891000123456\",\n    \"nome\": \"Dipirona 500mg (Nome Atualizado)\",\n    \"principioAtivo\": \"Dipirona Monoidratada\",\n    \"laboratorio\": \"Medley\",\n    \"descricao\": \"Analgésico e antitérmico.\",\n    \"codigoRegistroMS\": \"1234567890123\",\n    \"bulaUrl\": \"http://site.com/bula/dipirona\",\n    \"tipoProduto\": \"MEDICAMENTO\",\n    \"tipoReceita\": \"NAO_EXIGIDO\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -90,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_soft_delete_catalogo",
+			"parentId": "fld_admin",
+			"modified": 1678892025000,
+			"created": 1678892025000,
+			"url": "http://localhost:8080/api/produtos/1/desativar",
+			"name": "ADMIN: Desativar Produto (Soft Delete)",
+			"description": "Desativa (soft delete) um produto. Oculta das buscas. Altere o '1' na URL.",
+			"method": "POST",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -85,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_reactivate_catalogo",
+			"parentId": "fld_admin",
+			"modified": 1678892027000,
+			"created": 1678892027000,
+			"url": "http://localhost:8080/api/produtos/1/reativar",
+			"name": "ADMIN: Reativar Produto",
+			"description": "Reativa um produto desativado. Altere o '1' na URL.",
+			"method": "POST",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -82,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_delete_catalogo",
+			"parentId": "fld_admin",
+			"modified": 1678892030000,
+			"created": 1678892030000,
+			"url": "http://localhost:8080/api/produtos/1",
+			"name": "ADMIN: Excluir de Vez Produto (Hard Delete)",
+			"description": "Exclui de vez (hard delete) um produto. SÓ FUNCIONA se nenhuma farmácia o tiver em estoque. Altere o '1' na URL.",
+			"method": "DELETE",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -80,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_get_farmacias_status",
+			"parentId": "fld_admin",
+			"modified": 1678892040000,
+			"created": 1678892040000,
+			"url": "http://localhost:8080/api/admin/farmacias",
+			"name": "ADMIN: Listar Farmácias (por status)",
+			"description": "Use PENDENTE_APROVACAO, ATIVO ou SUSPENSO",
+			"method": "GET",
+			"body": {},
+			"parameters": [
+				{
+					"id": "param_status",
+					"name": "status",
+					"value": "PENDENTE_APROVACAO",
+					"description": "",
+					"disabled": false
+				}
+			],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -70,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_ativar_farmacia",
+			"parentId": "fld_admin",
+			"modified": 1678892050000,
+			"created": 1678892050000,
+			"url": "http://localhost:8080/api/admin/farmacias/1/ativar",
+			"name": "ADMIN: Ativar Farmácia",
+			"description": "Muda o status de PENDENTE ou SUSPENSO para ATIVO. Altere o '1' na URL.",
+			"method": "POST",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -60,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_desativar_farmacia",
+			"parentId": "fld_admin",
+			"modified": 1678892060000,
+			"created": 1678892060000,
+			"url": "http://localhost:8080/api/admin/farmacias/1/desativar",
+			"name": "ADMIN: Desativar Farmácia",
+			"description": "Muda o status para SUSPENSO (desativado). Altere o '1' na URL.",
+			"method": "POST",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -50,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_get_usuario_email",
+			"parentId": "fld_admin",
+			"modified": 1678892070000,
+			"created": 1678892070000,
+			"url": "http://localhost:8080/api/admin/usuarios/buscar",
+			"name": "ADMIN: Buscar Usuário (por email)",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [
+				{
+					"id": "param_email",
+					"name": "email",
+					"value": "cliente@teste.com",
+					"description": "",
+					"disabled": false
+				}
+			],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -40,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_desativar_usuario",
+			"parentId": "fld_admin",
+			"modified": 1678892080000,
+			"created": 1678892080000,
+			"url": "http://localhost:8080/api/admin/usuarios/1/desativar",
+			"name": "ADMIN: Desativar Usuário",
+			"description": "Define 'enabled = false' para um usuário. Altere o '1' na URL.",
+			"method": "POST",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -30,
+			"_type": "request"
+		},
+		{
+			"_id": "req_admin_reativar_usuario",
+			"parentId": "fld_admin",
+			"modified": 1678892090000,
+			"created": 1678892090000,
+			"url": "http://localhost:8080/api/admin/usuarios/1/reativar",
+			"name": "ADMIN: Reativar Usuário",
+			"description": "Define 'enabled = true' para um usuário. Altere o '1' na URL.",
+			"method": "POST",
+			"body": {},
+			"parameters": [],
+			"headers": [],
+			"authentication": {
+				"type": "bearer",
+				"token": "SEU_TOKEN_DE_ADMIN_AQUI",
+				"disabled": false,
+				"prefix": "Bearer"
+			},
+			"metaSortKey": -20,
+			"_type": "request"
+		}
+	]
+}
