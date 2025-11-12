@@ -1,0 +1,824 @@
+type: collection.insomnia.rest/5.0
+name: EsculapyVF
+meta:
+  id: wrk_8cfe1529d4f647109996a96bf680fcd8
+  created: 1762941073124
+  modified: 1762941073124
+collection:
+  - name: CLIENTE (Exige Auth)
+    meta:
+      id: fld_629d8b1ffe3d40f3894de863a8aa063f
+      created: 1678888000000
+      modified: 1678888000000
+      sortKey: -90
+    children:
+      - url: http://localhost:8080/api/pedidos/meus-pedidos
+        name: "CLIENTE: Ver Histórico de Pedidos"
+        meta:
+          id: req_1753839a0dd64521a27bbd6aa9e7f883
+          created: 1678888020000
+          modified: 1678888020000
+          isPrivate: false
+          sortKey: -50
+        method: GET
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_CLIENTE_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/pedidos
+        name: "CLIENTE: Criar Pedido (Checkout)"
+        meta:
+          id: req_932d414521014109b757673707a9e223
+          created: 1678888030000
+          modified: 1678888030000
+          isPrivate: false
+          description: Você precisa ter um item de estoque cadastrado (ID 1) para que
+            funcione.
+          sortKey: 0
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"itens": [
+            		{
+            			"estoqueLojistaId": 1,
+            			"quantidade": 1
+            		}
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_CLIENTE_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/pedidos/1/receita
+        name: "CLIENTE: Anexar Receita (Upload)"
+        meta:
+          id: req_443372d3b82c410388939fa760796051
+          created: 1678888040000
+          modified: 1678888040000
+          isPrivate: false
+          description: Altere o '1' na URL para o ID do pedido criado. Selecione o arquivo
+            no 'Body'.
+          sortKey: 50
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - id: file_1
+              name: arquivo
+              type: file
+              disabled: false
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_CLIENTE_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: FARMÁCIA-ADMIN (Exige Auth)
+    meta:
+      id: fld_92cae5034f1f40699987079e9d6595ea
+      created: 1678889000000
+      modified: 1678889000000
+      sortKey: -80
+    children:
+      - url: http://localhost:8080/api/farmacia-admin/farmaceuticos
+        name: "FARMÁCIA-ADMIN: Adicionar Farmacêutico"
+        meta:
+          id: req_aed5c4573303448ca6d89bb50d1d7886
+          created: 1678889010000
+          modified: 1678889010000
+          isPrivate: false
+          sortKey: -100
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "Farmacêutico Teste",
+            	"email": "farmaceutico@teste.com",
+            	"senha": "password123",
+            	"cpf": "99650310019",
+            	"crfP": "DF-99999",
+            	"numeroCelular": "61977777777"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_FARMACIA_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/farmacia-admin/estoque
+        name: "FARMÁCIA-ADMIN: Adicionar Item ao Estoque"
+        meta:
+          id: req_58a7d30cb2944533a24dc3ca8801cc61
+          created: 1678889020000
+          modified: 1678889020000
+          isPrivate: false
+          description: Altere o 'produtoId' para um ID de Produto do Catálogo.
+          sortKey: -50
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"produtoId": 1,
+            	"preco": 10.99,
+            	"quantidade": 100
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_FARMACIA_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/farmacia-admin/estoque/1
+        name: "FARMÁCIA-ADMIN: Atualizar Item de Estoque"
+        meta:
+          id: req_bc05c02e768644a78c28c870d23d3d09
+          created: 1678889030000
+          modified: 1678889030000
+          isPrivate: false
+          description: Altere o '1' na URL para o ID do EstoqueLojista. O 'produtoId' é
+            obrigatório no body.
+          sortKey: 0
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"produtoId": 1,
+            	"preco": 12.50,
+            	"quantidade": 99
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_FARMACIA_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/farmacia-admin/estoque/1
+        name: "FARMÁCIA-ADMIN: Deletar Item de Estoque"
+        meta:
+          id: req_d80b4b68dc974d25afb3438396af68f1
+          created: 1678889040000
+          modified: 1678889040000
+          isPrivate: false
+          description: Altere o '1' na URL para o ID do EstoqueLojista.
+          sortKey: 50
+        method: DELETE
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_FARMACIA_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: FARMACÊUTICO (Exige Auth)
+    meta:
+      id: fld_c4c4cf47f77f4843b82f7f6ae5fc4d5f
+      created: 1678890000000
+      modified: 1678890000000
+      sortKey: -70
+    children:
+      - url: http://localhost:8080/api/farmaceutico/pedidos/pendentes
+        name: "FARMACÊUTICO: Ver Pedidos Pendentes"
+        meta:
+          id: req_bf8c40a7a0164fdd960e545f5ee3048d
+          created: 1678890010000
+          modified: 1678890010000
+          isPrivate: false
+          sortKey: -100
+        method: GET
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_FARMACEUTICO_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/farmaceutico/pedidos/1/receita/aprovar
+        name: "FARMACÊUTICO: Aprovar Receita"
+        meta:
+          id: req_489cb734ee1a469f86a8b12fbc9be87b
+          created: 1678890020000
+          modified: 1678890020000
+          isPrivate: false
+          description: Altere o '1' na URL para o ID do Pedido pendente.
+          sortKey: -50
+        method: POST
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_FARMACEUTICO_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/farmaceutico/pedidos/1/receita/rejeitar
+        name: "FARMACÊUTICO: Rejeitar Receita"
+        meta:
+          id: req_9aa6933f09d84c338df27edd088bca4b
+          created: 1678890030000
+          modified: 1678890030000
+          isPrivate: false
+          description: Altere o '1' na URL para o ID do Pedido pendente.
+          sortKey: 0
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"justificativa": "A dosagem na receita está ilegível."
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_FARMACEUTICO_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: GERAL (Autenticação e Marketplace)
+    meta:
+      id: fld_7c84f01a652c4bd89c66a6c1dd6f183c
+      created: 1678891000000
+      modified: 1678891000000
+      sortKey: -100
+      description: Endpoints públicos ou usados por múltiplos perfis.
+    children:
+      - url: http://localhost:8080/api/auth/register/cliente
+        name: "GERAL: Registrar (Cliente)"
+        meta:
+          id: req_ecfdef3455ac470388d841d08a58b7e6
+          created: 1678891010000
+          modified: 1678891010000
+          isPrivate: false
+          sortKey: -100
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "Cliente Teste da Silva",
+            	"email": "cliente@teste.com",
+            	"senha": "password123",
+            	"cpf": "85503896081",
+            	"numeroCelular": "61999999999",
+            	"dataNascimento": "1990-01-01"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/auth/register/farmacia
+        name: "GERAL: Registrar (Farmácia)"
+        meta:
+          id: req_a75f2424bf4545dda7b4279a6f1d6c0f
+          created: 1678891020000
+          modified: 1678891020000
+          isPrivate: false
+          sortKey: -90
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "farmacia_admin@teste.com",
+            	"senha": "password123",
+            	"cnpj": "00440025000181",
+            	"razaoSocial": "Drogaria Teste Esculapy Ltda",
+            	"nomeFantasia": "Farmácia do Teste",
+            	"crfJ": "DF-12345",
+            	"emailContato": "contato@farmaciateste.com",
+            	"numeroCelularContato": "61988888888"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/auth/login
+        name: "GERAL: Login (email, senha)"
+        meta:
+          id: req_5ee06997a3c7443c9d90fc3f6794911f
+          created: 1678891030000
+          modified: 1678891030000
+          isPrivate: false
+          sortKey: -80
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "cliente@teste.com",
+            	"senha": "password123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/user/me
+        name: "GERAL: Ver Meu Perfil (Autenticado)"
+        meta:
+          id: req_7d4db7777820480a9f77a942710c126c
+          created: 1678891040000
+          modified: 1678891040000
+          isPrivate: false
+          description: Funciona para qualquer usuário logado (Cliente, Admin, etc)
+          sortKey: -70
+        method: GET
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/produtos/buscar
+        name: "GERAL: Buscar Ofertas (nome)"
+        meta:
+          id: req_a42dcb3b61864518a9d0c1f25eb650fe
+          created: 1678891050000
+          modified: 1678891050000
+          isPrivate: false
+          sortKey: -60
+        method: GET
+        parameters:
+          - id: param_nome
+            name: nome
+            value: Dipirona
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/produtos/1
+        name: "GERAL: Ver Detalhes (Catálogo)"
+        meta:
+          id: req_e77ca632ab8f4d4f870fa4053307d11a
+          created: 1678891060000
+          modified: 1678891060000
+          isPrivate: false
+          description: Altere o '1' na URL para o ID do produto que deseja ver.
+          sortKey: -50
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/produtos/1/ofertas
+        name: "GERAL: Ver Ofertas (Produto Específico)"
+        meta:
+          id: req_f20c46b44fc24600aebb05fc9732f44b
+          created: 1678891070000
+          modified: 1678891070000
+          isPrivate: false
+          description: Altere o '1' na URL para o ID do produto que deseja ver as ofertas.
+          sortKey: -40
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: ADMIN (Exige Auth)
+    meta:
+      id: fld_29846c52709245c4b89b4a9607ef66e8
+      created: 1678892000000
+      modified: 1678892000000
+      sortKey: -60
+      description: Endpoints de gerenciamento da plataforma.
+    children:
+      - url: http://localhost:8080/api/produtos
+        name: "ADMIN: Cadastrar Produto no Catálogo"
+        meta:
+          id: req_df00fa81972941f29e1d0916d2fce283
+          created: 1678892010000
+          modified: 1678892010000
+          isPrivate: false
+          description: Cria um novo produto mestre no catálogo da plataforma.
+          sortKey: -100
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "ean": "7891000123456",
+                "nome": "Dipirona Monoidratada 500mg 10cpr",
+                "principioAtivo": "Dipirona Monoidratada",
+                "laboratorio": "Medley",
+                "descricao": "Analgésico e antitérmico.",
+                "codigoRegistroMS": "1234567890123",
+                "bulaUrl": "http://site.com/bula/dipirona",
+                "tipoProduto": "MEDICAMENTO",
+                "tipoReceita": "NAO_EXIGIDO"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/produtos/1
+        name: "ADMIN: Atualizar Produto no Catálogo"
+        meta:
+          id: req_310f13d266d5490c97d49305e12900ac
+          created: 1678892020000
+          modified: 1678892020000
+          isPrivate: false
+          description: Atualiza um produto mestre. Altere o '1' na URL.
+          sortKey: -90
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "ean": "7891000123456",
+                "nome": "Dipirona 500mg (Nome Atualizado)",
+                "principioAtivo": "Dipirona Monoidratada",
+                "laboratorio": "Medley",
+                "descricao": "Analgésico e antitérmico.",
+                "codigoRegistroMS": "1234567890123",
+                "bulaUrl": "http://site.com/bula/dipirona",
+                "tipoProduto": "MEDICAMENTO",
+                "tipoReceita": "NAO_EXIGIDO"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/produtos/1/desativar
+        name: "ADMIN: Desativar Produto (Soft Delete)"
+        meta:
+          id: req_b0ffd4a5153f455e90b066153a16c328
+          created: 1678892025000
+          modified: 1678892025000
+          isPrivate: false
+          description: Desativa (soft delete) um produto. Oculta das buscas. Altere o '1'
+            na URL.
+          sortKey: -85
+        method: POST
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/produtos/1/reativar
+        name: "ADMIN: Reativar Produto"
+        meta:
+          id: req_67c46c38b120449380ed3b28322333c1
+          created: 1678892027000
+          modified: 1678892027000
+          isPrivate: false
+          description: Reativa um produto desativado. Altere o '1' na URL.
+          sortKey: -82
+        method: POST
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/produtos/1
+        name: "ADMIN: Excluir de Vez Produto (Hard Delete)"
+        meta:
+          id: req_3ee94cc11d644a4b886046d8205f6307
+          created: 1678892030000
+          modified: 1678892030000
+          isPrivate: false
+          description: Exclui de vez (hard delete) um produto. SÓ FUNCIONA se nenhuma
+            farmácia o tiver em estoque. Altere o '1' na URL.
+          sortKey: -80
+        method: DELETE
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/admin/farmacias
+        name: "ADMIN: Listar Farmácias (por status)"
+        meta:
+          id: req_5d27c426db68481d869d3258e12bb116
+          created: 1678892040000
+          modified: 1678892040000
+          isPrivate: false
+          description: Use PENDENTE_APROVACAO, ATIVO ou SUSPENSO
+          sortKey: -70
+        method: GET
+        parameters:
+          - id: param_status
+            name: status
+            value: PENDENTE_APROVACAO
+            disabled: false
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/admin/farmacias/1/ativar
+        name: "ADMIN: Ativar Farmácia"
+        meta:
+          id: req_8a7668d6e52b41db9ae604c65ce7910a
+          created: 1678892050000
+          modified: 1678892050000
+          isPrivate: false
+          description: Muda o status de PENDENTE ou SUSPENSO para ATIVO. Altere o '1' na
+            URL.
+          sortKey: -60
+        method: POST
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/admin/farmacias/1/desativar
+        name: "ADMIN: Desativar Farmácia"
+        meta:
+          id: req_e60637e0dba64f6eb806601a79930925
+          created: 1678892060000
+          modified: 1678892060000
+          isPrivate: false
+          description: Muda o status para SUSPENSO (desativado). Altere o '1' na URL.
+          sortKey: -50
+        method: POST
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/admin/usuarios/buscar
+        name: "ADMIN: Buscar Usuário (por email)"
+        meta:
+          id: req_443bf12c6bdb4d0388b368e919418117
+          created: 1678892070000
+          modified: 1678892070000
+          isPrivate: false
+          sortKey: -40
+        method: GET
+        parameters:
+          - id: param_email
+            name: email
+            value: cliente@teste.com
+            disabled: false
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/admin/usuarios/1/desativar
+        name: "ADMIN: Desativar Usuário"
+        meta:
+          id: req_8f5db8ed1c2e4c9185d3c95101ec975c
+          created: 1678892080000
+          modified: 1678892080000
+          isPrivate: false
+          description: Define 'enabled = false' para um usuário. Altere o '1' na URL.
+          sortKey: -30
+        method: POST
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/admin/usuarios/1/reativar
+        name: "ADMIN: Reativar Usuário"
+        meta:
+          id: req_bd535cd0f5284f4287a958eedafa2143
+          created: 1678892090000
+          modified: 1678892090000
+          isPrivate: false
+          description: Define 'enabled = true' para um usuário. Altere o '1' na URL.
+          sortKey: -20
+        method: POST
+        authentication:
+          type: bearer
+          token: SEU_TOKEN_DE_ADMIN_AQUI
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_9dce6f9cfed520238fe51a55cf3c026fae9a914a
+    created: 1762941074214
+    modified: 1762941074214
+environments:
+  name: Base Environment
+  meta:
+    id: env_9dce6f9cfed520238fe51a55cf3c026fae9a914a
+    created: 1762941074211
+    modified: 1762941074211
+    isPrivate: false
