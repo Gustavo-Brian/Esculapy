@@ -1,11 +1,32 @@
 package ucb.app.esculapy.model.enums;
 
-// Tipo de receita (controla o fluxo de validação)
+/**
+ * Define o nível de controle (exigência de receita) de um Produto.
+ */
 public enum TipoReceita {
+    /**
+     * Não precisa de receita (ex: Dipirona).
+     * (Usado em PedidoService)
+     */
     NAO_EXIGIDO,
-    RECEITA_SIMPLES_1_VIA,      // Apresentação (ex: anticoncepcional)
-    RECEITA_SIMPLES_2_VIAS,     // Retenção (ex: antibiótico)
-    RECEITA_CONTROLE_ESPECIAL,  // Numeração especial (ex: Ritalina)
-    RECEITUARIO_AZUL,           // Ex: Morfina
-    RECEITUARIO_AMARELO         // Ex: Talidomida
+
+    /**
+     * Receita Branca Comum (ex: Antibióticos).
+     */
+    BRANCA_SIMPLES,
+
+    /**
+     * Receita Branca de Controle Especial (ex: Antidepressivos).
+     */
+    BRANCA_CONTROLE_ESPECIAL,
+
+    /**
+     * Receita Azul (ex: Ritalina).
+     */
+    AZUL_B,
+
+    /**
+     * Receita Amarela (ex: Morfina).
+     */
+    AMARELA_A
 }

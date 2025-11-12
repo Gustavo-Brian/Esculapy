@@ -1,10 +1,31 @@
 package ucb.app.esculapy.model.enums;
 
-// Tipo de produto (controla a venda)
+/**
+ * Define a categoria de um Produto.
+ */
 public enum TipoProduto {
-    MEDICAMENTO_CONTROLADO, // Ex: Tarja Preta
-    MEDICAMENTO_ANTIBIOTICO, // Ex: Tarja Vermelha (receita retida)
-    MEDICAMENTO_COMUM,      // Ex: Tarja Vermelha/Amarela (só apresentação)
+    /**
+     * Medicamento tarjado ou de balcão.
+     */
+    MEDICAMENTO,
+
+    /**
+     * Itens de higiene pessoal, cosméticos.
+     */
     PERFUMARIA,
-    CORRELATO // Ex: Seringa, termômetro
+
+    /**
+     * Suplementos, vitaminas.
+     */
+    SUPLEMENTO,
+
+    /**
+     * Equipamentos (ex: medidor de pressão).
+     */
+    EQUIPAMENTO,
+
+    /**
+     * Outros itens de conveniência.
+     */
+    CONVENIENCIA
 }

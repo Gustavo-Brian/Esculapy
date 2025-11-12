@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ucb.app.esculapy.dto.EstoqueRequest;
-import ucb.app.esculapy.dto.RegisterFarmaceuticoRequest; // <--- USADO ABAIXO
+import ucb.app.esculapy.dto.RegisterFarmaceuticoRequest;
 import ucb.app.esculapy.model.EstoqueLojista;
-import ucb.app.esculapy.model.Farmaceutico; // <--- USADO ABAIXO
+import ucb.app.esculapy.model.Farmaceutico;
 import ucb.app.esculapy.service.EstoqueService;
 import ucb.app.esculapy.service.FarmaciaService;
 
@@ -33,10 +33,7 @@ public class FarmaciaManagementController {
      */
     @PostMapping("/farmaceuticos")
     public ResponseEntity<Farmaceutico> adicionarFarmaceutico(@Valid @RequestBody RegisterFarmaceuticoRequest request) {
-        // 1. Delega a lógica de criação e linkagem para o FarmaciaService
         Farmaceutico novoFarmaceutico = farmaciaService.adicionarFarmaceutico(request);
-
-        // Retorna o objeto criado (o Farmaceutico)
         return ResponseEntity.ok(novoFarmaceutico);
     }
 
@@ -67,7 +64,6 @@ public class FarmaciaManagementController {
     @DeleteMapping("/estoque/{estoqueId}")
     public ResponseEntity<Void> deletarEstoque(@PathVariable Long estoqueId) {
         estoqueService.deleteEstoque(estoqueId);
-        // Retorna 204 No Content, padrão REST para deleção bem-sucedida
         return ResponseEntity.noContent().build();
     }
 }

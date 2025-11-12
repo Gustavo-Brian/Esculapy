@@ -1,6 +1,6 @@
 package ucb.app.esculapy.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore; // <-- IMPORT NECESSÁRIO
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,14 +29,12 @@ public class EstoqueLojista {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Ligação com a farmácia
-    @JsonIgnore // <-- (CONSERTA O ERRO ANTERIOR: Ignora a Farmácia)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "farmacia_id")
     private Farmacia farmacia;
 
-    // Ligação com o produto do catálogo
-    @JsonIgnore // <-- CORREÇÃO FINAL: Ignora o Produto (resolve o erro 'ByteBuddyInterceptor')
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "produto_id")
     private Produto produto;

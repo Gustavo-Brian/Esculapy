@@ -25,22 +25,14 @@ public class AuthController {
     }
 
     @PostMapping("/register/cliente")
-    public ResponseEntity<?> registerCliente(@Valid @RequestBody RegisterClienteRequest request) {
-        try {
-            AuthResponse authResponse = authService.registerCliente(request);
-            return ResponseEntity.ok(authResponse);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<AuthResponse> registerCliente(@Valid @RequestBody RegisterClienteRequest request) {
+        AuthResponse authResponse = authService.registerCliente(request);
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/register/farmacia")
-    public ResponseEntity<?> registerFarmacia(@Valid @RequestBody RegisterFarmaciaRequest request) {
-        try {
-            AuthResponse authResponse = authService.registerFarmacia(request);
-            return ResponseEntity.ok(authResponse);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<AuthResponse> registerFarmacia(@Valid @RequestBody RegisterFarmaciaRequest request) {
+        AuthResponse authResponse = authService.registerFarmacia(request);
+        return ResponseEntity.ok(authResponse);
     }
 }

@@ -1,5 +1,6 @@
 package ucb.app.esculapy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,10 +38,7 @@ public class Endereco {
      */
     private String tipo;
 
-    /**
-     * Relação de volta para o Cliente (um cliente pode ter muitos endereços)
-     * A entidade Farmacia também pode ter uma relação OneToOne com Endereco.
-     */
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

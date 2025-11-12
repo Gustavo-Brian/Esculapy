@@ -1,6 +1,6 @@
 package ucb.app.esculapy.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore; // <-- IMPORT NECESSÁRIO
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,15 +47,12 @@ public class Cliente {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
-    // Relação com o Login (Dono da Relação)
-    // O Cliente é a entidade que possui a coluna usuario_id.
-    @JsonIgnore // <-- CORREÇÃO FINAL: Impede a serialização recursiva Pedido -> Cliente -> Usuario
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", unique = true)
     private Usuario usuario;
 
-    // Relação com Endereços
-    @JsonIgnore // Já estava, ignora Endereços na serialização de Cliente
+    @JsonIgnore
     @OneToMany(
             mappedBy = "cliente",
             cascade = CascadeType.ALL,
@@ -64,7 +61,6 @@ public class Cliente {
     )
     private List<Endereco> enderecos = new ArrayList<>();
 
-    // Relação com Pedidos (também deve ser ignorada na serialização)
     @JsonIgnore
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
     private List<Pedido> pedidos = new ArrayList<>();

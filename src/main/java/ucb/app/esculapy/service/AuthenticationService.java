@@ -9,6 +9,10 @@ import ucb.app.esculapy.model.Farmacia;
 import ucb.app.esculapy.model.Farmaceutico;
 import ucb.app.esculapy.model.Usuario;
 
+/**
+ * Serviço auxiliar para obter o principal de segurança (usuário logado)
+ * e seus perfis de forma segura e centralizada.
+ */
 @Component
 public class AuthenticationService {
 

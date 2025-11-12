@@ -1,8 +1,22 @@
 package ucb.app.esculapy.model.enums;
 
+/**
+ * Define o status de uma Farmácia (Lojista) na plataforma.
+ */
 public enum LojistaStatus {
-    PENDENTE_APROVACAO, // Recém-cadastrado
-    ATIVO,              // Aprovado e vendendo
-    SUSPENSO,           // Suspenso pelo admin
-    REJEITADO           // Cadastro não aprovado
+    /**
+     * A farmácia se cadastrou, mas aguarda aprovação do Admin da plataforma.
+     * (Usado em AuthService)
+     */
+    PENDENTE_APROVACAO,
+
+    /**
+     * Farmácia aprovada e pode operar.
+     */
+    ATIVO,
+
+    /**
+     * Farmácia suspensa ou bloqueada.
+     */
+    SUSPENSO
 }

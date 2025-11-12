@@ -1,13 +1,42 @@
 package ucb.app.esculapy.model.enums;
 
+/**
+ * Define os estados possíveis de um Pedido.
+ */
 public enum PedidoStatus {
-    CARRINHO,
+    /**
+     * O pedido foi criado, mas aguarda o upload e validação da receita.
+     */
+    AGUARDANDO_VALIDACAO_FARMACEUTICA,
+
+    /**
+     * A receita foi aprovada (ou não era necessária). Aguardando pagamento.
+     */
     AGUARDANDO_PAGAMENTO,
-    AGUARDANDO_VALIDACAO_FARMACEUTICA, // Etapa crucial
+
+    /**
+     * Pagamento confirmado, aguardando separação.
+     */
     PAGAMENTO_APROVADO,
-    PAGAMENTO_REJEITADO,
+
+    /**
+     * Pagamento aprovado, pedido está sendo separado no estoque.
+     * (Este era o status que faltava)
+     */
     EM_SEPARACAO,
-    ENVIADO,
+
+    /**
+     * Pedido em rota de entrega.
+     */
+    EM_TRANSPORTE,
+
+    /**
+     * Pedido entregue ao cliente.
+     */
     ENTREGUE,
+
+    /**
+     * O pedido foi cancelado (ex: receita rejeitada, falta de pagamento).
+     */
     CANCELADO
 }

@@ -42,7 +42,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwt);
 
+        // Se o usuário foi extraído e ainda não está autenticado no contexto
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // Carrega o usuário (usando o userDetailsService otimizado com @EntityGraph)
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
@@ -54,6 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
+                // Coloca o usuário autenticado no Contexto de Segurança
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

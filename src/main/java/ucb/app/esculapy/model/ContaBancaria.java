@@ -1,5 +1,6 @@
 package ucb.app.esculapy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,6 +45,7 @@ public class ContaBancaria {
     @Column(nullable = false)
     private String nomeTitular;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "contaBancaria", fetch = FetchType.LAZY)
-    private Farmacia farmacia; // Atualizado para Farmacia
+    private Farmacia farmacia;
 }

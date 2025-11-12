@@ -25,20 +25,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // Desabilita CSRF para APIs stateless
                 .authorizeHttpRequests(authz -> authz
                         // Endpoints públicos de Autenticação e Navegação
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll() // Busca de produtos é pública
+                        .requestMatchers("/error").permitAll() // Permite respostas de erro do Spring
 
-                        // O resto exige autenticação (as regras @PreAuthorize cuidam dos detalhes)
+                        // O resto exige autenticação
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Define a API como stateless
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Adiciona o filtro JWT
 
         return http.build();
     }

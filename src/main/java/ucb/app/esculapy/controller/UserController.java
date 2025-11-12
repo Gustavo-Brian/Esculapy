@@ -78,9 +78,10 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/me")
     public ResponseEntity<MeResponse> getMyInfo() {
+        // A lógica de busca do usuário já é tratada pelo Spring Security
+        // e pelo AuthenticationService, que o injeta no contexto.
         Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(new MeResponse(usuario));
     }

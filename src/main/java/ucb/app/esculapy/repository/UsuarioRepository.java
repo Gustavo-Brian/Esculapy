@@ -7,7 +7,8 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    // Ao buscar por email, já traz os perfis
+    // Otimizado: Ao buscar por email, já traz os perfis e roles
+    // Isso é crucial para o AuthenticationService e o /api/user/me
     @EntityGraph(attributePaths = {"roles", "cliente", "farmaciaAdmin", "farmaceutico"})
     Optional<Usuario> findByEmail(String email);
 

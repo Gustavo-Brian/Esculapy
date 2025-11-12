@@ -47,13 +47,11 @@ public class Farmaceutico {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
-    // Relação com o Login (Dono da Relação)
-    @JsonIgnore // <--- CORREÇÃO FINAL: Impede o loop Farmaceutico -> Usuario
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", unique = true)
     private Usuario usuario;
 
-    // Relação com a Farmácia onde ele trabalha
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "farmacia_id", referencedColumnName = "id")

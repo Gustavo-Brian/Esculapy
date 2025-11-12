@@ -1,22 +1,20 @@
 package ucb.app.esculapy.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query; // <-- IMPORTE ISSO
-import org.springframework.data.repository.query.Param; // <-- IMPORTE ISSO
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ucb.app.esculapy.model.Pedido;
 import ucb.app.esculapy.model.enums.PedidoStatus;
 
 import java.util.List;
-import java.util.Optional; // <-- IMPORTE ISSO
+import java.util.Optional;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     List<Pedido> findByStatus(PedidoStatus status);
     List<Pedido> findByClienteId(Long clienteId);
 
-    // --- MÉTODO NOVO (Otimizado para buscarPendentes) ---
-    // Busca apenas os pedidos que (a) têm o status correto E (b) contêm
-    // pelo menos um item da farmácia especificada.
+    // Otimizado: Busca pedidos de um status que pertençam a uma farmácia
     @Query("SELECT DISTINCT p FROM Pedido p " +
             "JOIN p.itens i " +
             "JOIN i.estoqueLojista el " +
@@ -26,9 +24,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             @Param("farmaciaId") Long farmaciaId
     );
 
-    // --- MÉTODO NOVO (Otimizado para getPedidoValidado) ---
-    // Busca um pedido específico, já validando o status e a posse pela farmácia,
-    // e já carrega os itens e o estoque (JOIN FETCH) para a lógica de estorno.
+    // Otimizado: Busca um pedido específico para validação, checando posse
+    // e carregando dados necessários para o estorno (itens e estoque).
     @Query("SELECT DISTINCT p FROM Pedido p " +
             "JOIN FETCH p.itens i " +
             "JOIN FETCH i.estoqueLojista el " +

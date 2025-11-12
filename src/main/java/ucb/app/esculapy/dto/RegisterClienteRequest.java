@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.hibernate.validator.constraints.br.CPF; // <-- 1. IMPORTE O VALIDADOR
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 

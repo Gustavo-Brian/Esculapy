@@ -20,18 +20,13 @@ public class EstoqueResponse {
 
     /**
      * Construtor que mapeia a entidade EstoqueLojista para este DTO.
-     * Isso nos permite expor apenas os dados necessários para o front-end.
      */
     public EstoqueResponse(EstoqueLojista estoque) {
         this.estoqueId = estoque.getId();
         this.preco = estoque.getPreco();
         this.quantidade = estoque.getQuantidade();
-
-        // Dados do Produto (do catálogo)
         this.produtoId = estoque.getProduto().getId();
         this.produtoNome = estoque.getProduto().getNome();
-
-        // Dados da Farmácia (vendedor)
         this.farmaciaId = estoque.getFarmacia().getId();
         this.farmaciaNome = estoque.getFarmacia().getNomeFantasia();
     }

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ucb.app.esculapy.dto.EstoqueResponse;
 import ucb.app.esculapy.dto.ProdutoRequest;
-import ucb.app.esculapy.exception.ForbiddenException;
+import ucb.app.esculapy.exception.ConflictException;
 import ucb.app.esculapy.exception.ResourceNotFoundException;
 import ucb.app.esculapy.model.EstoqueLojista;
 import ucb.app.esculapy.model.Produto;
@@ -20,11 +20,9 @@ import java.util.stream.Collectors;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
-    private final EstoqueLojistaRepository estoqueLojistaRepository;
+    private final EstoqueLojistaRepository estoqueLojistaRepository; // Já estava injetado
 
-    /**
-     * Lógica para GET /api/produtos/buscar?nome=...
-     */
+    // --- Lógica Pública (Completa) ---
     @Transactional(readOnly = true)
     public List<EstoqueResponse> buscarProdutosPorNome(String nome) {
         // 1. Usa a query otimizada do repositório
@@ -36,9 +34,6 @@ public class ProdutoService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Lógica para GET /api/produtos/{id}
-     */
     @Transactional(readOnly = true)
     public Produto getProdutoPorId(Long id) {
         // 1. Busca o produto no catálogo central
@@ -46,9 +41,6 @@ public class ProdutoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado no catálogo."));
     }
 
-    /**
-     * Lógica para GET /api/produtos/{id}/ofertas
-     */
     @Transactional(readOnly = true)
     public List<EstoqueResponse> getOfertasParaProduto(Long id) {
         // 1. Valida se o produto existe
@@ -65,21 +57,79 @@ public class ProdutoService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Lógica para POST /api/produtos (Admin)
-     */
+    // --- Lógica de Admin (Refatorada e Completa) ---
+
     @Transactional
     public Produto criarProdutoCatalogo(ProdutoRequest request) {
         // 1. Validar duplicatas
         if (produtoRepository.findByEan(request.getEan()).isPresent()) {
-            throw new ForbiddenException("EAN (Código de Barras) '" + request.getEan() + "' já cadastrado.");
+            throw new ConflictException("EAN (Código de Barras) '" + request.getEan() + "' já cadastrado.");
         }
         if (produtoRepository.findByCodigoRegistroMS(request.getCodigoRegistroMS()).isPresent()) {
-            throw new ForbiddenException("Código de Registro MS '" + request.getCodigoRegistroMS() + "' já cadastrado.");
+            throw new ConflictException("Código de Registro MS '" + request.getCodigoRegistroMS() + "' já cadastrado.");
         }
 
-        // 2. Mapear DTO para Entidade
         Produto produto = new Produto();
+        produto.setAtivo(true); // Garante que novos produtos estejam ativos
+        return mapDtoToProduto(produto, request);
+    }
+
+    @Transactional
+    public Produto updateProdutoCatalogo(Long id, ProdutoRequest request) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado."));
+
+        // Validação de duplicidade (só se o valor mudou E pertence a outro produto)
+        produtoRepository.findByEan(request.getEan()).ifPresent(p -> {
+            if (!p.getId().equals(id)) {
+                throw new ConflictException("EAN (Código de Barras) '" + request.getEan() + "' já pertence a outro produto.");
+            }
+        });
+        produtoRepository.findByCodigoRegistroMS(request.getCodigoRegistroMS()).ifPresent(p -> {
+            if (!p.getId().equals(id)) {
+                throw new ConflictException("Código de Registro MS '" + request.getCodigoRegistroMS() + "' já pertence a outro produto.");
+            }
+        });
+
+        return mapDtoToProduto(produto, request);
+    }
+
+    /**
+     * (ADMIN) Desativa (soft delete) um produto do catálogo.
+     */
+    @Transactional
+    public Produto desativarProdutoCatalogo(Long id) {
+        return setProdutoAtivo(id, false);
+    }
+
+    /**
+     * (ADMIN) Reativa um produto do catálogo.
+     */
+    @Transactional
+    public Produto reativarProdutoCatalogo(Long id) {
+        return setProdutoAtivo(id, true);
+    }
+
+    /**
+     * (ADMIN) Exclui de vez (hard delete) um produto do catálogo.
+     * SÓ PERMITE se nenhuma farmácia depender dele.
+     */
+    @Transactional
+    public void deleteProdutoCatalogo(Long id) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado."));
+
+        // VERIFICAÇÃO DE SEGURANÇA (Hard Delete)
+        if (estoqueLojistaRepository.existsByProdutoId(id)) {
+            throw new ConflictException("Este produto não pode ser excluído permanentemente pois está em uso no estoque de uma ou mais farmácias. Considere desativá-lo.");
+        }
+
+        // Se passou, é seguro deletar
+        produtoRepository.delete(produto);
+    }
+
+    // Método auxiliar para mapeamento
+    private Produto mapDtoToProduto(Produto produto, ProdutoRequest request) {
         produto.setNome(request.getNome());
         produto.setEan(request.getEan());
         produto.setPrincipioAtivo(request.getPrincipioAtivo());
@@ -89,8 +139,14 @@ public class ProdutoService {
         produto.setBulaUrl(request.getBulaUrl());
         produto.setTipoProduto(request.getTipoProduto());
         produto.setTipoReceita(request.getTipoReceita());
+        return produtoRepository.save(produto);
+    }
 
-        // 3. Salvar no banco
+    // Método auxiliar para soft delete/reactivate
+    private Produto setProdutoAtivo(Long id, boolean ativo) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado."));
+        produto.setAtivo(ativo);
         return produtoRepository.save(produto);
     }
 }

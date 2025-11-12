@@ -1,6 +1,6 @@
 package ucb.app.esculapy.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore; // <-- IMPORT NECESSÁRIO
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,7 +27,6 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Pedido: Ignoramos na serialização de ItemPedido para quebrar o loop ItemPedido -> Pedido
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pedido_id")
@@ -36,8 +35,6 @@ public class ItemPedido {
     /**
      * Link para o item de estoque da farmácia.
      */
-    // EstoqueLojista: Ignoramos para quebrar o loop ItemPedido -> EstoqueLojista -> Farmacia (e seus lazys)
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "estoque_lojista_id")
     private EstoqueLojista estoqueLojista;
@@ -46,5 +43,5 @@ public class ItemPedido {
     private Integer quantidade;
 
     @Column(nullable = false)
-    private BigDecimal precoUnitario;
+    private BigDecimal precoUnitario; // Snapshot do preço no momento da compra
 }

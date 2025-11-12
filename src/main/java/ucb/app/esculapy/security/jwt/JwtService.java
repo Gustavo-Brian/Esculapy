@@ -39,7 +39,6 @@ public class JwtService {
         if (userDetails instanceof Usuario) {
             Usuario usuario = (Usuario) userDetails;
             claims.put("userId", usuario.getId());
-            // Você pode adicionar mais claims aqui, se desejar
         }
         return generateToken(claims, userDetails);
     }

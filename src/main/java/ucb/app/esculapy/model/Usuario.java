@@ -43,6 +43,7 @@ public class Usuario implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonIgnore // Nunca expor a senha
     @Column(nullable = false)
     private String senha;
 
@@ -51,7 +52,7 @@ public class Usuario implements UserDetails {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER) // EAGER é necessário para o UserDetails
     @JoinTable(
             name = "usuario_roles",
             joinColumns = @JoinColumn(name = "usuario_id"),
@@ -59,22 +60,18 @@ public class Usuario implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    // Relação com o perfil de Cliente
-    @JsonIgnore // <-- ADICIONADO PARA QUEBRAR O LOOP
+    @JsonIgnore
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Cliente cliente;
 
-    // Relação com o perfil de Admin da Farmácia (Dono)
-    @JsonIgnore // <-- ADICIONADO PARA QUEBRAR O LOOP
+    @JsonIgnore
     @OneToOne(mappedBy = "usuarioAdmin", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Farmacia farmaciaAdmin;
 
-    // Relação com o perfil de Farmacêutico (Funcionário)
-    @JsonIgnore // <-- ADICIONADO PARA QUEBRAR O LOOP FINAL: Farmaceutico <-> Usuario
+    @JsonIgnore
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Farmaceutico farmaceutico;
 
-    // Construtor usado pelo AuthService
     public Usuario(String email, String senha) {
         this.email = email;
         this.senha = senha;
@@ -118,6 +115,7 @@ public class Usuario implements UserDetails {
     // --- Implementação da Interface UserDetails ---
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getNome()))
@@ -131,7 +129,6 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        // Usamos o email como "username" para o Spring Security
         return this.email;
     }
 

@@ -4,11 +4,13 @@ import ucb.app.esculapy.dto.AuthResponse;
 import ucb.app.esculapy.dto.LoginRequest;
 import ucb.app.esculapy.dto.RegisterClienteRequest;
 import ucb.app.esculapy.dto.RegisterFarmaciaRequest;
+import ucb.app.esculapy.exception.ConflictException; // <-- REFATORADO
+import ucb.app.esculapy.exception.ResourceNotFoundException; // <-- REFATORADO
 import ucb.app.esculapy.model.Cliente;
 import ucb.app.esculapy.model.Farmacia;
 import ucb.app.esculapy.model.Role;
 import ucb.app.esculapy.model.Usuario;
-import ucb.app.esculapy.model.enums.LojistaStatus; // <-- 1. CORREÇÃO DO IMPORT
+import ucb.app.esculapy.model.enums.LojistaStatus;
 import ucb.app.esculapy.repository.ClienteRepository;
 import ucb.app.esculapy.repository.FarmaciaRepository;
 import ucb.app.esculapy.repository.RoleRepository;
@@ -39,13 +41,12 @@ public class AuthService {
 
     @Transactional
     public AuthResponse registerCliente(RegisterClienteRequest request) {
+        // REFATORADO: Usando ConflictException (409) em vez de RuntimeException
         if (usuarioRepository.existsByEmail(request.getEmail())) {
-            // No futuro, podemos trocar por uma exceção customizada,
-            // mas o AuthController já trata RuntimeException.
-            throw new RuntimeException("Erro: Email já está em uso!");
+            throw new ConflictException("Erro: Email já está em uso!");
         }
         if (clienteRepository.existsByCpf(request.getCpf())) {
-            throw new RuntimeException("Erro: CPF já está em uso!");
+            throw new ConflictException("Erro: CPF já está em uso!");
         }
 
         Usuario usuario = new Usuario(
@@ -53,7 +54,7 @@ public class AuthService {
                 passwordEncoder.encode(request.getSenha())
         );
         Role clienteRole = roleRepository.findByNome("ROLE_CLIENTE")
-                .orElseThrow(() -> new RuntimeException("Erro: Role 'ROLE_CLIENTE' não encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException("Role 'ROLE_CLIENTE' não encontrada.")); // 404
         usuario.setRoles(Set.of(clienteRole));
 
         Cliente cliente = new Cliente();
@@ -62,7 +63,6 @@ public class AuthService {
         cliente.setNumeroCelular(request.getNumeroCelular());
         cliente.setDataNascimento(request.getDataNascimento());
 
-        // Método auxiliar bidirecional
         usuario.setCliente(cliente);
 
         Usuario savedUser = usuarioRepository.save(usuario);
@@ -73,14 +73,15 @@ public class AuthService {
 
     @Transactional
     public AuthResponse registerFarmacia(RegisterFarmaciaRequest request) {
+        // REFATORADO: Usando ConflictException (409) em vez de RuntimeException
         if (usuarioRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Erro: Email já está em uso!");
+            throw new ConflictException("Erro: Email já está em uso!");
         }
         if (farmaciaRepository.existsByCnpj(request.getCnpj())) {
-            throw new RuntimeException("Erro: CNPJ já está em uso!");
+            throw new ConflictException("Erro: CNPJ já está em uso!");
         }
         if (farmaciaRepository.existsByCrfJ(request.getCrfJ())) {
-            throw new RuntimeException("Erro: CRF-J já está em uso!");
+            throw new ConflictException("Erro: CRF-J já está em uso!");
         }
 
         Usuario usuario = new Usuario(
@@ -88,7 +89,7 @@ public class AuthService {
                 passwordEncoder.encode(request.getSenha())
         );
         Role lojistaRole = roleRepository.findByNome("ROLE_LOJISTA_ADMIN")
-                .orElseThrow(() -> new RuntimeException("Erro: Role 'ROLE_LOJISTA_ADMIN' não encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException("Role 'ROLE_LOJISTA_ADMIN' não encontrada."));
         usuario.setRoles(Set.of(lojistaRole));
 
         Farmacia farmacia = new Farmacia();
@@ -98,9 +99,8 @@ public class AuthService {
         farmacia.setCrfJ(request.getCrfJ());
         farmacia.setEmailContato(request.getEmailContato());
         farmacia.setNumeroCelularContato(request.getNumeroCelularContato());
-        farmacia.setStatus(LojistaStatus.PENDENTE_APROVACAO); // <-- 2. CORREÇÃO DO NOME
+        farmacia.setStatus(LojistaStatus.PENDENTE_APROVACAO);
 
-        // Método auxiliar bidirecional
         usuario.setFarmaciaAdmin(farmacia);
 
         Usuario savedUser = usuarioRepository.save(usuario);

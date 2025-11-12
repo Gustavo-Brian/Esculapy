@@ -8,7 +8,7 @@ import lombok.Data;
 public class ItemCarrinho {
 
     @NotNull
-    private Long estoqueLojistaId; // O ID do item de estoque que o cliente quer comprar
+    private Long estoqueLojistaId; // O ID do item de estoque
 
     @NotNull
     @Min(1)

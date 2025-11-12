@@ -11,18 +11,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ucb.app.esculapy.dto.ValidacaoReceitaRequest;
-import ucb.app.esculapy.model.Pedido; // <-- IMPORTAR
-import ucb.app.esculapy.service.ReceitaService; // <-- IMPORTAR O SERVICE
+import ucb.app.esculapy.model.Pedido;
+import ucb.app.esculapy.service.ReceitaService;
 
-import java.util.List; // <-- IMPORTAR
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/farmaceutico")
 @PreAuthorize("hasRole('FARMACEUTICO')")
-@RequiredArgsConstructor // <-- Lombok injeta o service
+@RequiredArgsConstructor
 public class FarmaceuticoController {
 
-    // O service é injetado via construtor
     private final ReceitaService receitaService;
 
     /**
@@ -31,7 +30,6 @@ public class FarmaceuticoController {
      */
     @GetMapping("/pedidos/pendentes")
     public ResponseEntity<List<Pedido>> getPedidosPendentes() {
-        // A lógica foi movida para o service
         List<Pedido> pedidos = receitaService.buscarPendentes();
         return ResponseEntity.ok(pedidos);
     }
@@ -41,7 +39,6 @@ public class FarmaceuticoController {
      */
     @PostMapping("/pedidos/{pedidoId}/receita/aprovar")
     public ResponseEntity<Pedido> aprovarReceita(@PathVariable Long pedidoId) {
-        // A lógica foi movida para o service
         Pedido pedido = receitaService.aprovarReceita(pedidoId);
         return ResponseEntity.ok(pedido);
     }
@@ -54,7 +51,6 @@ public class FarmaceuticoController {
             @PathVariable Long pedidoId,
             @Valid @RequestBody ValidacaoReceitaRequest request
     ) {
-        // A lógica foi movida para o service
         Pedido pedido = receitaService.rejeitarReceita(pedidoId, request.getJustificativa());
         return ResponseEntity.ok(pedido);
     }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ucb.app.esculapy.dto.EstoqueRequest;
+import ucb.app.esculapy.exception.ConflictException; // <-- REFATORADO
 import ucb.app.esculapy.exception.ForbiddenException;
 import ucb.app.esculapy.exception.ResourceNotFoundException;
 import ucb.app.esculapy.model.EstoqueLojista;
@@ -11,9 +12,6 @@ import ucb.app.esculapy.model.Farmacia;
 import ucb.app.esculapy.model.Produto;
 import ucb.app.esculapy.repository.EstoqueLojistaRepository;
 import ucb.app.esculapy.repository.ProdutoRepository;
-
-import java.math.BigDecimal;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +27,10 @@ public class EstoqueService {
         Produto produto = produtoRepository.findById(request.getProdutoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto do catálogo não encontrado."));
 
-        // 1. Validação de Duplicidade
+        // REFATORADO: Duplicata é conflito (409)
         estoqueLojistaRepository.findByFarmaciaIdAndProdutoId(farmacia.getId(), produto.getId())
                 .ifPresent(estoque -> {
-                    throw new ForbiddenException("Este produto já existe no seu estoque (ID: " + estoque.getId() + "). Use a rota de atualização (PUT) se quiser alterar preço ou quantidade.");
+                    throw new ConflictException("Este produto já existe no seu estoque (ID: " + estoque.getId() + "). Use a rota de atualização (PUT) se quiser alterar preço ou quantidade.");
                 });
 
         EstoqueLojista novoItem = new EstoqueLojista();
@@ -51,7 +49,7 @@ public class EstoqueService {
         EstoqueLojista item = estoqueLojistaRepository.findById(estoqueId)
                 .orElseThrow(() -> new ResourceNotFoundException("Item de estoque com ID " + estoqueId + " não encontrado."));
 
-        // Validação de Posse
+        // CORRETO: Validação de posse usa Forbidden (403)
         if (!item.getFarmacia().getId().equals(farmacia.getId())) {
             throw new ForbiddenException("Você não tem permissão para alterar o estoque de outra farmácia.");
         }
@@ -62,24 +60,18 @@ public class EstoqueService {
         return estoqueLojistaRepository.save(item);
     }
 
-    /**
-     * Remove um item do estoque do lojista.
-     * @param estoqueId O ID do registro de estoque a ser removido.
-     */
     @Transactional
     public void deleteEstoque(Long estoqueId) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
 
-        // 1. Busca o item de estoque
         EstoqueLojista item = estoqueLojistaRepository.findById(estoqueId)
                 .orElseThrow(() -> new ResourceNotFoundException("Item de estoque com ID " + estoqueId + " não encontrado."));
 
-        // 2. VALIDAÇÃO DE POSSE (CRUCIAL)
+        // CORRETO: Validação de posse usa Forbidden (403)
         if (!item.getFarmacia().getId().equals(farmacia.getId())) {
             throw new ForbiddenException("Você não tem permissão para remover o estoque de outra farmácia.");
         }
 
-        // 3. Deleta o item
         estoqueLojistaRepository.delete(item);
     }
 }

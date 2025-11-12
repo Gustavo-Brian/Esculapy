@@ -30,22 +30,22 @@ public class Produto {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String ean; // Código de barras
+    private String ean;
 
     @Column(nullable = false)
-    private String nome; // Ex: "Dipirona Monoidratada 500mg 10 comprimidos"
+    private String nome;
 
     private String principioAtivo;
 
-    private String laboratorio; // Ex: "Medley"
+    private String laboratorio;
 
     @Column(length = 1000)
     private String descricao;
 
     @Column(nullable = false, unique = true)
-    private String codigoRegistroMS; // Registro na ANVISA
+    private String codigoRegistroMS;
 
-    private String bulaUrl; // Link para a bula digital
+    private String bulaUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -54,4 +54,8 @@ public class Produto {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoReceita tipoReceita;
+
+    // --- CAMPO ADICIONADO ---
+    @Column(nullable = false)
+    private boolean ativo = true;
 }

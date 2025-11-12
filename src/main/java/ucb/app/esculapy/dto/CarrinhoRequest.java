@@ -8,9 +8,7 @@ import java.util.List;
 @Data
 public class CarrinhoRequest {
 
-    @Valid
-    @NotEmpty
+    @Valid // Garante que os itens dentro da lista sejam validados
+    @NotEmpty // Garante que a lista não esteja vazia
     private List<ItemCarrinho> itens;
-
-    // Você pode adicionar aqui "enderecoEntregaId", "metodoPagamento", etc.
 }
