@@ -29,7 +29,7 @@ public class DataInitializer implements CommandLineRunner {
         garantirRole("ROLE_FARMACEUTICO");
         garantirRole("ROLE_ADMIN");
 
-        // 2. CRIAR USUÁRIO ADMIN MASTER RANDÔMICO PARA TESTES
+        // 2. CRIAR USUÁRIO ADMIN MASTER RANDÔMICO
         String senhaPadrao = UUID.randomUUID().toString().substring(0, 8);
         String emailPadrao = "admin_" + UUID.randomUUID().toString().substring(0, 4) + "@esculapy.com";
 
@@ -45,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
             usuarioRepository.save(adminUser);
 
             System.out.println("------------------------------------------------------------------");
-            System.out.println(">>> USUÁRIO ADMIN MASTER CRIADO (BANCO VAZIO) <<<");
+            System.out.println(">>> USUÁRIO ADMIN MASTER CRIADO");
             System.out.println(">>> E-mail: " + adminUser.getEmail());
             System.out.println(">>> Senha: " + senhaPadrao);
             System.out.println("------------------------------------------------------------------");

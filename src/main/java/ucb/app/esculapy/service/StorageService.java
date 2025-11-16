@@ -3,6 +3,12 @@ package ucb.app.esculapy.service;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface StorageService {
+
+    /**
+     * Prepara o serviço de storage (ex: cria a pasta de uploads).
+     */
+    void init();
+
     /**
      * Faz o upload de um arquivo e retorna a URL pública.
      * @param file O arquivo enviado na requisição

@@ -20,27 +20,47 @@ import java.util.stream.Collectors;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
-    private final EstoqueLojistaRepository estoqueLojistaRepository; // Já estava injetado
+    private final EstoqueLojistaRepository estoqueLojistaRepository;
 
-    // --- Lógica Pública (Completa) ---
+    // --- Lógica Pública (Chamada pelo CatalogoController e EstoqueController) ---
+
+    /**
+     * NOVO MÉTODO: Retorna todos os produtos ativos do catálogo.
+     * Chamado por: CatalogoController (GET /api/catalogo)
+     */
     @Transactional(readOnly = true)
-    public List<EstoqueResponse> buscarProdutosPorNome(String nome) {
-        // 1. Usa a query otimizada do repositório
-        List<EstoqueLojista> estoques = estoqueLojistaRepository.findByProdutoNomeContendo(nome);
-
-        // 2. Mapeia a lista de Entidades para a lista de DTOs
-        return estoques.stream()
-                .map(EstoqueResponse::new) // Usa o construtor que criamos no DTO
-                .collect(Collectors.toList());
+    public List<Produto> findAllAtivos() {
+        return produtoRepository.findAllByAtivoTrue();
     }
 
+    /**
+     * Retorna um produto do catálogo pelo ID.
+     * Chamado por: CatalogoController (GET /api/catalogo/{id})
+     */
     @Transactional(readOnly = true)
     public Produto getProdutoPorId(Long id) {
-        // 1. Busca o produto no catálogo central
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado no catálogo."));
     }
 
+    /**
+     * Busca estoques (itens de lojista) pelo nome do produto.
+     * Chamado por: EstoqueController (GET /api/estoque/buscar-por-nome)
+     */
+    @Transactional(readOnly = true)
+    public List<EstoqueResponse> buscarProdutosPorNome(String nome) {
+        // A query otimizada já filtra por p.ativo = true e el.ativo = true
+        List<EstoqueLojista> estoques = estoqueLojistaRepository.findByProdutoNomeContendo(nome);
+
+        return estoques.stream()
+                .map(EstoqueResponse::new) // Usa o construtor do DTO
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Busca estoques (itens de lojista) pelo ID do produto no catálogo.
+     * Chamado por: EstoqueController (GET /api/estoque/buscar-por-catalogo/{catalogoId})
+     */
     @Transactional(readOnly = true)
     public List<EstoqueResponse> getOfertasParaProduto(Long id) {
         // 1. Valida se o produto existe
@@ -48,7 +68,7 @@ public class ProdutoService {
             throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado no catálogo.");
         }
 
-        // 2. Busca as ofertas usando a query otimizada
+        // 2. Busca estoques (a query já otimiza e filtra por ativos)
         List<EstoqueLojista> estoques = estoqueLojistaRepository.findOfertasByProdutoId(id);
 
         // 3. Mapeia para DTOs
@@ -57,7 +77,7 @@ public class ProdutoService {
                 .collect(Collectors.toList());
     }
 
-    // --- Lógica de Admin (Refatorada e Completa) ---
+    // --- Lógica de Admin (Chamada pelo ProdutoController - /api/admin/catalogo) ---
 
     @Transactional
     public Produto criarProdutoCatalogo(ProdutoRequest request) {
@@ -76,8 +96,7 @@ public class ProdutoService {
 
     @Transactional
     public Produto updateProdutoCatalogo(Long id, ProdutoRequest request) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado."));
+        Produto produto = getProdutoPorId(id); // Reusa o método que já lança 404
 
         // Validação de duplicidade (só se o valor mudou E pertence a outro produto)
         produtoRepository.findByEan(request.getEan()).ifPresent(p -> {
@@ -94,30 +113,19 @@ public class ProdutoService {
         return mapDtoToProduto(produto, request);
     }
 
-    /**
-     * (ADMIN) Desativa (soft delete) um produto do catálogo.
-     */
     @Transactional
     public Produto desativarProdutoCatalogo(Long id) {
         return setProdutoAtivo(id, false);
     }
 
-    /**
-     * (ADMIN) Reativa um produto do catálogo.
-     */
     @Transactional
     public Produto reativarProdutoCatalogo(Long id) {
         return setProdutoAtivo(id, true);
     }
 
-    /**
-     * (ADMIN) Exclui de vez (hard delete) um produto do catálogo.
-     * SÓ PERMITE se nenhuma farmácia depender dele.
-     */
     @Transactional
     public void deleteProdutoCatalogo(Long id) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado."));
+        Produto produto = getProdutoPorId(id);
 
         // VERIFICAÇÃO DE SEGURANÇA (Hard Delete)
         if (estoqueLojistaRepository.existsByProdutoId(id)) {
@@ -128,7 +136,8 @@ public class ProdutoService {
         produtoRepository.delete(produto);
     }
 
-    // Método auxiliar para mapeamento
+    // --- Métodos Auxiliares ---
+
     private Produto mapDtoToProduto(Produto produto, ProdutoRequest request) {
         produto.setNome(request.getNome());
         produto.setEan(request.getEan());
@@ -142,10 +151,8 @@ public class ProdutoService {
         return produtoRepository.save(produto);
     }
 
-    // Método auxiliar para soft delete/reactivate
     private Produto setProdutoAtivo(Long id, boolean ativo) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado."));
+        Produto produto = getProdutoPorId(id);
         produto.setAtivo(ativo);
         return produtoRepository.save(produto);
     }
