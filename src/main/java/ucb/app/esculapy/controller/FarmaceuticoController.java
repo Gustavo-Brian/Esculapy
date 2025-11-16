@@ -4,15 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*; // Importação atualizada
 import ucb.app.esculapy.dto.ValidacaoReceitaRequest;
 import ucb.app.esculapy.model.Pedido;
-import ucb.app.esculapy.service.ReceitaService;
+import ucb.app.esculapy.service.PedidoService; // --- ALTERAÇÃO ---
+// import ucb.app.esculapy.service.ReceitaService; // --- DELETADO ---
 
 import java.util.List;
 
@@ -22,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FarmaceuticoController {
 
-    private final ReceitaService receitaService;
+    private final PedidoService pedidoService; // --- ALTERAÇÃO ---
 
     /**
      * Busca pedidos pendentes de validação farmacêutica
@@ -30,7 +26,7 @@ public class FarmaceuticoController {
      */
     @GetMapping("/pedidos/pendentes")
     public ResponseEntity<List<Pedido>> getPedidosPendentes() {
-        List<Pedido> pedidos = receitaService.buscarPendentes();
+        List<Pedido> pedidos = pedidoService.getPedidosPendentesFarmaceutico(); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(pedidos);
     }
 
@@ -39,7 +35,7 @@ public class FarmaceuticoController {
      */
     @PostMapping("/pedidos/{pedidoId}/receita/aprovar")
     public ResponseEntity<Pedido> aprovarReceita(@PathVariable Long pedidoId) {
-        Pedido pedido = receitaService.aprovarReceita(pedidoId);
+        Pedido pedido = pedidoService.aprovarReceita(pedidoId); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(pedido);
     }
 
@@ -51,7 +47,7 @@ public class FarmaceuticoController {
             @PathVariable Long pedidoId,
             @Valid @RequestBody ValidacaoReceitaRequest request
     ) {
-        Pedido pedido = receitaService.rejeitarReceita(pedidoId, request.getJustificativa());
+        Pedido pedido = pedidoService.rejeitarReceita(pedidoId, request.getJustificativa()); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(pedido);
     }
 }

@@ -22,7 +22,7 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    // --- Gerenciamento de Farmácias (Refatorado) ---
+    // --- Gerenciamento de Farmácias (REFATORADO) ---
 
     /**
      * (ADMIN) Lista farmácias por status (PENDENTE_APROVACAO, ATIVO, SUSPENSO)
@@ -34,24 +34,35 @@ public class AdminController {
     }
 
     /**
-     * (ADMIN) Ativa uma farmácia.
-     * Muda o status de PENDENTE_APROVACAO ou SUSPENSO para ATIVO.
+     * (ADMIN) Aprova uma nova farmácia.
+     * Muda o status de PENDENTE_APROVACAO para ATIVO.
      */
-    @PostMapping("/farmacias/{id}/ativar")
-    public ResponseEntity<Farmacia> ativarFarmacia(@PathVariable Long id) {
-        Farmacia farmacia = adminService.ativarFarmacia(id);
+    @PostMapping("/farmacias/{id}/aprovar")
+    public ResponseEntity<Farmacia> aprovarFarmacia(@PathVariable Long id) {
+        Farmacia farmacia = adminService.aprovarFarmacia(id);
         return ResponseEntity.ok(farmacia);
     }
 
     /**
-     * (ADMIN) Desativa (suspende) uma farmácia.
-     * Muda o status para SUSPENSO.
+     * (ADMIN) Suspende uma farmácia ativa.
+     * Muda o status de ATIVO para SUSPENSO.
      */
-    @PostMapping("/farmacias/{id}/desativar")
-    public ResponseEntity<Farmacia> desativarFarmacia(@PathVariable Long id) {
-        Farmacia farmacia = adminService.desativarFarmacia(id);
+    @PostMapping("/farmacias/{id}/suspender")
+    public ResponseEntity<Farmacia> suspenderFarmacia(@PathVariable Long id) {
+        Farmacia farmacia = adminService.suspenderFarmacia(id);
         return ResponseEntity.ok(farmacia);
     }
+
+    /**
+     * (ADMIN) Reativa uma farmácia suspensa.
+     * Muda o status de SUSPENSO para ATIVO.
+     */
+    @PostMapping("/farmacias/{id}/reativar")
+    public ResponseEntity<Farmacia> reativarFarmacia(@PathVariable Long id) {
+        Farmacia farmacia = adminService.reativarFarmacia(id);
+        return ResponseEntity.ok(farmacia);
+    }
+
 
     // --- Gerenciamento de Usuários (Sem alteração) ---
 

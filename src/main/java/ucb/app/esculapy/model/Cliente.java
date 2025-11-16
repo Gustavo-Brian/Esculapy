@@ -54,11 +54,12 @@ public class Cliente {
 
     @JsonIgnore
     @OneToMany(
-            mappedBy = "cliente",
+            // mappedBy = "cliente", // --- ALTERAÇÃO: Removido
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
+    @JoinColumn(name = "cliente_id") // --- ALTERAÇÃO: Adicionado
     private List<Endereco> enderecos = new ArrayList<>();
 
     @JsonIgnore
@@ -67,6 +68,5 @@ public class Cliente {
 
     public void adicionarEndereco(Endereco endereco) {
         this.enderecos.add(endereco);
-        endereco.setCliente(this);
     }
 }

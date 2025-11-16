@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ucb.app.esculapy.dto.CarrinhoRequest;
+import ucb.app.esculapy.dto.CriarPedidoRequest;
+import ucb.app.esculapy.dto.PagamentoResponse; // --- IMPORT ADICIONADO ---
 import ucb.app.esculapy.model.Pedido;
+import ucb.app.esculapy.service.PagamentoService; // --- IMPORT ADICIONADO ---
 import ucb.app.esculapy.service.PedidoService;
 
 import java.util.List;
@@ -19,16 +21,32 @@ import java.util.List;
 public class PedidoController {
 
     private final PedidoService pedidoService;
+    private final PagamentoService pagamentoService; // --- DEPENDÊNCIA ADICIONADA ---
 
     /**
      * Cria um novo pedido (fecha o carrinho).
-     * O DTO do carrinho vem no RequestBody.
      */
     @PostMapping
-    public ResponseEntity<Pedido> criarPedido(@Valid @RequestBody CarrinhoRequest carrinho) {
-        Pedido pedidoCriado = pedidoService.criarPedido(carrinho);
+    public ResponseEntity<Pedido> criarPedido(
+            @Valid @RequestBody CriarPedidoRequest request
+    ) {
+        Pedido pedidoCriado = pedidoService.criarPedido(request);
         return ResponseEntity.ok(pedidoCriado);
     }
+
+    // --- NOVO ENDPOINT ADICIONADO ---
+    /**
+     * Inicia o processo de pagamento para um pedido
+     * que está aguardando pagamento.
+     */
+    @PostMapping("/{pedidoId}/pagar")
+    public ResponseEntity<PagamentoResponse> pagarPedido(
+            @PathVariable Long pedidoId
+    ) {
+        PagamentoResponse response = pagamentoService.criarSessaoDePagamento(pedidoId);
+        return ResponseEntity.ok(response);
+    }
+    // --- FIM DO NOVO ENDPOINT ---
 
     /**
      * Faz o upload da foto/PDF da receita para um pedido que está pendente.

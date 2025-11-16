@@ -37,4 +37,15 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             @Param("status") PedidoStatus status,
             @Param("farmaciaId") Long farmaciaId
     );
+
+    // --- MÉTODO ADICIONADO (PARA CORRIGIR O BUG DE PERFORMANCE) ---
+    /**
+     * Busca todos os pedidos de uma farmácia específica,
+     * independentemente do status, de forma otimizada.
+     */
+    @Query("SELECT DISTINCT p FROM Pedido p " +
+            "JOIN p.itens i " +
+            "JOIN i.estoqueLojista el " +
+            "WHERE el.farmacia.id = :farmaciaId")
+    List<Pedido> findAllByFarmaciaId(@Param("farmaciaId") Long farmaciaId);
 }

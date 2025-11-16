@@ -3,7 +3,7 @@ package ucb.app.esculapy.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // Importar HttpMethod
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,20 +29,27 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         // Endpoints públicos de Autenticação e Navegação
                         .requestMatchers("/api/auth/**").permitAll()
-                        // MUDANÇA: Liberar os novos controllers públicos
                         .requestMatchers(HttpMethod.GET, "/api/catalogo/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/estoque/**").permitAll()
-                        // A linha antiga "GET, /api/produtos/**" foi removida
+
+                        // --- LINHA ADICIONADA ---
+                        .requestMatchers(HttpMethod.GET, "/api/farmacias/**").permitAll()
+                        // ------------------------
+
+                        .requestMatchers("/api/webhooks/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
                         // O resto exige autenticação
                         .anyRequest().authenticated()
                 )
+
+                // --- RESTANTE DO ARQUIVO COMPLETADO ---
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        // --- FIM DA COMPLETAÇÃO ---
 
         return http.build();
     }

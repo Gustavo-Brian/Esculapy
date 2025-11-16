@@ -5,8 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ucb.app.esculapy.dto.EstoqueResponse;
 import ucb.app.esculapy.model.EstoqueLojista;
-import ucb.app.esculapy.service.EstoqueService;
-import ucb.app.esculapy.service.ProdutoService;
+import ucb.app.esculapy.service.CatalogoService; // --- ALTERAÇÃO ---
 
 import java.util.List;
 
@@ -15,8 +14,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EstoqueController {
 
-    private final ProdutoService produtoService; // Para os métodos de busca antigos
-    private final EstoqueService estoqueService; // Para os novos métodos de busca
+    // --- ALTERAÇÃO ---
+    // Removemos as duas dependências de serviço e injetamos apenas uma
+    private final CatalogoService catalogoService;
+    // --- FIM DA ALTERAÇÃO ---
 
     /**
      * MOVIDO (Era /api/produtos/buscar)
@@ -24,7 +25,7 @@ public class EstoqueController {
      */
     @GetMapping("/buscar-por-nome")
     public ResponseEntity<List<EstoqueResponse>> buscarEstoquePorNome(@RequestParam String nome) {
-        List<EstoqueResponse> estoques = produtoService.buscarProdutosPorNome(nome);
+        List<EstoqueResponse> estoques = catalogoService.buscarEstoquePorNomeProduto(nome); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(estoques);
     }
 
@@ -34,7 +35,7 @@ public class EstoqueController {
      */
     @GetMapping("/buscar-por-catalogo/{catalogoId}")
     public ResponseEntity<List<EstoqueResponse>> getEstoqueParaProduto(@PathVariable Long catalogoId) {
-        List<EstoqueResponse> estoques = produtoService.getOfertasParaProduto(catalogoId);
+        List<EstoqueResponse> estoques = catalogoService.buscarEstoquePorCatalogoId(catalogoId); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(estoques);
     }
 
@@ -44,8 +45,7 @@ public class EstoqueController {
      */
     @GetMapping("/farmacia/{farmaciaId}")
     public ResponseEntity<List<EstoqueLojista>> getEstoqueDaFarmacia(@PathVariable Long farmaciaId) {
-        // Você precisará adicionar "getEstoqueDaFarmaciaPublico" no seu EstoqueService
-        List<EstoqueLojista> estoque = estoqueService.getEstoqueDaFarmaciaPublico(farmaciaId);
+        List<EstoqueLojista> estoque = catalogoService.getEstoquePublicoDaFarmacia(farmaciaId); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(estoque);
     }
 
@@ -55,8 +55,7 @@ public class EstoqueController {
      */
     @GetMapping("/{estoqueId}")
     public ResponseEntity<EstoqueLojista> getEstoquePorId(@PathVariable Long estoqueId) {
-        // Você precisará adicionar "getEstoquePorIdPublico" no seu EstoqueService
-        EstoqueLojista estoque = estoqueService.getEstoquePorIdPublico(estoqueId);
+        EstoqueLojista estoque = catalogoService.getEstoquePublicoPorId(estoqueId); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(estoque);
     }
 }

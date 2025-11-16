@@ -23,7 +23,7 @@ public class AdminService {
     private final FarmaciaRepository farmaciaRepository;
     private final UsuarioRepository usuarioRepository;
 
-    // --- Lógica de Farmácias (Refatorada) ---
+    // --- Lógica de Farmácias (REFATORADA) ---
 
     @Transactional(readOnly = true)
     public List<Farmacia> findFarmaciasByStatus(String status) {
@@ -36,43 +36,58 @@ public class AdminService {
     }
 
     /**
-     * (ADMIN) Ativa uma farmácia (seja ela PENDENTE ou SUSPENSA).
+     * (ADMIN) Aprova uma farmácia PENDENTE.
      */
     @Transactional
-    public Farmacia ativarFarmacia(Long farmaciaId) {
+    public Farmacia aprovarFarmacia(Long farmaciaId) {
         Farmacia farmacia = farmaciaRepository.findById(farmaciaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Farmácia com ID " + farmaciaId + " não encontrada."));
 
-        if (farmacia.getStatus() == LojistaStatus.ATIVO) {
-            throw new ConflictException("A farmácia já está ativa.");
+        if (farmacia.getStatus() != LojistaStatus.PENDENTE_APROVACAO) {
+            throw new ConflictException("Esta farmácia não está PENDENTE_APROVACAO. Status atual: " + farmacia.getStatus());
         }
 
-        // Seta como ATIVO, não importa se estava PENDENTE ou SUSPENSO
         farmacia.setStatus(LojistaStatus.ATIVO);
         return farmaciaRepository.save(farmacia);
     }
 
     /**
-     * (ADMIN) Desativa (suspende) uma farmácia.
+     * (ADMIN) Suspende uma farmácia ATIVA.
      */
     @Transactional
-    public Farmacia desativarFarmacia(Long farmaciaId) {
+    public Farmacia suspenderFarmacia(Long farmaciaId) {
         Farmacia farmacia = farmaciaRepository.findById(farmaciaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Farmácia com ID " + farmaciaId + " não encontrada."));
 
-        if (farmacia.getStatus() == LojistaStatus.SUSPENSO) {
-            throw new ConflictException("A farmácia já está suspensa/desativada.");
+        if (farmacia.getStatus() != LojistaStatus.ATIVO) {
+            throw new ConflictException("Apenas farmácias ATIVAS podem ser suspensas. Status atual: " + farmacia.getStatus());
         }
 
         farmacia.setStatus(LojistaStatus.SUSPENSO);
         return farmaciaRepository.save(farmacia);
     }
 
+    /**
+     * (ADMIN) Reativa uma farmácia SUSPENSA.
+     */
+    @Transactional
+    public Farmacia reativarFarmacia(Long farmaciaId) {
+        Farmacia farmacia = farmaciaRepository.findById(farmaciaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Farmácia com ID " + farmaciaId + " não encontrada."));
+
+        if (farmacia.getStatus() != LojistaStatus.SUSPENSO) {
+            throw new ConflictException("Apenas farmácias SUSPENSAS podem ser reativadas. Status atual: " + farmacia.getStatus());
+        }
+
+        farmacia.setStatus(LojistaStatus.ATIVO);
+        return farmaciaRepository.save(farmacia);
+    }
+
+
     // --- Lógica de Usuários (Sem alteração) ---
 
     @Transactional(readOnly = true)
     public Usuario findUsuarioByEmail(String email) {
-        // A query findByEmail já é otimizada com EntityGraph
         return usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário com e-mail '" + email + "' não encontrado."));
     }

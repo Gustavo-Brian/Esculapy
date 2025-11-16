@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ucb.app.esculapy.model.Produto;
-import ucb.app.esculapy.service.ProdutoService;
+import ucb.app.esculapy.service.CatalogoService; // --- ALTERAÇÃO ---
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CatalogoController {
 
-    private final ProdutoService produtoService;
+    private final CatalogoService catalogoService; // --- ALTERAÇÃO ---
 
     /**
      * NOVO ENDPOINT (Seu Pedido)
@@ -24,8 +24,7 @@ public class CatalogoController {
      */
     @GetMapping
     public ResponseEntity<List<Produto>> getCatalogoCompleto() {
-        // Você precisará adicionar o método "findAllAtivos" no seu ProdutoService
-        List<Produto> catalogo = produtoService.findAllAtivos();
+        List<Produto> catalogo = catalogoService.getCatalogoCompletoAtivo(); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(catalogo);
     }
 
@@ -35,7 +34,7 @@ public class CatalogoController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Produto> getProdutoDoCatalogoPorId(@PathVariable Long id) {
-        Produto produto = produtoService.getProdutoPorId(id);
+        Produto produto = catalogoService.getProdutoDoCatalogoPorId(id); // --- ALTERAÇÃO ---
         return ResponseEntity.ok(produto);
     }
 }
