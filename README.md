@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Esculapy - Documentação de Endpoints</title>
 </head>
 <body>
     <h1>API Esculapy - Documentação de Endpoints</h1>
