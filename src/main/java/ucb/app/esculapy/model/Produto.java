@@ -1,5 +1,6 @@
 package ucb.app.esculapy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ucb.app.esculapy.model.enums.TipoProduto;
 import ucb.app.esculapy.model.enums.TipoReceita;
 import jakarta.persistence.Column;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Produto {
 
     @Id

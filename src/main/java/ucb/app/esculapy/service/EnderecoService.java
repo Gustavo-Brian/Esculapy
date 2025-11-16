@@ -8,6 +8,7 @@ import ucb.app.esculapy.exception.ForbiddenException;
 import ucb.app.esculapy.exception.ResourceNotFoundException;
 import ucb.app.esculapy.model.Cliente;
 import ucb.app.esculapy.model.Endereco;
+import ucb.app.esculapy.repository.ClienteRepository; // --- IMPORT ADICIONADO ---
 import ucb.app.esculapy.repository.EnderecoRepository;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
     private final AuthenticationService authenticationService;
+    private final ClienteRepository clienteRepository; // --- DEPENDÊNCIA ADICIONADA ---
 
     @Transactional(readOnly = true)
     public List<Endereco> getMeusEnderecos() {
@@ -31,9 +33,17 @@ public class EnderecoService {
 
         Endereco endereco = new Endereco();
         mapRequestToEndereco(request, endereco);
-        endereco.setCliente(cliente); // Linka o endereço ao cliente logado
 
-        return enderecoRepository.save(endereco);
+        // --- CORREÇÃO APLICADA ---
+        // 1. Adicionamos o endereço à lista do cliente
+        cliente.adicionarEndereco(endereco);
+
+        // 2. Salvamos o cliente (que tem CascadeType.ALL)
+        // Isso irá salvar o novo endereço e definir o 'cliente_id' nele.
+        clienteRepository.save(cliente);
+        // --- FIM DA CORREÇÃO ---
+
+        return endereco;
     }
 
     @Transactional

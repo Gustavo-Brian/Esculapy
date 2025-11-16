@@ -1,5 +1,6 @@
 package ucb.app.esculapy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ucb.app.esculapy.model.enums.PedidoStatus;
 import jakarta.persistence.*; // Importação atualizada
 import lombok.Getter;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Pedido {
 
     @Id
