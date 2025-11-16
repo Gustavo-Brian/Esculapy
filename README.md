@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentação da API - Farmácia Online</title>
 </head>
 <body>
-
     <h1>Documentação da API</h1>
-
     <!-- AuthController -->
     <section>
         <h2>🔐 AuthController</h2>
         <p><strong>Base:</strong> <code>/api/auth</code></p>
-
         <ul>
             <li>
                 <strong>POST</strong> <code>/api/auth/login</code><br>
@@ -32,14 +28,11 @@
             </li>
         </ul>
     </section>
-
     <hr>
-
     <!-- UserController -->
     <section>
         <h2>👤 UserController</h2>
         <p><strong>Base:</strong> <code>/api/user</code></p>
-
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/user/me</code><br>
@@ -48,14 +41,11 @@
             </li>
         </ul>
     </section>
-
     <hr>
-
     <!-- CatalogoController -->
     <section>
         <h2>📚 CatalogoController</h2>
         <p><strong>Base:</strong> <code>/api/catalogo</code></p>
-
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/catalogo</code><br>
@@ -69,14 +59,11 @@
             </li>
         </ul>
     </section>
-
     <hr>
-
     <!-- EstoqueController -->
     <section>
         <h2>🏪 EstoqueController</h2>
         <p><strong>Base:</strong> <code>/api/estoque</code></p>
-
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/estoque/buscar-por-nome</code><br>
@@ -100,14 +87,11 @@
             </li>
         </ul>
     </section>
-
     <hr>
-
     <!-- PedidoController -->
     <section>
         <h2>🛒 PedidoController</h2>
         <p><strong>Base:</strong> <code>/api/pedidos</code></p>
-
         <ul>
             <li>
                 <strong>POST</strong> <code>/api/pedidos</code><br>
@@ -126,14 +110,11 @@
             </li>
         </ul>
     </section>
-
     <hr>
-
     <!-- FarmaceuticoController -->
     <section>
         <h2>🧑‍⚕️ FarmaceuticoController</h2>
         <p><strong>Base:</strong> <code>/api/farmaceutico</code></p>
-
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/farmaceutico/pedidos/pendentes</code><br>
@@ -152,14 +133,11 @@
             </li>
         </ul>
     </section>
-
     <hr>
-
     <!-- FarmaciaAdminController -->
     <section>
         <h2>👨‍💼 FarmaciaAdminController</h2>
         <p><strong>Base:</strong> <code>/api/farmacia-admin</code></p>
-
         <ul>
             <li>
                 <strong>POST</strong> <code>/api/farmacia-admin/farmaceuticos</code><br>
@@ -198,14 +176,11 @@
             </li>
         </ul>
     </section>
-
     <hr>
-
     <!-- ProdutoController (Admin do Catálogo) -->
     <section>
         <h2>⚙️ ProdutoController (Admin do Catálogo)</h2>
         <p><strong>Base:</strong> <code>/api/admin/catalogo</code></p>
-
         <ul>
             <li>
                 <strong>POST</strong> <code>/api/admin/catalogo</code><br>
@@ -234,14 +209,11 @@
             </li>
         </ul>
     </section>
-
     <hr>
-
     <!-- AdminController (Admin da Plataforma) -->
     <section>
         <h2>👑 AdminController (Admin da Plataforma)</h2>
         <p><strong>Base:</strong> <code>/api/admin</code></p>
-
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/admin/farmacias</code><br>
