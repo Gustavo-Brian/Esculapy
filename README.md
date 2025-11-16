@@ -20,22 +20,73 @@
 
 <h3>1. Como obter um Token</h3>
 
-<p>Para obter um token, envie uma requisição <code>POST</code> para o endpoint de login com o e-mail e a senha de um usuário cadastrado (Admin, Cliente, Farmácia e Farmacêutico) ou envie uma requisição <code>POST</code> para o endpoint de registrar cliente, registrar farmácia e registrar farmacêutico</p>
+<p>Você obtém um <strong>Token JWT</strong> (sua chave de acesso à API) de <strong>duas maneiras</strong>: fazendo login com uma conta existente ou criando uma nova conta. Em ambos os casos, a API retorna o token imediatamente na resposta.</p>
+
+<div class="note">
+    <p><strong>Dica:</strong> O token é válido por um período limitado (geralmente 1 hora). Após expirar, faça login novamente.</p>
+</div>
+
+<h4>Método A: Fazendo Login (Usuário Existente)</h4>
+
+<p>Envie uma requisição <code>POST</code> com e-mail e senha de uma conta já cadastrada (Cliente, Lojista ou Admin).</p>
 
 <pre><code>POST /api/auth/login</code></pre>
 
 <p><strong>Exemplo de Corpo (Request):</strong></p>
 <pre><code>{
-  "email": "seu-email@exemplo.com",
+  "email": "cliente-existente@exemplo.com",
   "senha": "sua-senha-123"
 }</code></pre>
 
-<p><strong>Exemplo de Resposta (Response):</strong></p>
+<hr style="border-top: 1px dashed #dfe2e5; margin: 1.8em 0;">
+
+<h4>Método B: Criando uma Nova Conta (Registro Automático com Token)</h4>
+
+<p>Ao registrar um <strong>novo cliente</strong> ou uma <strong>nova farmácia</strong>, a API cria a conta, faz login automático e já retorna o token na resposta.</p>
+
+<h5>Registrar Cliente</h5>
+<pre><code>POST /api/auth/register/cliente</code></pre>
+
+<p><strong>Exemplo de Corpo (Request):</strong></p>
 <pre><code>{
-  "token": "eyJh... (token longo) ...89sQ",
-  "userId": 1,
-  "email": "seu-email@exemplo.com"
+  "nome": "Maria Silva",
+  "email": "maria.nova@exemplo.com",
+  "senha": "nova-senha-segura-123",
+  "cpf": "12345678900",
+  "numeroCelular": "61999998888",
+  "dataNascimento": "1990-01-15"
 }</code></pre>
+
+<h5>Registrar Farmácia (e seu Dono)</h5>
+<pre><code>POST /api/auth/register/farmacia</code></pre>
+
+<p><strong>Exemplo de Corpo (Request):</strong></p>
+<pre><code>{
+  "email": "dono@farmacianova.com",
+  "senha": "senha-dono-segura-123",
+  "cnpj": "12345678000199",
+  "razaoSocial": "Drogaria Nova LTDA",
+  "nomeFantasia": "Farmácia Nova",
+  "crfJ": "DF-99999J",
+  "emailContato": "contato@farmacianova.com",
+  "numeroCelularContato": "61988887777"
+}</code></pre>
+
+<hr style="border-top: 1px dashed #dfe2e5; margin: 1.8em 0;">
+
+<h4>Resposta de Sucesso (Login ou Registro)</h4>
+
+<p>Em <strong>qualquer um dos métodos acima</strong>, a resposta será:</p>
+
+<pre><code>{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxxxx.yyyyyyy",
+  "userId": 42,
+  "email": "maria.nova@exemplo.com"
+}</code></pre>
+
+<p>Use o valor de <code>token</code> no cabeçalho <code>Authorization</code> de todas as requisições protegidas:</p>
+
+<pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxxxx.yyyyyyy</code></pre>
 
 <h3>2. Como usar o Token</h3>
 
