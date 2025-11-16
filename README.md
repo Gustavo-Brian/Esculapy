@@ -8,9 +8,9 @@
 
 <h1>Documentação da API Esculapy</h1>
 
-<p><strong>Guia de referência rápida para os endpoints da API Esculapy</strong>, refletindo a arquitetura com separação entre <em>Catálogo de Produtos</em> e <em>Estoque de Lojistas</em>.</p>
+<p><strong>Guia de referência rápida para os endpoints da API Esculapy</strong></em>.</p>
 
-<div class="url-base">URL Base: http://localhost:8080</div>
+<div>URL Base: http://localhost:8080</div>
 
 <hr>
 
@@ -20,7 +20,7 @@
 
 <h3>1. Como obter um Token</h3>
 
-<p>Para obter um token, envie uma requisição <code>POST</code> para o endpoint de login com o e-mail e a senha de um usuário cadastrado (Admin, Cliente ou Lojista).</p>
+<p>Para obter um token, envie uma requisição <code>POST</code> para o endpoint de login com o e-mail e a senha de um usuário cadastrado (Admin, Cliente, Farmácia e Farmacêutico) ou faça o cadastro de um novo usuário, seja: Cliente ou Farmácia</p>
 
 <pre><code>POST /api/auth/login</code></pre>
 
