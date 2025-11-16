@@ -3,449 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação da API - Farmácia Online</title>
 </head>
 <body>
 
-<h1>Documentação da API Esculapy</h1>
+    <h1>Documentação da API</h1>
 
-<p><strong>Guia de referência rápida para os endpoints da API Esculapy</strong></em>.</p>
+    <!-- AuthController -->
+    <section>
+        <h2>🔐 AuthController</h2>
+        <p><strong>Base:</strong> <code>/api/auth</code></p>
 
-<div>URL Base: http://localhost:8080</div>
+        <ul>
+            <li>
+                <strong>POST</strong> <code>/api/auth/login</code><br>
+                <em>Descrição:</em> Autentica um usuário (cliente, farmácia, admin) e retorna um token de acesso.<br>
+                <em>Permissão:</em> Público
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/auth/register/cliente</code><br>
+                <em>Descrição:</em> Registra um novo usuário do tipo CLIENTE.<br>
+                <em>Permissão:</em> Público
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/auth/register/farmacia</code><br>
+                <em>Descrição:</em> Registra uma nova farmácia (inicialmente com status PENDENTE_APROVACAO).<br>
+                <em>Permissão:</em> Público
+            </li>
+        </ul>
+    </section>
 
-<hr>
+    <hr>
 
-<h2>Autenticação</h2>
+    <!-- UserController -->
+    <section>
+        <h2>👤 UserController</h2>
+        <p><strong>Base:</strong> <code>/api/user</code></p>
 
-<p>A maioria dos endpoints da API requer autenticação via <strong>Token JWT</strong>.</p>
+        <ul>
+            <li>
+                <strong>GET</strong> <code>/api/user/me</code><br>
+                <em>Descrição:</em> Retorna as informações detalhadas (perfil, roles) do usuário atualmente logado.<br>
+                <em>Permissão:</em> Qualquer usuário autenticado
+            </li>
+        </ul>
+    </section>
 
-<h3>1. Como obter um Token</h3>
+    <hr>
 
-<p>Você obtém um <strong>Token JWT</strong> (sua chave de acesso à API) de <strong>duas maneiras</strong>: fazendo login com uma conta existente ou criando uma nova conta. Em ambos os casos, a API retorna o token imediatamente na resposta.</p>
+    <!-- CatalogoController -->
+    <section>
+        <h2>📚 CatalogoController</h2>
+        <p><strong>Base:</strong> <code>/api/catalogo</code></p>
 
-<div class="note">
-    <p><strong>Dica:</strong> O token é válido por um período limitado (geralmente 1 hora). Após expirar, faça login novamente.</p>
-</div>
+        <ul>
+            <li>
+                <strong>GET</strong> <code>/api/catalogo</code><br>
+                <em>Descrição:</em> Retorna uma lista de todos os produtos ativos do catálogo central da plataforma.<br>
+                <em>Permissão:</em> Público
+            </li>
+            <li>
+                <strong>GET</strong> <code>/api/catalogo/{id}</code><br>
+                <em>Descrição:</em> Retorna um produto específico do catálogo central pelo seu ID.<br>
+                <em>Permissão:</em> Público
+            </li>
+        </ul>
+    </section>
 
-<h4>Método A: Fazendo Login (Usuário Existente)</h4>
+    <hr>
 
-<p>Envie uma requisição <code>POST</code> com e-mail e senha de uma conta já cadastrada (Cliente, Lojista ou Admin).</p>
+    <!-- EstoqueController -->
+    <section>
+        <h2>🏪 EstoqueController</h2>
+        <p><strong>Base:</strong> <code>/api/estoque</code></p>
 
-<pre><code>POST /api/auth/login</code></pre>
+        <ul>
+            <li>
+                <strong>GET</strong> <code>/api/estoque/buscar-por-nome</code><br>
+                <em>Descrição:</em> Busca itens de estoque disponíveis em todas as farmácias com base no nome do produto.<br>
+                <em>Permissão:</em> Público
+            </li>
+            <li>
+                <strong>GET</strong> <code>/api/estoque/buscar-por-catalogo/{catalogoId}</code><br>
+                <em>Descrição:</em> Busca todas as ofertas (itens de estoque) para um ID de produto específico do catálogo central.<br>
+                <em>Permissão:</em> Público
+            </li>
+            <li>
+                <strong>GET</strong> <code>/api/estoque/farmacia/{farmaciaId}</code><br>
+                <em>Descrição:</em> Retorna todos os itens de estoque de uma farmácia específica.<br>
+                <em>Permissão:</em> Público
+            </li>
+            <li>
+                <strong>GET</strong> <code>/api/estoque/{estoqueId}</code><br>
+                <em>Descrição:</em> Retorna um item de estoque específico pelo seu ID.<br>
+                <em>Permissão:</em> Público
+            </li>
+        </ul>
+    </section>
 
-<p><strong>Exemplo de Corpo (Request):</strong></p>
-<pre><code>{
-  "email": "cliente-existente@exemplo.com",
-  "senha": "sua-senha-123"
-}</code></pre>
+    <hr>
 
-<hr style="border-top: 1px dashed #dfe2e5; margin: 1.8em 0;">
+    <!-- PedidoController -->
+    <section>
+        <h2>🛒 PedidoController</h2>
+        <p><strong>Base:</strong> <code>/api/pedidos</code></p>
 
-<h4>Método B: Criando uma Nova Conta (Registro Automático com Token)</h4>
+        <ul>
+            <li>
+                <strong>POST</strong> <code>/api/pedidos</code><br>
+                <em>Descrição:</em> Cria um novo pedido (fecha o carrinho de compras) para o cliente logado.<br>
+                <em>Permissão:</em> CLIENTE
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/pedidos/{pedidoId}/receita</code><br>
+                <em>Descrição:</em> Anexa um arquivo (foto/PDF) de receita a um pedido existente.<br>
+                <em>Permissão:</em> CLIENTE
+            </li>
+            <li>
+                <strong>GET</strong> <code>/api/pedidos/meus-pedidos</code><br>
+                <em>Descrição:</em> Retorna o histórico de pedidos do cliente logado.<br>
+                <em>Permissão:</em> CLIENTE
+            </li>
+        </ul>
+    </section>
 
-<p>Ao registrar um <strong>novo cliente</strong> ou uma <strong>nova farmácia</strong>, a API cria a conta, faz login automático e já retorna o token na resposta.</p>
+    <hr>
 
-<h5>Registrar Cliente</h5>
-<pre><code>POST /api/auth/register/cliente</code></pre>
+    <!-- FarmaceuticoController -->
+    <section>
+        <h2>🧑‍⚕️ FarmaceuticoController</h2>
+        <p><strong>Base:</strong> <code>/api/farmaceutico</code></p>
 
-<p><strong>Exemplo de Corpo (Request):</strong></p>
-<pre><code>{
-  "nome": "Maria Silva",
-  "email": "maria.nova@exemplo.com",
-  "senha": "nova-senha-segura-123",
-  "cpf": "12345678900",
-  "numeroCelular": "61999998888",
-  "dataNascimento": "1990-01-15"
-}</code></pre>
+        <ul>
+            <li>
+                <strong>GET</strong> <code>/api/farmaceutico/pedidos/pendentes</code><br>
+                <em>Descrição:</em> Retorna uma lista de pedidos que aguardam validação de receita, específicos da farmácia onde o farmacêutico logado trabalha.<br>
+                <em>Permissão:</em> FARMACEUTICO
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/farmaceutico/pedidos/{pedidoId}/receita/aprovar</code><br>
+                <em>Descrição:</em> Aprova a receita de um pedido.<br>
+                <em>Permissão:</em> FARMACEUTICO
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/farmaceutico/pedidos/{pedidoId}/receita/rejeitar</code><br>
+                <em>Descrição:</em> Rejeita a receita de um pedido, exigindo uma justificativa.<br>
+                <em>Permissão:</em> FARMACEUTICO
+            </li>
+        </ul>
+    </section>
 
-<h5>Registrar Farmácia (e seu Dono)</h5>
-<pre><code>POST /api/auth/register/farmacia</code></pre>
+    <hr>
 
-<p><strong>Exemplo de Corpo (Request):</strong></p>
-<pre><code>{
-  "email": "dono@farmacianova.com",
-  "senha": "senha-dono-segura-123",
-  "cnpj": "12345678000199",
-  "razaoSocial": "Drogaria Nova LTDA",
-  "nomeFantasia": "Farmácia Nova",
-  "crfJ": "DF-99999J",
-  "emailContato": "contato@farmacianova.com",
-  "numeroCelularContato": "61988887777"
-}</code></pre>
+    <!-- FarmaciaAdminController -->
+    <section>
+        <h2>👨‍💼 FarmaciaAdminController</h2>
+        <p><strong>Base:</strong> <code>/api/farmacia-admin</code></p>
 
-<hr style="border-top: 1px dashed #dfe2e5; margin: 1.8em 0;">
+        <ul>
+            <li>
+                <strong>POST</strong> <code>/api/farmacia-admin/farmaceuticos</code><br>
+                <em>Descrição:</em> Adiciona/registra um novo funcionário (farmacêutico) para a farmácia do admin logado.<br>
+                <em>Permissão:</em> LOJISTA_ADMIN
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/farmacia-admin/estoque</code><br>
+                <em>Descrição:</em> Adiciona um novo item ao estoque da farmácia logada.<br>
+                <em>Permissão:</em> LOJISTA_ADMIN
+            </li>
+            <li>
+                <strong>PUT</strong> <code>/api/farmacia-admin/estoque/{estoqueId}</code><br>
+                <em>Descrição:</em> Atualiza um item de estoque existente (preço, quantidade, etc.).<br>
+                <em>Permissão:</em> LOJISTA_ADMIN
+            </li>
+            <li>
+                <strong>DELETE</strong> <code>/api/farmacia-admin/estoque/{estoqueId}</code><br>
+                <em>Descrição:</em> Remove um item do estoque da farmácia logada.<br>
+                <em>Permissão:</em> LOJISTA_ADMIN
+            </li>
+            <li>
+                <strong>GET</strong> <code>/api/farmacia-admin/estoque</code><br>
+                <em>Descrição:</em> Lista todos os itens de estoque da farmácia logada.<br>
+                <em>Permissão:</em> LOJISTA_ADMIN
+            </li>
+            <li>
+                <strong>GET</strong> <code>/api/farmacia-admin/pedidos</code><br>
+                <em>Descrição:</em> Lista todos os pedidos recebidos pela farmácia logada.<br>
+                <em>Permissão:</em> LOJISTA_ADMIN
+            </li>
+            <li>
+                <strong>PUT</strong> <code>/api/farmacia-admin/pedidos/{pedidoId}/status</code><br>
+                <em>Descrição:</em> Atualiza o status de um pedido (ex: "EM_PREPARACAO", "SAIU_PARA_ENTREGA").<br>
+                <em>Permissão:</em> LOJISTA_ADMIN
+            </li>
+        </ul>
+    </section>
 
-<h4>Resposta de Sucesso (Login ou Registro)</h4>
+    <hr>
 
-<p>Em <strong>qualquer um dos métodos acima</strong>, a resposta será:</p>
+    <!-- ProdutoController (Admin do Catálogo) -->
+    <section>
+        <h2>⚙️ ProdutoController (Admin do Catálogo)</h2>
+        <p><strong>Base:</strong> <code>/api/admin/catalogo</code></p>
 
-<pre><code>{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxxxx.yyyyyyy",
-  "userId": 42,
-  "email": "maria.nova@exemplo.com"
-}</code></pre>
+        <ul>
+            <li>
+                <strong>POST</strong> <code>/api/admin/catalogo</code><br>
+                <em>Descrição:</em> Cria um novo produto no catálogo central da plataforma.<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>PUT</strong> <code>/api/admin/catalogo/{id}</code><br>
+                <em>Descrição:</em> Atualiza os dados de um produto no catálogo central.<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/admin/catalogo/{id}/desativar</code><br>
+                <em>Descrição:</em> Desativa um produto do catálogo central (impede que apareça em buscas públicas).<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/admin/catalogo/{id}/reativar</code><br>
+                <em>Descrição:</em> Reativa um produto do catálogo central.<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>DELETE</strong> <code>/api/admin/catalogo/{id}</code><br>
+                <em>Descrição:</em> Deleta permanentemente um produto do catálogo central.<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+        </ul>
+    </section>
 
-<p>Use o valor de <code>token</code> no cabeçalho <code>Authorization</code> de todas as requisições protegidas:</p>
+    <hr>
 
-<pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxxxx.yyyyyyy</code></pre>
+    <!-- AdminController (Admin da Plataforma) -->
+    <section>
+        <h2>👑 AdminController (Admin da Plataforma)</h2>
+        <p><strong>Base:</strong> <code>/api/admin</code></p>
 
-<h3>2. Como usar o Token</h3>
-
-<p>Você deve copiar o token da resposta e enviá-lo em todas as requisições autenticadas no cabeçalho <code>Authorization</code>.</p>
-
-<p><strong>Exemplo de Header:</strong></p>
-<pre><code>Authorization: Bearer eyJh... (token longo) ...89sQ</code></pre>
-
-<hr>
-
-<h2>Perfis de Acesso</h2>
-
-<p>A API possui <strong>5 perfis de acesso (Roles)</strong>:</p>
-
-<ul>
-    <li><span class="badge badge-public">Público</span> Não requer token.</li>
-    <li><span class="badge badge-cliente">CLIENTE</span> Requer login de um cliente.</li>
-    <li><span class="badge badge-farmaceutico">FARMACEUTICO</span> Requer login de um funcionário farmacêutico.</li>
-    <li><span class="badge badge-lojista">LOJISTA_ADMIN</span> Requer login do dono da farmácia.</li>
-    <li><span class="badge badge-admin">ADMIN</span> Requer login do administrador master da plataforma.</li>
-</ul>
-
-<hr>
-
-<h2>Endpoints da API</h2>
-
-<!-- ===== 1. Auth ===== -->
-<div class="endpoint-header">
-    <h3>1. Auth (Autenticação)</h3>
-    <span class="badge badge-public">Público</span>
-</div>
-
-<div class="section-intro">Endpoints públicos para criar contas e fazer login.</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Método</th>
-            <th>Endpoint</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/auth/login</code></td>
-            <td>Realiza o login e retorna um token JWT.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/auth/register/cliente</code></td>
-            <td>Registra um novo usuário com perfil CLIENTE.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/auth/register/farmacia</code></td>
-            <td>Registra uma nova farmácia e seu dono (LOJISTA_ADMIN).</td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- ===== 2. Catálogo ===== -->
-<div class="endpoint-header">
-    <h3>2. Catálogo (Público)</h3>
-    <span class="badge badge-public">Público</span>
-</div>
-
-<div class="section-intro">Endpoints públicos para consultar o catálogo central de produtos.</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Método</th>
-            <th>Endpoint</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/catalogo</code> <span style="color:#888; font-size:0.9em;">(NOVO)</span></td>
-            <td>Lista todos os produtos que existem no catálogo central.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/catalogo/{id}</code></td>
-            <td>Retorna os dados de um produto específico do catálogo (bula, laboratório, etc.).</td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- ===== 3. Estoque ===== -->
-<div class="endpoint-header">
-    <h3>3. Estoque (Público)</h3>
-    <span class="badge badge-public">Público</span>
-</div>
-
-<div class="section-intro">Endpoints públicos para pesquisar estoques (itens à venda) nas farmácias.</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Método</th>
-            <th>Endpoint</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/estoque/buscar-por-nome?nome=...</code></td>
-            <td>Busca estoques em todas as lojas pelo nome do produto.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/estoque/buscar-por-catalogo/{catalogoId}</code></td>
-            <td>Lista todos os estoques (de várias farmácias) para um item do catálogo.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/estoque/farmacia/{farmaciaId}</code> <span style="color:#888; font-size:0.9em;">(NOVO)</span></td>
-            <td>Lista todo o estoque disponível de uma farmácia específica.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/estoque/{estoqueId}</code> <span style="color:#888; font-size:0.9em;">(NOVO)</span></td>
-            <td>Retorna um item de estoque específico (preço, quantidade) pelo seu ID.</td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- ===== 4. User ===== -->
-<div class="endpoint-header">
-    <h3>4. User (Usuário)</h3>
-    <span class="badge" style="background:#e6f7ff; color:#0066cc;">Qualquer Usuário Autenticado</span>
-</div>
-
-<div class="section-intro">Endpoint para o usuário logado buscar suas próprias informações.</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Método</th>
-            <th>Endpoint</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/user/me</code></td>
-            <td>Retorna os dados do usuário logado (e-mail, roles e perfil).</td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- ===== 5. Pedidos (Cliente) ===== -->
-<div class="endpoint-header">
-    <h3>5. Pedidos (Cliente)</h3>
-    <span class="badge badge-cliente">CLIENTE</span>
-</div>
-
-<div class="section-intro">Fluxo de compra para clientes.</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Método</th>
-            <th>Endpoint</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/pedidos</code></td>
-            <td>Cria um novo pedido (fecha o carrinho).</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/pedidos/{pedidoId}/receita</code></td>
-            <td>Anexa um arquivo (receita) a um pedido que exige validação.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/pedidos/meus-pedidos</code></td>
-            <td>Lista o histórico de pedidos do cliente logado.</td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- ===== 6. Farmacêutico ===== -->
-<div class="endpoint-header">
-    <h3>6. Farmacêutico</h3>
-    <span class="badge badge-farmaceutico">FARMACEUTICO</span>
-</div>
-
-<div class="section-intro">Validação de receitas pendentes.</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Método</th>
-            <th>Endpoint</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/farmaceutico/pedidos/pendentes</code></td>
-            <td>Lista pedidos da sua farmácia que aguardam validação de receita.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/farmaceutico/pedidos/{pedidoId}/receita/aprovar</code></td>
-            <td>Aprova a receita de um pedido.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/farmaceutico/pedidos/{pedidoId}/receita/rejeitar</code></td>
-            <td>Rejeita a receita (exige justificativa no corpo) e estorna o estoque.</td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- ===== 7. Farmácia Admin ===== -->
-<div class="endpoint-header">
-    <h3>7. Farmácia Admin (Lojista)</h3>
-    <span class="badge badge-lojista">LOJISTA_ADMIN</span>
-</div>
-
-<div class="section-intro">Gerenciamento da farmácia pelo dono.</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Método</th>
-            <th>Endpoint</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/farmacia-admin/farmaceuticos</code></td>
-            <td>Cadastra um novo funcionário farmacêutico para sua loja.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/farmacia-admin/meu-estoque</code></td>
-            <td>Lista todos os itens de estoque da sua farmácia.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/farmacia-admin/meu-estoque</code></td>
-            <td>Adiciona um item do catálogo ao seu estoque (define preço/quantidade).</td>
-        </tr>
-        <tr>
-            <td><span class="method method-put">PUT</span></td>
-            <td><code>/api/farmacia-admin/meu-estoque/{estoqueId}</code></td>
-            <td>Atualiza o preço/quantidade de um item no seu estoque.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-delete">DELETE</span></td>
-            <td><code>/api/farmacia-admin/meu-estoque/{estoqueId}</code></td>
-            <td>Remove um item do seu estoque.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/farmacia-admin/pedidos</code></td>
-            <td>Lista todos os pedidos feitos para a sua farmácia.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-put">PUT</span></td>
-            <td><code>/api/farmacia-admin/pedidos/{pedidoId}/status</code></td>
-            <td>Atualiza o status de um pedido (ex: "EM_SEPARACAO", "ENVIADO").</td>
-        </tr>
-    </tbody>
-</table>
-
-<!-- ===== 8. Admin Master ===== -->
-<div class="endpoint-header">
-    <h3>8. Admin Master</h3>
-    <span class="badge badge-admin">ADMIN</span>
-</div>
-
-<div class="section-intro">Gerenciamento da plataforma.</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Método</th>
-            <th>Endpoint</th>
-            <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/admin/catalogo</code></td>
-            <td>Adiciona um novo produto ao catálogo central.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-put">PUT</span></td>
-            <td><code>/api/admin/catalogo/{id}</code></td>
-            <td>Atualiza um produto no catálogo central.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-delete">DELETE</span></td>
-            <td><code>/api/admin/catalogo/{id}</code></td>
-            <td>Deleta (Hard Delete) um produto do catálogo (só se não houver estoque).</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/admin/catalogo/{id}/desativar</code></td>
-            <td>Desativa (Soft Delete) um produto do catálogo.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/admin/catalogo/{id}/reativar</code></td>
-            <td>Reativa um produto do catálogo.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/admin/farmacias?status=...</code></td>
-            <td>Lista farmácias por status (PENDENTE_APROVACAO, ATIVO, SUSPENSO).</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/admin/farmacias/{id}/ativar</code></td>
-            <td>Ativa o cadastro de uma nova farmácia.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/admin/farmacias/{id}/desativar</code></td>
-            <td>Suspende o cadastro de uma farmácia.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-get">GET</span></td>
-            <td><code>/api/admin/usuarios/buscar?email=...</code></td>
-            <td>Busca um usuário por e-mail.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/admin/usuarios/{id}/desativar</code></td>
-            <td>Desativa (bane) a conta de um usuário.</td>
-        </tr>
-        <tr>
-            <td><span class="method method-post">POST</span></td>
-            <td><code>/api/admin/usuarios/{id}/reativar</code></td>
-            <td>Reativa a conta de um usuário.</td>
-        </tr>
-    </tbody>
-</table>
-
-<div class="note">
-    <p><strong>Nota:</strong> Este HTML pode ser colado diretamente no README do GitHub. O GitHub renderiza HTML em READMEs (exceto alguns elementos como <code>&lt;style&gt;</code> e <code>&lt;script&gt;</code>), mas este documento usa apenas estilos inline e classes CSS seguras.</p>
-</div>
+        <ul>
+            <li>
+                <strong>GET</strong> <code>/api/admin/farmacias</code><br>
+                <em>Descrição:</em> Lista farmácias filtrando por status (PENDENTE_APROVACAO, ATIVO, SUSPENSO).<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/admin/farmacias/{id}/ativar</code><br>
+                <em>Descrição:</em> Ativa o cadastro de uma farmácia (muda o status para ATIVO).<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/admin/farmacias/{id}/desativar</code><br>
+                <em>Descrição:</em> Suspende o cadastro de uma farmácia (muda o status para SUSPENSO).<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>GET</strong> <code>/api/admin/usuarios/buscar</code><br>
+                <em>Descrição:</em> Busca um usuário (de qualquer tipo) pelo seu e-mail.<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/admin/usuarios/{id}/desativar</code><br>
+                <em>Descrição:</em> Desativa (bane) a conta de um usuário.<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+            <li>
+                <strong>POST</strong> <code>/api/admin/usuarios/{id}/reativar</code><br>
+                <em>Descrição:</em> Reativa a conta de um usuário.<br>
+                <em>Permissão:</em> ADMIN
+            </li>
+        </ul>
+    </section>
 
 </body>
 </html>
