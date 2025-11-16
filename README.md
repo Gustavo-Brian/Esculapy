@@ -20,7 +20,7 @@
 
 <h3>1. Como obter um Token</h3>
 
-<p>Para obter um token, envie uma requisição <code>POST</code> para o endpoint de login com o e-mail e a senha de um usuário cadastrado (Admin, Cliente, Farmácia e Farmacêutico) ou faça o cadastro de um novo usuário, seja: Cliente ou Farmácia</p>
+<p>Para obter um token, envie uma requisição <code>POST</code> para o endpoint de login com o e-mail e a senha de um usuário cadastrado (Admin, Cliente, Farmácia e Farmacêutico) ou envie uma requisição <code>POST</code> para o endpoint de registrar cliente, registrar farmácia e o endpoint de registrar farmacêutico</p>
 
 <pre><code>POST /api/auth/login</code></pre>
 
