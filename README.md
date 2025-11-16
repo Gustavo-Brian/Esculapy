@@ -13,18 +13,61 @@
         <ul>
             <li>
                 <strong>POST</strong> <code>/api/auth/login</code><br>
-                <em>Descrição:</em> Autentica um usuário (cliente, farmácia, admin) e retorna um token de acesso.<br>
-                <em>Permissão:</em> Público
+                <em>Descrição:</em> Autentica um usuário e retorna um token JWT.<br>
+                <em>Permissão:</em> Público<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "email": "cliente@email.com",
+  "senha": "password123"
+}</pre>
+                <strong>Exemplo de Body (Response):</strong>
+                <pre>{
+  "token": "eyJh... (token JWT longo)",
+  "userId": 1,
+  "email": "cliente@email.com"
+}</pre>
             </li>
             <li>
                 <strong>POST</strong> <code>/api/auth/register/cliente</code><br>
                 <em>Descrição:</em> Registra um novo usuário do tipo CLIENTE.<br>
-                <em>Permissão:</em> Público
+                <em>Permissão:</em> Público<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "nome": "João da Silva",
+  "email": "joao.silva@email.com",
+  "senha": "password123",
+  "cpf": "12345678900",
+  "numeroCelular": "61999887766",
+  "dataNascimento": "1990-05-15"
+}</pre>
+                <strong>Exemplo de Body (Response):</strong>
+                <pre>{
+  "token": "eyJh... (token JWT longo)",
+  "userId": 2,
+  "email": "joao.silva@email.com"
+}</pre>
             </li>
             <li>
                 <strong>POST</strong> <code>/api/auth/register/farmacia</code><br>
-                <em>Descrição:</em> Registra uma nova farmácia (inicialmente com status PENDENTE_APROVACAO).<br>
-                <em>Permissão:</em> Público
+                <em>Descrição:</em> Registra uma nova farmácia (status PENDENTE_APROVACAO).<br>
+                <em>Permissão:</em> Público<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "email": "admin@farmaciaxyz.com",
+  "senha": "passwordforte",
+  "cnpj": "12345678000199",
+  "razaoSocial": "Farmacia XYZ LTDA",
+  "nomeFantasia": "Drogaria XYZ",
+  "crfJ": "DF-12345",
+  "emailContato": "contato@farmaciaxyz.com",
+  "numeroCelularContato": "61988776655"
+}</pre>
+                <strong>Exemplo de Body (Response):</strong>
+                <pre>{
+  "token": "eyJh... (token JWT longo)",
+  "userId": 3,
+  "email": "admin@farmaciaxyz.com"
+}</pre>
             </li>
         </ul>
     </section>
@@ -36,8 +79,39 @@
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/user/me</code><br>
-                <em>Descrição:</em> Retorna as informações detalhadas (perfil, roles) do usuário atualmente logado.<br>
-                <em>Permissão:</em> Qualquer usuário autenticado
+                <em>Descrição:</em> Retorna as informações detalhadas (perfil, roles) do usuário logado.<br>
+                <em>Permissão:</em> Qualquer usuário autenticado<br><br>
+                <strong>Exemplo de Body (Response para um Cliente):</strong>
+                <pre>{
+  "id": 1,
+  "email": "cliente@email.com",
+  "roles": [
+    "ROLE_CLIENTE"
+  ],
+  "cliente": {
+    "id": 1,
+    "nome": "João da Silva",
+    "cpf": "12345678900"
+  },
+  "farmaciaAdmin": null,
+  "farmaceutico": null
+}</pre>
+                <strong>Exemplo de Body (Response para um Dono de Farmácia):</strong>
+                <pre>{
+  "id": 3,
+  "email": "admin@farmaciaxyz.com",
+  "roles": [
+    "ROLE_LOJISTA_ADMIN"
+  ],
+  "cliente": null,
+  "farmaciaAdmin": {
+    "id": 1,
+    "nomeFantasia": "Drogaria XYZ",
+    "cnpj": "12345678000199",
+    "status": "PENDENTE_APROVACAO"
+  },
+  "farmaceutico": null
+}</pre>
             </li>
         </ul>
     </section>
@@ -49,7 +123,7 @@
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/catalogo</code><br>
-                <em>Descrição:</em> Retorna uma lista de todos os produtos ativos do catálogo central da plataforma.<br>
+                <em>Descrição:</em> Retorna uma lista de todos os produtos ativos do catálogo central.<br>
                 <em>Permissão:</em> Público
             </li>
             <li>
@@ -68,12 +142,34 @@
             <li>
                 <strong>GET</strong> <code>/api/estoque/buscar-por-nome</code><br>
                 <em>Descrição:</em> Busca itens de estoque disponíveis em todas as farmácias com base no nome do produto.<br>
-                <em>Permissão:</em> Público
+                <em>Permissão:</em> Público<br><br>
+                <strong>Exemplo de Body (Response):</strong>
+                <pre>[
+  {
+    "estoqueId": 101,
+    "produtoId": 1,
+    "produtoNome": "Dipirona 500mg",
+    "farmaciaId": 1,
+    "farmaciaNome": "Drogaria XYZ",
+    "preco": 5.99,
+    "quantidade": 50
+  },
+  {
+    "estoqueId": 205,
+    "produtoId": 1,
+    "produtoNome": "Dipirona 500mg",
+    "farmaciaId": 2,
+    "farmaciaNome": "Farmácia Pague Menos",
+    "preco": 6.20,
+    "quantidade": 30
+  }
+]</pre>
             </li>
             <li>
                 <strong>GET</strong> <code>/api/estoque/buscar-por-catalogo/{catalogoId}</code><br>
-                <em>Descrição:</em> Busca todas as ofertas (itens de estoque) para um ID de produto específico do catálogo central.<br>
-                <em>Permissão:</em> Público
+                <em>Descrição:</em> Busca todas as ofertas (itens de estoque) para um ID de produto específico do catálogo.<br>
+                <em>Permissão:</em> Público<br>
+                <em>(Resposta similar ao endpoint anterior)</em>
             </li>
             <li>
                 <strong>GET</strong> <code>/api/estoque/farmacia/{farmaciaId}</code><br>
@@ -96,12 +192,26 @@
             <li>
                 <strong>POST</strong> <code>/api/pedidos</code><br>
                 <em>Descrição:</em> Cria um novo pedido (fecha o carrinho de compras) para o cliente logado.<br>
-                <em>Permissão:</em> CLIENTE
+                <em>Permissão:</em> CLIENTE<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "itens": [
+    {
+      "estoqueLojistaId": 101,
+      "quantidade": 2
+    },
+    {
+      "estoqueLojistaId": 105,
+      "quantidade": 1
+    }
+  ]
+}</pre>
             </li>
             <li>
                 <strong>POST</strong> <code>/api/pedidos/{pedidoId}/receita</code><br>
                 <em>Descrição:</em> Anexa um arquivo (foto/PDF) de receita a um pedido existente.<br>
-                <em>Permissão:</em> CLIENTE
+                <em>Permissão:</em> CLIENTE<br>
+                <em>Body (Request):</em> <code>multipart/form-data</code> com campo <code>arquivo</code>
             </li>
             <li>
                 <strong>GET</strong> <code>/api/pedidos/meus-pedidos</code><br>
@@ -118,18 +228,22 @@
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/farmaceutico/pedidos/pendentes</code><br>
-                <em>Descrição:</em> Retorna uma lista de pedidos que aguardam validação de receita, específicos da farmácia onde o farmacêutico logado trabalha.<br>
+                <em>Descrição:</em> Lista pedidos que aguardam validação de receita na farmácia do farmacêutico logado.<br>
                 <em>Permissão:</em> FARMACEUTICO
             </li>
             <li>
                 <strong>POST</strong> <code>/api/farmaceutico/pedidos/{pedidoId}/receita/aprovar</code><br>
-                <em>Descrição:</em> Aprova a receita de um pedido.<br>
+                <em>Descrição:</em> Aprova a receita de um pedido. (Não requer body).<br>
                 <em>Permissão:</em> FARMACEUTICO
             </li>
             <li>
                 <strong>POST</strong> <code>/api/farmaceutico/pedidos/{pedidoId}/receita/rejeitar</code><br>
                 <em>Descrição:</em> Rejeita a receita de um pedido, exigindo uma justificativa.<br>
-                <em>Permissão:</em> FARMACEUTICO
+                <em>Permissão:</em> FARMACEUTICO<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "justificativa": "A assinatura do médico está ilegível. Por favor, envie uma nova foto."
+}</pre>
             </li>
         </ul>
     </section>
@@ -142,21 +256,43 @@
             <li>
                 <strong>POST</strong> <code>/api/farmacia-admin/farmaceuticos</code><br>
                 <em>Descrição:</em> Adiciona/registra um novo funcionário (farmacêutico) para a farmácia do admin logado.<br>
-                <em>Permissão:</em> LOJISTA_ADMIN
+                <em>Permissão:</em> LOJISTA_ADMIN<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "nome": "Maria Souza",
+  "email": "maria.farma@farmaciaxyz.com",
+  "senha": "senhafarmaceutico",
+  "cpf": "98765432100",
+  "crfP": "DF-54321",
+  "numeroCelular": "61977665544"
+}</pre>
             </li>
             <li>
                 <strong>POST</strong> <code>/api/farmacia-admin/estoque</code><br>
-                <em>Descrição:</em> Adiciona um novo item ao estoque da farmácia logada.<br>
-                <em>Permissão:</em> LOJISTA_ADMIN
+                <em>Descrição:</em> Adiciona um novo item (ou atualiza) ao estoque da farmácia logada.<br>
+                <em>Permissão:</em> LOJISTA_ADMIN<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "produtoId": 1,
+  "preco": 5.99,
+  "quantidade": 100
+}</pre>
             </li>
+
             <li>
                 <strong>PUT</strong> <code>/api/farmacia-admin/estoque/{estoqueId}</code><br>
-                <em>Descrição:</em> Atualiza um item de estoque existente (preço, quantidade, etc.).<br>
-                <em>Permissão:</em> LOJISTA_ADMIN
+                <em>Descrição:</em> Atualiza um item de estoque existente (preço, quantidade).<br>
+                <em>Permissão:</em> LOJISTA_ADMIN<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "produtoId": 1,
+  "preco": 6.10,
+  "quantidade": 150
+}</pre>
             </li>
             <li>
                 <strong>DELETE</strong> <code>/api/farmacia-admin/estoque/{estoqueId}</code><br>
-                <em>Descrição:</em> Remove um item do estoque da farmácia logada.<br>
+                <em>Descrição:</em> Remove um item do estoque da farmácia logada. (Não requer body).<br>
                 <em>Permissão:</em> LOJISTA_ADMIN
             </li>
             <li>
@@ -171,13 +307,18 @@
             </li>
             <li>
                 <strong>PUT</strong> <code>/api/farmacia-admin/pedidos/{pedidoId}/status</code><br>
-                <em>Descrição:</em> Atualiza o status de um pedido (ex: "EM_PREPARACAO", "SAIU_PARA_ENTREGA").<br>
-                <em>Permissão:</em> LOJISTA_ADMIN
+                <em>Descrição:</em> Atualiza o status de um pedido.<br>
+                <em>Permissão:</em> LOJISTA_ADMIN<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "status": "EM_PREPARACAO"
+}</pre>
+                <em>Possíveis status:</em> AGUARDANDO_PAGAMENTO, AGUARDANDO_RECEITA, AGUARDANDO_APROVACAO_FARMACEUTICA, PAGAMENTO_REJEITADO, RECEITA_REJEITADA, EM_PREPARACAO, SAIU_PARA_ENTREGA, ENTREGUE, CANCELADO
             </li>
         </ul>
     </section>
     <hr>
-    <!-- ProdutoController (Admin do Catálogo) -->
+    <!-- ProdutoController -->
     <section>
         <h2>⚙️ ProdutoController (Admin do Catálogo)</h2>
         <p><strong>Base:</strong> <code>/api/admin/catalogo</code></p>
@@ -185,68 +326,82 @@
             <li>
                 <strong>POST</strong> <code>/api/admin/catalogo</code><br>
                 <em>Descrição:</em> Cria um novo produto no catálogo central da plataforma.<br>
-                <em>Permissão:</em> ADMIN
+                <em>Permissão:</em> ADMIN<br><br>
+                <strong>Exemplo de Body (Request):</strong>
+                <pre>{
+  "ean": "7891234567890",
+  "nome": "Dipirona 500mg 10cpr",
+  "principioAtivo": "Dipirona Monoidratada",
+  "laboratorio": "Neo Química",
+  "descricao": "Analgésico e antitérmico.",
+  "codigoRegistroMS": "1234567890",
+  "bulaUrl": "http://site.com/bula/dipirona.pdf",
+  "tipoProduto": "MEDICAMENTO",
+  "tipoReceita": "COMUM"
+}</pre>
+                <em>tipoProduto:</em> MEDICAMENTO, COSMETICO, OUTRO<br>
+                <em>tipoReceita:</em> COMUM, CONTROLADA, NAO_EXIGIDA
             </li>
             <li>
                 <strong>PUT</strong> <code>/api/admin/catalogo/{id}</code><br>
                 <em>Descrição:</em> Atualiza os dados de um produto no catálogo central.<br>
-                <em>Permissão:</em> ADMIN
+                <em>Permissão:</em> ADMIN<br>
+                <em>(Mesmo formato do POST acima)</em>
             </li>
             <li>
                 <strong>POST</strong> <code>/api/admin/catalogo/{id}/desativar</code><br>
-                <em>Descrição:</em> Desativa um produto do catálogo central (impede que apareça em buscas públicas).<br>
+                <em>Descrição:</em> Desativa um produto do catálogo central. (Não requer body).<br>
                 <em>Permissão:</em> ADMIN
             </li>
             <li>
                 <strong>POST</strong> <code>/api/admin/catalogo/{id}/reativar</code><br>
-                <em>Descrição:</em> Reativa um produto do catálogo central.<br>
+                <em>Descrição:</em> Reativa um produto do catálogo central. (Não requer body).<br>
                 <em>Permissão:</em> ADMIN
             </li>
             <li>
                 <strong>DELETE</strong> <code>/api/admin/catalogo/{id}</code><br>
-                <em>Descrição:</em> Deleta permanentemente um produto do catálogo central.<br>
+                <em>Descrição:</em> Deleta permanentemente um produto do catálogo central. (Não requer body).<br>
                 <em>Permissão:</em> ADMIN
             </li>
         </ul>
     </section>
     <hr>
-    <!-- AdminController (Admin da Plataforma) -->
+    <!-- AdminController -->
     <section>
         <h2>👑 AdminController (Admin da Plataforma)</h2>
         <p><strong>Base:</strong> <code>/api/admin</code></p>
         <ul>
             <li>
                 <strong>GET</strong> <code>/api/admin/farmacias</code><br>
-                <em>Descrição:</em> Lista farmácias filtrando por status (PENDENTE_APROVACAO, ATIVO, SUSPENSO).<br>
+                <em>Descrição:</em> Lista farmácias filtrando por status (ex: ?status=PENDENTE_APROVACAO).<br>
                 <em>Permissão:</em> ADMIN
             </li>
             <li>
                 <strong>POST</strong> <code>/api/admin/farmacias/{id}/ativar</code><br>
-                <em>Descrição:</em> Ativa o cadastro de uma farmácia (muda o status para ATIVO).<br>
+                <em>Descrição:</em> Ativa o cadastro de uma farmácia. (Não requer body).<br>
                 <em>Permissão:</em> ADMIN
             </li>
             <li>
                 <strong>POST</strong> <code>/api/admin/farmacias/{id}/desativar</code><br>
-                <em>Descrição:</em> Suspende o cadastro de uma farmácia (muda o status para SUSPENSO).<br>
+                <em>Descrição:</em> Suspende o cadastro de uma farmácia. (Não requer body).<br>
                 <em>Permissão:</em> ADMIN
             </li>
             <li>
                 <strong>GET</strong> <code>/api/admin/usuarios/buscar</code><br>
-                <em>Descrição:</em> Busca um usuário (de qualquer tipo) pelo seu e-mail.<br>
+                <em>Descrição:</em> Busca um usuário (de qualquer tipo) pelo seu e-mail (ex: ?email=teste@email.com).<br>
                 <em>Permissão:</em> ADMIN
             </li>
             <li>
                 <strong>POST</strong> <code>/api/admin/usuarios/{id}/desativar</code><br>
-                <em>Descrição:</em> Desativa (bane) a conta de um usuário.<br>
+                <em>Descrição:</em> Desativa (bane) a conta de um usuário. (Não requer body).<br>
                 <em>Permissão:</em> ADMIN
             </li>
             <li>
                 <strong>POST</strong> <code>/api/admin/usuarios/{id}/reativar</code><br>
-                <em>Descrição:</em> Reativa a conta de um usuário.<br>
+                <em>Descrição:</em> Reativa a conta de um usuário. (Não requer body).<br>
                 <em>Permissão:</em> ADMIN
             </li>
         </ul>
     </section>
-
 </body>
 </html>
