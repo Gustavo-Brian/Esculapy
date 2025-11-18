@@ -1,6 +1,8 @@
 package ucb.app.esculapy.repository;
 
 import ucb.app.esculapy.model.EstoqueLojista;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,42 +13,41 @@ import java.util.Optional;
 public interface EstoqueLojistaRepository extends JpaRepository<EstoqueLojista, Long> {
 
     // --- Métodos para Lógica de Admin/Privada ---
-    List<EstoqueLojista> findByFarmaciaId(Long farmaciaId);
+
+    // Lista paginada do estoque privado da farmácia
+    Page<EstoqueLojista> findByFarmaciaId(Long farmaciaId, Pageable pageable);
+
     boolean existsByProdutoId(Long produtoId);
+
     Optional<EstoqueLojista> findByFarmaciaIdAndProdutoId(Long farmaciaId, Long produtoId);
 
 
     // --- Métodos para Lógica Pública (Filtrando por ativos) ---
 
-    // Query original (usada em /api/estoque/buscar-por-catalogo/{id})
-    @Query("SELECT el FROM EstoqueLojista el " +
+    // Busca ofertas de um produto específico (Paginado)
+    @Query(value = "SELECT el FROM EstoqueLojista el " +
             "JOIN FETCH el.produto p " +
             "JOIN FETCH el.farmacia f " +
-            "WHERE el.produto.id = :produtoId AND el.ativo = true AND el.quantidade > 0 AND p.ativo = true")
-    List<EstoqueLojista> findOfertasByProdutoId(@Param("produtoId") Long produtoId);
+            "WHERE el.produto.id = :produtoId AND el.ativo = true AND el.quantidade > 0 AND p.ativo = true",
+            countQuery = "SELECT COUNT(el) FROM EstoqueLojista el WHERE el.produto.id = :produtoId AND el.ativo = true AND el.quantidade > 0 AND el.produto.ativo = true")
+    Page<EstoqueLojista> findOfertasByProdutoId(@Param("produtoId") Long produtoId, Pageable pageable);
 
-    // Query original (usada em /api/estoque/buscar-por-nome)
-    @Query("SELECT el FROM EstoqueLojista el " +
+    // Busca estoque por nome do produto (Paginado)
+    @Query(value = "SELECT el FROM EstoqueLojista el " +
             "JOIN FETCH el.produto p " +
             "JOIN FETCH el.farmacia f " +
-            "WHERE p.nome LIKE %:nomeProduto% AND el.ativo = true AND el.quantidade > 0 AND p.ativo = true")
-    List<EstoqueLojista> findByProdutoNomeContendo(@Param("nomeProduto") String nomeProduto);
+            "WHERE p.nome LIKE %:nomeProduto% AND el.ativo = true AND el.quantidade > 0 AND p.ativo = true",
+            countQuery = "SELECT COUNT(el) FROM EstoqueLojista el JOIN el.produto p WHERE p.nome LIKE %:nomeProduto% AND el.ativo = true AND el.quantidade > 0 AND p.ativo = true")
+    Page<EstoqueLojista> findByProdutoNomeContendo(@Param("nomeProduto") String nomeProduto, Pageable pageable);
 
-    /**
-     * NOVO MÉTODO (Público)
-     * Busca o estoque de uma farmácia específica, garantindo que o estoque e o
-     * produto estejam ativos.
-     */
-    @Query("SELECT el FROM EstoqueLojista el " +
+    // Busca todo o estoque público de uma farmácia (Paginado)
+    @Query(value = "SELECT el FROM EstoqueLojista el " +
             "JOIN FETCH el.produto p " +
-            "WHERE el.farmacia.id = :farmaciaId AND el.ativo = true AND p.ativo = true")
-    List<EstoqueLojista> findPublicoByFarmaciaId(@Param("farmaciaId") Long farmaciaId);
+            "WHERE el.farmacia.id = :farmaciaId AND el.ativo = true AND p.ativo = true",
+            countQuery = "SELECT COUNT(el) FROM EstoqueLojista el WHERE el.farmacia.id = :farmaciaId AND el.ativo = true AND el.produto.ativo = true")
+    Page<EstoqueLojista> findPublicoByFarmaciaId(@Param("farmaciaId") Long farmaciaId, Pageable pageable);
 
-    /**
-     * NOVO MÉTODO (Público)
-     * Busca um item de estoque específico, garantindo que ele e seu produto
-     * estejam ativos.
-     */
+    // Busca item específico (sem paginação, retorno único)
     @Query("SELECT el FROM EstoqueLojista el " +
             "JOIN FETCH el.produto p " +
             "WHERE el.id = :estoqueId AND el.ativo = true AND p.ativo = true")

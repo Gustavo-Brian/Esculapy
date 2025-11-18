@@ -63,7 +63,6 @@ public class ApplicationConfig {
     }
 
     /**
-     * Bean ADICIONADO (estava no seu arquivo):
      * Inicializa o serviço de storage (cria a pasta 'uploads' se necessário)
      * quando a aplicação inicia.
      */

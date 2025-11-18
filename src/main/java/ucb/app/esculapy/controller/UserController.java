@@ -1,22 +1,31 @@
 package ucb.app.esculapy.controller;
 
-import org.springframework.security.core.GrantedAuthority;
-import ucb.app.esculapy.model.Farmaceutico;
-import ucb.app.esculapy.model.Farmacia;
-import ucb.app.esculapy.model.Usuario;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import ucb.app.esculapy.dto.*;
 import ucb.app.esculapy.model.Cliente;
+import ucb.app.esculapy.model.Farmacia;
+import ucb.app.esculapy.model.Farmaceutico;
+import ucb.app.esculapy.model.Usuario;
+import ucb.app.esculapy.service.UserService;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
+
+    private final UserService userService;
+
+    // ========================================================================
+    // --- Classes Internas (DTOs de Resposta Específicos para /me) ---
+    // ========================================================================
 
     @Data
     private static class MeResponse {
@@ -52,7 +61,9 @@ public class UserController {
         private String nome;
         private String cpf;
         public ClienteProfile(Cliente c) {
-            this.id = c.getId(); this.nome = c.getNome(); this.cpf = c.getCpf();
+            this.id = c.getId();
+            this.nome = c.getNome();
+            this.cpf = c.getCpf();
         }
     }
 
@@ -63,7 +74,10 @@ public class UserController {
         private String cnpj;
         private String status;
         public FarmaciaAdminProfile(Farmacia f) {
-            this.id = f.getId(); this.nomeFantasia = f.getNomeFantasia(); this.cnpj = f.getCnpj(); this.status = f.getStatus().name();
+            this.id = f.getId();
+            this.nomeFantasia = f.getNomeFantasia();
+            this.cnpj = f.getCnpj();
+            this.status = f.getStatus().name();
         }
     }
 
@@ -74,15 +88,50 @@ public class UserController {
         private String crfP;
         private Long farmaciaId;
         public FarmaceuticoProfile(Farmaceutico f) {
-            this.id = f.getId(); this.nome = f.getNome(); this.crfP = f.getCrfP(); this.farmaciaId = f.getFarmacia().getId();
+            this.id = f.getId();
+            this.nome = f.getNome();
+            this.crfP = f.getCrfP();
+            this.farmaciaId = f.getFarmacia().getId();
         }
     }
 
+
+    // ========================================================================
+    // --- Endpoints ---
+    // ========================================================================
+
+    /**
+     * Retorna as informações do usuário logado e seus perfis associados.
+     */
     @GetMapping("/me")
-    public ResponseEntity<MeResponse> getMyInfo() {
-        // A lógica de busca do usuário já é tratada pelo Spring Security
-        // e pelo AuthenticationService, que o injeta no contexto.
+    public ApiResponse<MeResponse> getMyInfo() {
         Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(new MeResponse(usuario));
+        MeResponse meResponse = new MeResponse(usuario);
+        return ApiResponse.success(meResponse);
+    }
+
+    /**
+     * Retorna o perfil editável do usuário (atualmente focado no Cliente).
+     */
+    @GetMapping("/profile")
+    public ApiResponse<ProfileResponse> getProfile() {
+        return ApiResponse.success(userService.getMeuProfile());
+    }
+
+    /**
+     * Atualiza os dados do perfil do usuário (Nome, Telefone).
+     */
+    @PutMapping("/profile")
+    public ApiResponse<ProfileResponse> updateProfile(@Valid @RequestBody ProfileUpdateRequest request) {
+        return ApiResponse.success(userService.updateMeuProfile(request));
+    }
+
+    /**
+     * Atualiza a senha do usuário logado.
+     */
+    @PutMapping("/password")
+    public ApiResponse<Object> updatePassword(@Valid @RequestBody PasswordUpdateRequest request) {
+        userService.updateMinhaSenha(request);
+        return ApiResponse.success("Senha alterada com sucesso");
     }
 }

@@ -2,12 +2,12 @@ package ucb.app.esculapy.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ucb.app.esculapy.dto.ApiResponse;
 import ucb.app.esculapy.dto.ProdutoRequest;
 import ucb.app.esculapy.model.Produto;
-import ucb.app.esculapy.service.CatalogoService; // --- ALTERAÇÃO ---
+import ucb.app.esculapy.service.CatalogoService;
 
 @RestController
 @RequestMapping("/api/admin/catalogo")
@@ -15,38 +15,38 @@ import ucb.app.esculapy.service.CatalogoService; // --- ALTERAÇÃO ---
 @RequiredArgsConstructor
 public class ProdutoController {
 
-    private final CatalogoService catalogoService; // --- ALTERAÇÃO ---
+    private final CatalogoService catalogoService;
 
     @PostMapping
-    public ResponseEntity<Produto> criarProdutoCatalogo(@Valid @RequestBody ProdutoRequest request) {
-        Produto produtoCriado = catalogoService.criarProdutoCatalogo(request); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(produtoCriado);
+    public ApiResponse<Produto> criarProdutoCatalogo(@Valid @RequestBody ProdutoRequest request) {
+        Produto produtoCriado = catalogoService.criarProdutoCatalogo(request);
+        return ApiResponse.success(produtoCriado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> updateProdutoCatalogo(
+    public ApiResponse<Produto> updateProdutoCatalogo(
             @PathVariable Long id,
             @Valid @RequestBody ProdutoRequest request
     ) {
-        Produto produtoAtualizado = catalogoService.updateProdutoCatalogo(id, request); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(produtoAtualizado);
+        Produto produtoAtualizado = catalogoService.updateProdutoCatalogo(id, request);
+        return ApiResponse.success(produtoAtualizado);
     }
 
     @PostMapping("/{id}/desativar")
-    public ResponseEntity<Produto> desativarProdutoCatalogo(@PathVariable Long id) {
-        Produto produto = catalogoService.desativarProdutoCatalogo(id); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(produto);
+    public ApiResponse<Produto> desativarProdutoCatalogo(@PathVariable Long id) {
+        Produto produto = catalogoService.desativarProdutoCatalogo(id);
+        return ApiResponse.success(produto);
     }
 
     @PostMapping("/{id}/reativar")
-    public ResponseEntity<Produto> reativarProdutoCatalogo(@PathVariable Long id) {
-        Produto produto = catalogoService.reativarProdutoCatalogo(id); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(produto);
+    public ApiResponse<Produto> reativarProdutoCatalogo(@PathVariable Long id) {
+        Produto produto = catalogoService.reativarProdutoCatalogo(id);
+        return ApiResponse.success(produto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProdutoCatalogo(@PathVariable Long id) {
-        catalogoService.deleteProdutoCatalogo(id); // --- ALTERAÇÃO ---
-        return ResponseEntity.noContent().build();
+    public ApiResponse<Object> deleteProdutoCatalogo(@PathVariable Long id) {
+        catalogoService.deleteProdutoCatalogo(id);
+        return ApiResponse.success("Produto do catálogo deletado com sucesso");
     }
 }

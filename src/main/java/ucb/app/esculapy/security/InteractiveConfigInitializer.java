@@ -13,7 +13,7 @@ public class InteractiveConfigInitializer implements EnvironmentPostProcessor {
     private static final String PROPERTY_SOURCE_NAME = "interactiveConfig";
 
     private String readInput(BufferedReader reader, String prompt, String defaultValue) throws Exception {
-        System.out.print("  " + prompt + " (Padrão: " + defaultValue + "): ");
+        System.out.print("  " + prompt + " [" + defaultValue + "]: ");
         String input = reader.readLine();
         return (input == null || input.trim().isEmpty()) ? defaultValue : input.trim();
     }
@@ -21,7 +21,6 @@ public class InteractiveConfigInitializer implements EnvironmentPostProcessor {
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 
-        // Não executa em modo de teste
         if (System.getProperty("java.class.path").contains("junit")) {
             return;
         }
@@ -34,23 +33,33 @@ public class InteractiveConfigInitializer implements EnvironmentPostProcessor {
 
             Properties props = new Properties();
 
-            String serverPort = readInput(reader, "[1/5] Porta do Servidor", "8080");
+            String serverPort = readInput(reader, "[1/6] Porta do Servidor", "8080");
             props.setProperty("server.port", serverPort);
 
-            String defaultDbUrl = environment.getProperty("spring.datasource.url", "jdbc:mysql://localhost:3306/esculapy");
-            String dbUrl = readInput(reader, "[2/5] URL do Banco de Dados", defaultDbUrl);
+            // --- ESTA LINHA LÊ DO 'application.properties' PRIMEIRO ---
+            // Se o arquivo .properties estiver correto (Passo 1), esta linha funcionará.
+            // O valor padrão (segundo argumento) só é usado se a propriedade não existir lá.
+            String defaultDbUrl = environment.getProperty(
+                    "spring.datasource.url",
+                    "jdbc:mysql://localhost:3306/esculapy?allowPublicKeyRetrieval=true&useSSL=false"
+            );
+            // --------------------------------------------------------
+
+            String dbUrl = readInput(reader, "[2/6] URL do Banco de Dados", defaultDbUrl);
             props.setProperty("spring.datasource.url", dbUrl);
 
-            String defaultDbUsername = environment.getProperty("spring.datasource.username", "root");
-            String dbUsername = readInput(reader, "[3/5] Usuário do Banco de Dados", defaultDbUsername);
+            String dbUsername = readInput(reader, "[3/6] Usuário do Banco de Dados", "seu-user");
             props.setProperty("spring.datasource.username", dbUsername);
 
-            String dbPassword = readInput(reader, "[4/5] Senha do Banco de Dados", "");
+            String dbPassword = readInput(reader, "[4/6] Senha do Banco de Dados", "seu-password");
             props.setProperty("spring.datasource.password", dbPassword);
 
             String defaultJwtSecret = environment.getProperty("jwt.secret", "SUA_CHAVE_SECRETA_PADRAO_DE_TESTE_32_BITS");
-            String jwtSecret = readInput(reader, "[5/5] Chave JWT (Segurança)", defaultJwtSecret);
+            String jwtSecret = readInput(reader, "[5/6] Chave JWT", defaultJwtSecret);
             props.setProperty("jwt.secret", jwtSecret);
+
+            String webhookSecret = readInput(reader, "[6/6] Webhook Secret", "SUA_CHAVE_SECRETA_DO_WEBHOOK");
+            props.setProperty("pagamento.webhook.secret", webhookSecret);
 
             environment.getPropertySources().addFirst(new PropertiesPropertySource(PROPERTY_SOURCE_NAME, props));
 

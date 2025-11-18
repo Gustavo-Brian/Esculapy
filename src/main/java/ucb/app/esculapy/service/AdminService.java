@@ -1,6 +1,8 @@
 package ucb.app.esculapy.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ucb.app.esculapy.exception.ConflictException;
@@ -11,11 +13,6 @@ import ucb.app.esculapy.model.enums.LojistaStatus;
 import ucb.app.esculapy.repository.FarmaciaRepository;
 import ucb.app.esculapy.repository.UsuarioRepository;
 
-import java.util.List;
-
-/**
- * Service para a lógica de negócios do Administrador Master.
- */
 @Service
 @RequiredArgsConstructor
 public class AdminService {
@@ -23,21 +20,18 @@ public class AdminService {
     private final FarmaciaRepository farmaciaRepository;
     private final UsuarioRepository usuarioRepository;
 
-    // --- Lógica de Farmácias (REFATORADA) ---
+    // --- Lógica de Farmácias ---
 
     @Transactional(readOnly = true)
-    public List<Farmacia> findFarmaciasByStatus(String status) {
+    public Page<Farmacia> findFarmaciasByStatus(String status, Pageable pageable) {
         try {
             LojistaStatus lojistaStatus = LojistaStatus.valueOf(status.toUpperCase());
-            return farmaciaRepository.findByStatus(lojistaStatus);
+            return farmaciaRepository.findByStatus(lojistaStatus, pageable);
         } catch (IllegalArgumentException e) {
             throw new ConflictException("Status '" + status + "' é inválido. Use PENDENTE_APROVACAO, ATIVO ou SUSPENSO.");
         }
     }
 
-    /**
-     * (ADMIN) Aprova uma farmácia PENDENTE.
-     */
     @Transactional
     public Farmacia aprovarFarmacia(Long farmaciaId) {
         Farmacia farmacia = farmaciaRepository.findById(farmaciaId)
@@ -51,9 +45,6 @@ public class AdminService {
         return farmaciaRepository.save(farmacia);
     }
 
-    /**
-     * (ADMIN) Suspende uma farmácia ATIVA.
-     */
     @Transactional
     public Farmacia suspenderFarmacia(Long farmaciaId) {
         Farmacia farmacia = farmaciaRepository.findById(farmaciaId)
@@ -67,9 +58,6 @@ public class AdminService {
         return farmaciaRepository.save(farmacia);
     }
 
-    /**
-     * (ADMIN) Reativa uma farmácia SUSPENSA.
-     */
     @Transactional
     public Farmacia reativarFarmacia(Long farmaciaId) {
         Farmacia farmacia = farmaciaRepository.findById(farmaciaId)
@@ -83,8 +71,7 @@ public class AdminService {
         return farmaciaRepository.save(farmacia);
     }
 
-
-    // --- Lógica de Usuários (Sem alteração) ---
+    // --- Lógica de Usuários ---
 
     @Transactional(readOnly = true)
     public Usuario findUsuarioByEmail(String email) {

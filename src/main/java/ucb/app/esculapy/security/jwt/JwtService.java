@@ -23,7 +23,7 @@ public class JwtService {
     private String jwtSecret;
 
     @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    private long jwtExpiration; // Em milissegundos
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -38,7 +38,10 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof Usuario) {
             Usuario usuario = (Usuario) userDetails;
+            // Adicionamos o ID do usuário no token para facilitar o front-end
             claims.put("userId", usuario.getId());
+            // Adicionamos as roles também
+            claims.put("roles", usuario.getAuthorities());
         }
         return generateToken(claims, userDetails);
     }

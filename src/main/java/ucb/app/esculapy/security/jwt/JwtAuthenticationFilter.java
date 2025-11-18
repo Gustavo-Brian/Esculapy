@@ -39,27 +39,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Extrai o token (remove o prefixo "Bearer ")
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
 
-        // Se o usuário foi extraído e ainda não está autenticado no contexto
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // Carrega o usuário (usando o userDetailsService otimizado com @EntityGraph)
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+        try {
+            userEmail = jwtService.extractUsername(jwt); // Pode lançar exceção se token inválido
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                // Coloca o usuário autenticado no Contexto de Segurança
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            // Se o usuário foi extraído e ainda não está autenticado no contexto
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Carrega o usuário do banco
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+
+                // Valida o token
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+                    // Autentica no contexto
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception e) {
+            // Em caso de token inválido ou expirado, não autenticamos.
+            // O Spring Security tratará isso (403 Forbidden) se a rota for protegida.
+            // Log para debug:
+            System.out.println("Erro na validação do JWT: " + e.getMessage());
         }
+
         filterChain.doFilter(request, response);
     }
 }

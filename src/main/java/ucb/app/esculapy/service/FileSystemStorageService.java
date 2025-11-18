@@ -12,24 +12,18 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-/**
- * Implementação "Real" do StorageService que salva os arquivos
- * em uma pasta local chamada 'uploads'.
- */
 @Service
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
 
     public FileSystemStorageService() {
-        // Define o diretório de upload na raiz do projeto
         this.rootLocation = Paths.get("uploads");
     }
 
     @Override
     public void init() {
         try {
-            // Cria o diretório 'uploads' se ele não existir
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
             throw new RuntimeException("Não foi possível inicializar o diretório de storage", e);
@@ -43,7 +37,6 @@ public class FileSystemStorageService implements StorageService {
         }
 
         try (InputStream inputStream = file.getInputStream()) {
-            // Gera um nome de arquivo único para evitar conflitos
             String originalFilename = file.getOriginalFilename();
             String extension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
@@ -51,14 +44,11 @@ public class FileSystemStorageService implements StorageService {
             }
             String filename = UUID.randomUUID().toString() + extension;
 
-            // Salva o arquivo no disco
             Path destinationFile = this.rootLocation.resolve(Paths.get(filename))
                     .normalize().toAbsolutePath();
 
             Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
-            // Em um app real, retornaríamos a URL completa (ex: http://meusite.com/uploads/arquivo.pdf)
-            // Por enquanto, retornamos o caminho relativo.
             return destinationFile.toString();
 
         } catch (IOException e) {

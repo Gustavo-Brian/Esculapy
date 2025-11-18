@@ -1,11 +1,19 @@
 package ucb.app.esculapy.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ucb.app.esculapy.dto.AuthResponse;
 import ucb.app.esculapy.dto.LoginRequest;
 import ucb.app.esculapy.dto.RegisterClienteRequest;
 import ucb.app.esculapy.dto.RegisterFarmaciaRequest;
-import ucb.app.esculapy.exception.ConflictException; // <-- REFATORADO
-import ucb.app.esculapy.exception.ResourceNotFoundException; // <-- REFATORADO
+import ucb.app.esculapy.exception.ConflictException;
+import ucb.app.esculapy.exception.ResourceNotFoundException;
 import ucb.app.esculapy.model.Cliente;
 import ucb.app.esculapy.model.Farmacia;
 import ucb.app.esculapy.model.Role;
@@ -16,14 +24,6 @@ import ucb.app.esculapy.repository.FarmaciaRepository;
 import ucb.app.esculapy.repository.RoleRepository;
 import ucb.app.esculapy.repository.UsuarioRepository;
 import ucb.app.esculapy.security.jwt.JwtService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -38,10 +38,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
     @Transactional
     public AuthResponse registerCliente(RegisterClienteRequest request) {
-        // REFATORADO: Usando ConflictException (409) em vez de RuntimeException
         if (usuarioRepository.existsByEmail(request.getEmail())) {
             throw new ConflictException("Erro: Email já está em uso!");
         }
@@ -54,7 +54,7 @@ public class AuthService {
                 passwordEncoder.encode(request.getSenha())
         );
         Role clienteRole = roleRepository.findByNome("ROLE_CLIENTE")
-                .orElseThrow(() -> new ResourceNotFoundException("Role 'ROLE_CLIENTE' não encontrada.")); // 404
+                .orElseThrow(() -> new ResourceNotFoundException("Role 'ROLE_CLIENTE' não encontrada."));
         usuario.setRoles(Set.of(clienteRole));
 
         Cliente cliente = new Cliente();
@@ -73,7 +73,6 @@ public class AuthService {
 
     @Transactional
     public AuthResponse registerFarmacia(RegisterFarmaciaRequest request) {
-        // REFATORADO: Usando ConflictException (409) em vez de RuntimeException
         if (usuarioRepository.existsByEmail(request.getEmail())) {
             throw new ConflictException("Erro: Email já está em uso!");
         }
@@ -123,5 +122,13 @@ public class AuthService {
         String jwtToken = jwtService.generateToken(usuario);
 
         return new AuthResponse(jwtToken, usuario.getId(), usuario.getEmail());
+    }
+
+    public void forgotPassword(String email) {
+        userService.forgotPassword(email);
+    }
+
+    public void resetPassword(String token, String novaSenha) {
+        userService.resetPassword(token, novaSenha);
     }
 }

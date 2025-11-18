@@ -1,6 +1,8 @@
 package ucb.app.esculapy.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,16 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Serviço unificado para gerenciar todo o ciclo de vida de um Pedido.
- * Inclui lógica de Cliente, Farmacêutico e Lojista.
- * Substitui PedidoService(antigo), ReceitaService e PedidoManagementService.
- */
 @Service
 @RequiredArgsConstructor
 public class PedidoService {
 
-    // --- Dependências de todos os serviços fundidos ---
     private final PedidoRepository pedidoRepository;
     private final EstoqueLojistaRepository estoqueLojistaRepository;
     private final ReceitaRepository receitaRepository;
@@ -42,9 +38,8 @@ public class PedidoService {
     private final AuthenticationService authenticationService;
     private final StorageService storageService;
 
-
     // ========================================================================
-    // --- Lógica de CLIENTE (do antigo PedidoService) ---
+    // --- Lógica de CLIENTE ---
     // ========================================================================
 
     @Transactional
@@ -73,7 +68,7 @@ public class PedidoService {
                 receitaExigida = true;
             }
 
-            // Decrementa o estoque
+            // Baixa no estoque
             estoque.setQuantidade(estoque.getQuantidade() - itemDTO.getQuantidade());
             estoqueLojistaRepository.save(estoque);
 
@@ -91,7 +86,7 @@ public class PedidoService {
         pedido.setValorTotal(valorTotal);
 
         if (receitaExigida) {
-            pedido.setStatus(PedidoStatus.AGUARDANDO_VALIDACAO_FARMACEUTICA);
+            pedido.setStatus(PedidoStatus.AGUARDANDO_RECEITA);
         } else {
             pedido.setStatus(PedidoStatus.AGUARDANDO_PAGAMENTO);
         }
@@ -102,10 +97,10 @@ public class PedidoService {
     @Transactional
     public Pedido anexarReceita(Long pedidoId, MultipartFile arquivo) {
         Cliente cliente = authenticationService.getClienteLogado();
-        Pedido pedido = getPedidoValidadoCliente(pedidoId, cliente);
+        Pedido pedido = getPedidoValidadoCliente(pedidoId, cliente.getId());
 
-        if (pedido.getStatus() != PedidoStatus.AGUARDANDO_VALIDACAO_FARMACEUTICA) {
-            throw new ConflictException("Este pedido não está aguardando validação de receita.");
+        if (pedido.getStatus() != PedidoStatus.AGUARDANDO_RECEITA) {
+            throw new ConflictException("Este pedido não está aguardando anexo de receita.");
         }
 
         String urlArquivo = storageService.upload(arquivo);
@@ -118,27 +113,57 @@ public class PedidoService {
         receitaRepository.save(receita);
 
         pedido.setReceita(receita);
-        return pedido;
+        // Agora o fluxo segue para o pagamento (paralelo à validação)
+        pedido.setStatus(PedidoStatus.AGUARDANDO_PAGAMENTO);
+
+        return pedidoRepository.save(pedido);
     }
 
     @Transactional(readOnly = true)
-    public List<Pedido> getMeusPedidos() {
+    public Page<Pedido> getMeusPedidos(Pageable pageable) {
         Cliente cliente = authenticationService.getClienteLogado();
-        return pedidoRepository.findByClienteId(cliente.getId());
+        return pedidoRepository.findByClienteId(cliente.getId(), pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Pedido getPedidoDetalhesCliente(Long pedidoId) {
+        Cliente cliente = authenticationService.getClienteLogado();
+        return getPedidoValidadoCliente(pedidoId, cliente.getId());
+    }
+
+    @Transactional
+    public Pedido cancelarPedido(Long pedidoId) {
+        Cliente cliente = authenticationService.getClienteLogado();
+        Pedido pedido = getPedidoValidadoCliente(pedidoId, cliente.getId());
+
+        if (pedido.getStatus() != PedidoStatus.AGUARDANDO_PAGAMENTO &&
+                pedido.getStatus() != PedidoStatus.AGUARDANDO_RECEITA &&
+                pedido.getStatus() != PedidoStatus.AGUARDANDO_CONFIRMACAO)
+        {
+            throw new ConflictException("Este pedido não pode mais ser cancelado pelo cliente. Status: " + pedido.getStatus());
+        }
+
+        estornarEstoquePedido(pedido);
+        pedido.setStatus(PedidoStatus.CANCELADO);
+        return pedidoRepository.save(pedido);
+    }
+
+
     // ========================================================================
-    // --- Lógica de FARMACÊUTICO (do antigo ReceitaService) ---
+    // --- Lógica de FARMACÊUTICO ---
     // ========================================================================
 
     @Transactional(readOnly = true)
-    public List<Pedido> getPedidosPendentesFarmaceutico() {
+    public Page<Pedido> getPedidosPendentesFarmaceutico(Pageable pageable) {
         Farmaceutico farmaceutico = authenticationService.getFarmaceuticoLogado();
         Long farmaciaId = farmaceutico.getFarmacia().getId();
 
+        // Farmacêutico verifica receitas enquanto o pagamento está pendente ou aguardando confirmação
+        // Para simplificar, buscamos AGUARDANDO_PAGAMENTO por padrão, mas poderíamos expandir
         return pedidoRepository.findPedidosPorStatusEFarmacia(
-                PedidoStatus.AGUARDANDO_VALIDACAO_FARMACEUTICA,
-                farmaciaId
+                PedidoStatus.AGUARDANDO_PAGAMENTO,
+                farmaciaId,
+                pageable
         );
     }
 
@@ -146,11 +171,7 @@ public class PedidoService {
     public Pedido aprovarReceita(Long pedidoId) {
         Farmaceutico farmaceutico = authenticationService.getFarmaceuticoLogado();
         Pedido pedido = getPedidoValidadoFarmaceutico(pedidoId, farmaceutico);
-
-        Receita receita = pedido.getReceita();
-        if (receita == null) {
-            throw new ResourceNotFoundException("Pedido " + pedidoId + " não possui uma receita anexada.");
-        }
+        Receita receita = getReceitaDoPedido(pedido);
 
         receita.setStatus(ReceitaStatus.APROVADA);
         receita.setFarmaceuticoValidador(farmaceutico);
@@ -158,26 +179,16 @@ public class PedidoService {
         receita.setJustificativaRejeicao(null);
         receitaRepository.save(receita);
 
-        pedido.setStatus(PedidoStatus.AGUARDANDO_PAGAMENTO);
-        return pedidoRepository.save(pedido);
+        return pedido;
     }
 
     @Transactional
     public Pedido rejeitarReceita(Long pedidoId, String justificativa) {
         Farmaceutico farmaceutico = authenticationService.getFarmaceuticoLogado();
         Pedido pedido = getPedidoValidadoFarmaceutico(pedidoId, farmaceutico);
+        Receita receita = getReceitaDoPedido(pedido);
 
-        Receita receita = pedido.getReceita();
-        if (receita == null) {
-            throw new ResourceNotFoundException("Pedido " + pedidoId + " não possui uma receita anexada.");
-        }
-
-        // --- Lógica de Estorno de Estoque ---
-        for (ItemPedido item : pedido.getItens()) {
-            EstoqueLojista estoque = item.getEstoqueLojista();
-            estoque.setQuantidade(estoque.getQuantidade() + item.getQuantidade());
-            estoqueLojistaRepository.save(estoque);
-        }
+        estornarEstoquePedido(pedido);
 
         receita.setStatus(ReceitaStatus.REJEITADA);
         receita.setFarmaceuticoValidador(farmaceutico);
@@ -189,49 +200,80 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
 
+    @Transactional(readOnly = true)
+    public Pedido getPedidoDetalhesFarmaceutico(Long pedidoId) {
+        Farmaceutico farmaceutico = authenticationService.getFarmaceuticoLogado();
+        return getPedidoValidadoFarmaceutico(pedidoId, farmaceutico);
+    }
+
+
     // ========================================================================
-    // --- Lógica de LOJISTA_ADMIN (do antigo PedidoManagementService) ---
+    // --- Lógica de LOJISTA_ADMIN ---
     // ========================================================================
 
     @Transactional(readOnly = true)
-    public List<Pedido> getPedidosDaFarmaciaLogada() {
+    public Page<Pedido> getPedidosDaFarmaciaLogada(Pageable pageable) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
-        Long farmaciaId = farmacia.getId();
-
-        // Usa a query otimizada do repositório
-        return pedidoRepository.findAllByFarmaciaId(farmaciaId);
+        return pedidoRepository.findAllByFarmaciaId(farmacia.getId(), pageable);
     }
 
     @Transactional
     public Pedido updateStatusPedidoLojista(Long pedidoId, PedidoStatusUpdateRequest request) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
-        Long farmaciaId = farmacia.getId();
-
-        Pedido pedido = pedidoRepository.findById(pedidoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Pedido com ID " + pedidoId + " não encontrado."));
-
-        // Validação de posse
-        boolean isFarmaciaOwner = pedido.getItens().stream()
-                .anyMatch(i -> Objects.equals(i.getEstoqueLojista().getFarmacia().getId(), farmaciaId));
-
-        if (!isFarmaciaOwner) {
-            throw new ForbiddenException("Você não tem permissão para gerenciar este pedido.");
-        }
-
-        // Validação de Transição de Status
+        Pedido pedido = getPedidoValidadoLojista(pedidoId, farmacia.getId());
         PedidoStatus novoStatus = request.getStatus();
-        if (pedido.getStatus() == PedidoStatus.CANCELADO) {
-            throw new ForbiddenException("Pedido cancelado não pode ter o status alterado.");
+
+        if (pedido.getStatus() == PedidoStatus.CANCELADO || pedido.getStatus() == PedidoStatus.RECUSADO) {
+            throw new ForbiddenException("Pedido cancelado/recusado não pode ter o status alterado.");
         }
 
-        // Ex: Lojista só pode mover para "EM_SEPARACAO" se o pagamento
-        // foi aprovado (lógica vinda do PagamentoService)
-        if (novoStatus == PedidoStatus.EM_SEPARACAO && pedido.getStatus() != PedidoStatus.PAGAMENTO_APROVADO) {
-            throw new ConflictException("Não é possível iniciar a separação sem pagamento aprovado.");
+        // Lojista não pode mover para status anteriores ao CONFIRMADO manualmente
+        if (novoStatus == PedidoStatus.AGUARDANDO_RECEITA ||
+                novoStatus == PedidoStatus.AGUARDANDO_PAGAMENTO ||
+                novoStatus == PedidoStatus.AGUARDANDO_CONFIRMACAO) {
+            throw new ForbiddenException("Transição de status inválida para lojista.");
         }
-        // (Adicionar outras regras de transição aqui)
 
         pedido.setStatus(novoStatus);
+        return pedidoRepository.save(pedido);
+    }
+
+    @Transactional(readOnly = true)
+    public Pedido getPedidoDetalhesLojista(Long pedidoId) {
+        Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
+        return getPedidoValidadoLojista(pedidoId, farmacia.getId());
+    }
+
+    @Transactional
+    public Pedido aceitarPedido(Long pedidoId) {
+        Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
+        Pedido pedido = getPedidoValidadoLojista(pedidoId, farmacia.getId());
+
+        if (pedido.getStatus() != PedidoStatus.AGUARDANDO_CONFIRMACAO) {
+            throw new ConflictException("Apenas pedidos aguardando confirmação podem ser aceitos. Status atual: " + pedido.getStatus());
+        }
+
+        // Se tiver receita, verifica se foi aprovada
+        if (pedido.getReceita() != null && pedido.getReceita().getStatus() != ReceitaStatus.APROVADA) {
+            throw new ConflictException("Não é possível aceitar o pedido pois a receita ainda não foi aprovada.");
+        }
+
+        pedido.setStatus(PedidoStatus.CONFIRMADO);
+        return pedidoRepository.save(pedido);
+    }
+
+    @Transactional
+    public Pedido recusarPedido(Long pedidoId, String justificativa) {
+        Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
+        Pedido pedido = getPedidoValidadoLojista(pedidoId, farmacia.getId());
+
+        if (pedido.getStatus() != PedidoStatus.AGUARDANDO_CONFIRMACAO) {
+            throw new ConflictException("Apenas pedidos aguardando confirmação podem ser recusados. Status atual: " + pedido.getStatus());
+        }
+
+        estornarEstoquePedido(pedido);
+        pedido.setStatus(PedidoStatus.RECUSADO);
+        // Futuro: Salvar a justificativa de recusa em algum lugar
         return pedidoRepository.save(pedido);
     }
 
@@ -240,32 +282,60 @@ public class PedidoService {
     // --- Métodos Auxiliares Privados ---
     // ========================================================================
 
-    /**
-     * Busca um pedido e valida se o cliente logado pode gerenciá-lo.
-     */
-    private Pedido getPedidoValidadoCliente(Long pedidoId, Cliente cliente) {
+    private void estornarEstoquePedido(Pedido pedido) {
+        for (ItemPedido item : pedido.getItens()) {
+            EstoqueLojista estoque = item.getEstoqueLojista();
+            estoque.setQuantidade(estoque.getQuantidade() + item.getQuantidade());
+            estoqueLojistaRepository.save(estoque);
+        }
+    }
+
+    private Receita getReceitaDoPedido(Pedido pedido) {
+        Receita receita = pedido.getReceita();
+        if (receita == null) {
+            throw new ResourceNotFoundException("Pedido " + pedido.getId() + " não possui uma receita anexada.");
+        }
+        return receita;
+    }
+
+    private Pedido getPedidoValidadoCliente(Long pedidoId, Long clienteId) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido " + pedidoId + " não encontrado."));
-
-        if (!pedido.getCliente().getId().equals(cliente.getId())) {
+        if (!pedido.getCliente().getId().equals(clienteId)) {
             throw new ForbiddenException("Você não tem permissão para modificar este pedido.");
         }
         return pedido;
     }
 
-    /**
-     * Busca um pedido e valida se o farmacêutico logado pode gerenciá-lo.
-     */
     private Pedido getPedidoValidadoFarmaceutico(Long pedidoId, Farmaceutico farmaceutico) {
         Long farmaciaId = farmaceutico.getFarmacia().getId();
+        // A query do repositório findPedidoParaValidacao foi feita para um status específico.
+        // Como agora o status pode variar (pagamento pendente, receita pendente),
+        // vamos buscar pelo ID e validar manualmente.
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido " + pedidoId + " não encontrado."));
 
-        // Esta query otimizada já valida posse, status e carrega os dados
-        return pedidoRepository.findPedidoParaValidacao(
-                pedidoId,
-                PedidoStatus.AGUARDANDO_VALIDACAO_FARMACEUTICA,
-                farmaciaId
-        ).orElseThrow(() -> new ResourceNotFoundException(
-                "Pedido " + pedidoId + " não encontrado, não está aguardando validação, ou não pertence à sua farmácia."
-        ));
+        // Valida se o pedido pertence à farmácia do farmacêutico
+        boolean isFarmaciaOwner = pedido.getItens().stream()
+                .anyMatch(i -> Objects.equals(i.getEstoqueLojista().getFarmacia().getId(), farmaciaId));
+
+        if (!isFarmaciaOwner) {
+            throw new ResourceNotFoundException("Pedido não encontrado ou não pertence à sua farmácia.");
+        }
+
+        return pedido;
+    }
+
+    private Pedido getPedidoValidadoLojista(Long pedidoId, Long farmaciaId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido com ID " + pedidoId + " não encontrado."));
+
+        boolean isFarmaciaOwner = pedido.getItens().stream()
+                .anyMatch(i -> Objects.equals(i.getEstoqueLojista().getFarmacia().getId(), farmaciaId));
+
+        if (!isFarmaciaOwner) {
+            throw new ForbiddenException("Você não tem permissão para gerenciar este pedido.");
+        }
+        return pedido;
     }
 }

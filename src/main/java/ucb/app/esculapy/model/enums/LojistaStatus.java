@@ -6,7 +6,6 @@ package ucb.app.esculapy.model.enums;
 public enum LojistaStatus {
     /**
      * A farmácia se cadastrou, mas aguarda aprovação do Admin da plataforma.
-     * (Usado em AuthService)
      */
     PENDENTE_APROVACAO,
 

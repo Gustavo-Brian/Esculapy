@@ -1,14 +1,12 @@
 package ucb.app.esculapy.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class FarmaceuticoUpdateRequest {
-
+public class PasswordForgotRequest {
     @NotBlank
-    private String nome;
-
-    @NotBlank
-    private String numeroCelular;
+    @Email
+    private String email;
 }

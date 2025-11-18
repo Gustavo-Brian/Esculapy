@@ -4,11 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class FarmaceuticoUpdateRequest {
-
+public class PedidoRecusarRequest {
     @NotBlank
-    private String nome;
-
-    @NotBlank
-    private String numeroCelular;
+    private String justificativa;
 }

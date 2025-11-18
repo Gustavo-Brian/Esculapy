@@ -6,7 +6,6 @@ package ucb.app.esculapy.model.enums;
 public enum TipoReceita {
     /**
      * Não precisa de receita (ex: Dipirona).
-     * (Usado em PedidoService)
      */
     NAO_EXIGIDO,
 

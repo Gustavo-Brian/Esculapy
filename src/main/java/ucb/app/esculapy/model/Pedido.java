@@ -2,7 +2,7 @@ package ucb.app.esculapy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ucb.app.esculapy.model.enums.PedidoStatus;
-import jakarta.persistence.*; // Importação atualizada
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,7 +42,6 @@ public class Pedido {
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Receita receita;
 
-    // --- CAMPO ADICIONADO ---
     /**
      * O endereço de entrega selecionado pelo cliente no momento da compra.
      */

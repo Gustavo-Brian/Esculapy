@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ucb.app.esculapy.dto.PagamentoResponse; // --- IMPORT ADICIONADO ---
+import ucb.app.esculapy.dto.PagamentoResponse;
 import ucb.app.esculapy.dto.WebhookPagamentoRequest;
 import ucb.app.esculapy.exception.ConflictException;
 import ucb.app.esculapy.exception.ForbiddenException;
 import ucb.app.esculapy.exception.ResourceNotFoundException;
-import ucb.app.esculapy.model.Cliente; // --- IMPORT ADICIONADO ---
+import ucb.app.esculapy.model.Cliente;
 import ucb.app.esculapy.model.Pedido;
 import ucb.app.esculapy.model.enums.PedidoStatus;
 import ucb.app.esculapy.repository.PedidoRepository;
@@ -19,76 +19,67 @@ import ucb.app.esculapy.repository.PedidoRepository;
 public class PagamentoService {
 
     private final PedidoRepository pedidoRepository;
-    private final AuthenticationService authenticationService; // --- DEPENDÊNCIA ADICIONADA ---
+    private final AuthenticationService authenticationService;
 
     @Value("${pagamento.webhook.secret}")
     private String webhookSecretaCorreta;
 
-    // --- NOVO MÉTODO ADICIONADO ---
     @Transactional(readOnly = true)
     public PagamentoResponse criarSessaoDePagamento(Long pedidoId) {
         Cliente cliente = authenticationService.getClienteLogado();
 
-        // 1. Busca o pedido
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido com ID " + pedidoId + " não encontrado."));
 
-        // 2. Valida a posse (se o pedido é do cliente logado)
         if (!pedido.getCliente().getId().equals(cliente.getId())) {
             throw new ForbiddenException("Você não tem permissão para pagar este pedido.");
         }
 
-        // 3. Valida o status
         if (pedido.getStatus() != PedidoStatus.AGUARDANDO_PAGAMENTO) {
             throw new ConflictException("Este pedido não está aguardando pagamento. Status atual: " + pedido.getStatus());
         }
 
-        // 4. (SIMULAÇÃO) Chamar a API do Gateway de Pagamento
-        // Aqui você chamaria a API do Stripe/PagSeguro/etc.
-        // e passaria o ID do pedido, o valor total e os dados do cliente.
-        // ex: String urlStripe = stripeService.criarCheckout(pedido, cliente);
-
+        // (Simulação de chamada ao Gateway)
         System.out.println("LOG: [PagamentoService] Simulando criação de sessão de pagamento para o Pedido ID: " + pedidoId);
-        System.out.println("LOG: [PagamentoService] Valor: " + pedido.getValorTotal());
-
-        // 5. Retorna a URL (Simulada)
-        // O frontend irá redirecionar o cliente para esta URL.
-        // O 'pedidoId' na URL é crucial para o webhook saber qual pedido foi pago.
         String urlPagamentoSimulada = "https://gateway.pagamento.simulado/pagar?pedidoId=" + pedido.getId() + "&valor=" + pedido.getValorTotal();
 
         return new PagamentoResponse(urlPagamentoSimulada);
     }
-    // --- FIM DO NOVO MÉTODO ---
-
 
     @Transactional
     public void processarWebhook(WebhookPagamentoRequest request) {
 
-        // 1. VERIFICAÇÃO DE SEGURANÇA
+        // 1. Validação de Segurança
         if (!webhookSecretaCorreta.equals(request.getSecretKey())) {
             throw new ForbiddenException("Chave secreta do webhook inválida.");
         }
 
-        // 2. PROCESSAR APENAS SE O PAGAMENTO FOI APROVADO
+        // 2. Processar apenas sucesso
         if (!"PAGO".equalsIgnoreCase(request.getStatusPagamento())) {
             return;
         }
 
-        // 3. BUSCAR O PEDIDO
+        // 3. Buscar o Pedido
         Pedido pedido = pedidoRepository.findById(request.getPedidoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido com ID " + request.getPedidoId() + " não encontrado."));
 
-        // 4. VERIFICAÇÃO DE ESTADO (Idempotência)
-        if (pedido.getStatus() == PedidoStatus.PAGAMENTO_APROVADO) {
-            return; // Já foi processado
+        // 4. Idempotência
+        if (pedido.getStatus() == PedidoStatus.AGUARDANDO_CONFIRMACAO ||
+                pedido.getStatus() == PedidoStatus.CONFIRMADO ||
+                pedido.getStatus() == PedidoStatus.EM_PREPARACAO ||
+                pedido.getStatus() == PedidoStatus.PRONTO_PARA_ENTREGA ||
+                pedido.getStatus() == PedidoStatus.EM_TRANSPORTE ||
+                pedido.getStatus() == PedidoStatus.ENTREGUE) {
+            return; // Já foi pago
         }
 
         if (pedido.getStatus() != PedidoStatus.AGUARDANDO_PAGAMENTO) {
             throw new ConflictException("O pedido " + pedido.getId() + " não está aguardando pagamento. Status atual: " + pedido.getStatus());
         }
 
-        // 5. ATUALIZAR O PEDIDO
-        pedido.setStatus(PedidoStatus.PAGAMENTO_APROVADO);
+        // 5. Mudar Status
+        // Agora o pedido vai para AGUARDANDO_CONFIRMACAO (Farmácia precisa aceitar)
+        pedido.setStatus(PedidoStatus.AGUARDANDO_CONFIRMACAO);
         pedidoRepository.save(pedido);
     }
 }

@@ -1,6 +1,8 @@
 package ucb.app.esculapy.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ucb.app.esculapy.dto.EstoqueRequest;
@@ -16,14 +18,6 @@ import ucb.app.esculapy.repository.EstoqueLojistaRepository;
 import ucb.app.esculapy.repository.FarmaciaRepository;
 import ucb.app.esculapy.repository.ProdutoRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * Serviço unificado para gerenciar o Catálogo de Produtos da plataforma
- * e os Estoques das farmácias.
- * * Substitui ProdutoService e EstoqueService.
- */
 @Service
 @RequiredArgsConstructor
 public class CatalogoService {
@@ -34,12 +28,12 @@ public class CatalogoService {
     private final AuthenticationService authenticationService;
 
     // ========================================================================
-    // --- Lógica PÚBLICA (Usada por EstoqueController e CatalogoController) ---
+    // --- Lógica PÚBLICA (Paginada) ---
     // ========================================================================
 
     @Transactional(readOnly = true)
-    public List<Produto> getCatalogoCompletoAtivo() {
-        return produtoRepository.findAllByAtivoTrue();
+    public Page<Produto> getCatalogoCompletoAtivo(Pageable pageable) {
+        return produtoRepository.findAllByAtivoTrue(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -49,30 +43,26 @@ public class CatalogoService {
     }
 
     @Transactional(readOnly = true)
-    public List<EstoqueResponse> buscarEstoquePorNomeProduto(String nome) {
-        List<EstoqueLojista> estoques = estoqueLojistaRepository.findByProdutoNomeContendo(nome);
-        return estoques.stream()
-                .map(EstoqueResponse::new)
-                .collect(Collectors.toList());
+    public Page<EstoqueResponse> buscarEstoquePorNomeProduto(String nome, Pageable pageable) {
+        Page<EstoqueLojista> estoques = estoqueLojistaRepository.findByProdutoNomeContendo(nome, pageable);
+        return estoques.map(EstoqueResponse::new);
     }
 
     @Transactional(readOnly = true)
-    public List<EstoqueResponse> buscarEstoquePorCatalogoId(Long catalogoId) {
+    public Page<EstoqueResponse> buscarEstoquePorCatalogoId(Long catalogoId, Pageable pageable) {
         if (!produtoRepository.existsById(catalogoId)) {
             throw new ResourceNotFoundException("Produto com ID " + catalogoId + " não encontrado no catálogo.");
         }
-        List<EstoqueLojista> estoques = estoqueLojistaRepository.findOfertasByProdutoId(catalogoId);
-        return estoques.stream()
-                .map(EstoqueResponse::new)
-                .collect(Collectors.toList());
+        Page<EstoqueLojista> estoques = estoqueLojistaRepository.findOfertasByProdutoId(catalogoId, pageable);
+        return estoques.map(EstoqueResponse::new);
     }
 
     @Transactional(readOnly = true)
-    public List<EstoqueLojista> getEstoquePublicoDaFarmacia(Long farmaciaId) {
+    public Page<EstoqueLojista> getEstoquePublicoDaFarmacia(Long farmaciaId, Pageable pageable) {
         if (!farmaciaRepository.existsById(farmaciaId)) {
             throw new ResourceNotFoundException("Farmácia com ID " + farmaciaId + " não encontrada.");
         }
-        return estoqueLojistaRepository.findPublicoByFarmaciaId(farmaciaId);
+        return estoqueLojistaRepository.findPublicoByFarmaciaId(farmaciaId, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -82,7 +72,7 @@ public class CatalogoService {
     }
 
     // ========================================================================
-    // --- Lógica de ADMIN (Usada por ProdutoController) ---
+    // --- Lógica de ADMIN (CRUD Catálogo) ---
     // ========================================================================
 
     @Transactional
@@ -101,7 +91,7 @@ public class CatalogoService {
 
     @Transactional
     public Produto updateProdutoCatalogo(Long id, ProdutoRequest request) {
-        Produto produto = getProdutoDoCatalogoPorId(id); // Reusa o método público
+        Produto produto = getProdutoDoCatalogoPorId(id);
 
         produtoRepository.findByEan(request.getEan()).ifPresent(p -> {
             if (!p.getId().equals(id)) {
@@ -137,19 +127,19 @@ public class CatalogoService {
     }
 
     // ========================================================================
-    // --- Lógica de LOJISTA_ADMIN (Usada por FarmaciaAdminController) ---
+    // --- Lógica de LOJISTA_ADMIN (CRUD Estoque) ---
     // ========================================================================
 
     @Transactional(readOnly = true)
-    public List<EstoqueLojista> getEstoquePrivadoDaFarmaciaLogada() {
+    public Page<EstoqueLojista> getEstoquePrivadoDaFarmaciaLogada(Pageable pageable) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
-        return estoqueLojistaRepository.findByFarmaciaId(farmacia.getId());
+        return estoqueLojistaRepository.findByFarmaciaId(farmacia.getId(), pageable);
     }
 
     @Transactional
     public EstoqueLojista adicionarItemEstoque(EstoqueRequest request) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
-        Produto produto = getProdutoDoCatalogoPorId(request.getProdutoId()); // Reusa o método público
+        Produto produto = getProdutoDoCatalogoPorId(request.getProdutoId());
 
         estoqueLojistaRepository.findByFarmaciaIdAndProdutoId(farmacia.getId(), produto.getId())
                 .ifPresent(estoque -> {
@@ -168,36 +158,46 @@ public class CatalogoService {
     @Transactional
     public EstoqueLojista updateEstoque(Long estoqueId, EstoqueRequest request) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
-        EstoqueLojista item = estoqueLojistaRepository.findById(estoqueId)
-                .orElseThrow(() -> new ResourceNotFoundException("Item de estoque com ID " + estoqueId + " não encontrado."));
+        EstoqueLojista item = getEstoquePrivadoValidado(estoqueId, farmacia.getId());
 
-        if (!item.getFarmacia().getId().equals(farmacia.getId())) {
-            throw new ForbiddenException("Você não tem permissão para alterar o estoque de outra farmácia.");
-        }
         if (!item.getProduto().getId().equals(request.getProdutoId())) {
             throw new ConflictException("Não é permitido alterar o ProdutoId de um item de estoque. Crie um novo item.");
         }
 
         item.setPreco(request.getPreco());
         item.setQuantidade(request.getQuantidade());
+
         return estoqueLojistaRepository.save(item);
     }
 
     @Transactional
     public void deleteEstoque(Long estoqueId) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
-        EstoqueLojista item = estoqueLojistaRepository.findById(estoqueId)
-                .orElseThrow(() -> new ResourceNotFoundException("Item de estoque com ID " + estoqueId + " não encontrado."));
-
-        if (!item.getFarmacia().getId().equals(farmacia.getId())) {
-            throw new ForbiddenException("Você não tem permissão para remover o estoque de outra farmácia.");
-        }
+        EstoqueLojista item = getEstoquePrivadoValidado(estoqueId, farmacia.getId());
         estoqueLojistaRepository.delete(item);
+    }
+
+    @Transactional
+    public EstoqueLojista setEstoqueAtivo(Long estoqueId, boolean ativo) {
+        Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
+        EstoqueLojista item = getEstoquePrivadoValidado(estoqueId, farmacia.getId());
+        item.setAtivo(ativo);
+        return estoqueLojistaRepository.save(item);
     }
 
     // ========================================================================
     // --- Métodos Auxiliares Privados ---
     // ========================================================================
+
+    private EstoqueLojista getEstoquePrivadoValidado(Long estoqueId, Long farmaciaId) {
+        EstoqueLojista item = estoqueLojistaRepository.findById(estoqueId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item de estoque com ID " + estoqueId + " não encontrado."));
+
+        if (!item.getFarmacia().getId().equals(farmaciaId)) {
+            throw new ForbiddenException("Você não tem permissão para alterar o estoque de outra farmácia.");
+        }
+        return item;
+    }
 
     private Produto mapDtoToProduto(Produto produto, ProdutoRequest request) {
         produto.setNome(request.getNome());

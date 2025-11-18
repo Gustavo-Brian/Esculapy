@@ -1,25 +1,13 @@
 package ucb.app.esculapy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ucb.app.esculapy.model.enums.LojistaStatus;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +57,12 @@ public class Farmacia {
     @JoinColumn(name = "usuario_admin_id", referencedColumnName = "id", unique = true)
     private Usuario usuarioAdmin;
 
-    @JsonIgnore // Carregar sob demanda
+    @JsonIgnore // Carregar sob demanda via Controller
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "endereco_comercial_id", referencedColumnName = "id")
     private Endereco enderecoComercial;
 
-    @JsonIgnore // Carregar sob demanda
+    @JsonIgnore // Carregar sob demanda via Controller
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "conta_bancaria_id", referencedColumnName = "id")
     private ContaBancaria contaBancaria;

@@ -1,17 +1,16 @@
 package ucb.app.esculapy.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ucb.app.esculapy.dto.EnderecoRequest;
-import ucb.app.esculapy.exception.ForbiddenException;
 import ucb.app.esculapy.exception.ResourceNotFoundException;
 import ucb.app.esculapy.model.Cliente;
 import ucb.app.esculapy.model.Endereco;
-import ucb.app.esculapy.repository.ClienteRepository; // --- IMPORT ADICIONADO ---
+import ucb.app.esculapy.repository.ClienteRepository;
 import ucb.app.esculapy.repository.EnderecoRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,14 +18,15 @@ public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
     private final AuthenticationService authenticationService;
-    private final ClienteRepository clienteRepository; // --- DEPENDÊNCIA ADICIONADA ---
+    private final ClienteRepository clienteRepository; // Manter para o getClienteLogado()
 
     @Transactional(readOnly = true)
-    public List<Endereco> getMeusEnderecos() {
+    public Page<Endereco> getMeusEnderecos(Pageable pageable) {
         Cliente cliente = authenticationService.getClienteLogado();
-        return enderecoRepository.findByClienteId(cliente.getId());
+        return enderecoRepository.findByClienteId(cliente.getId(), pageable);
     }
 
+    // --- BLOCO CORRIGIDO ---
     @Transactional
     public Endereco adicionarEndereco(EnderecoRequest request) {
         Cliente cliente = authenticationService.getClienteLogado();
@@ -34,24 +34,18 @@ public class EnderecoService {
         Endereco endereco = new Endereco();
         mapRequestToEndereco(request, endereco);
 
-        // --- CORREÇÃO APLICADA ---
-        // 1. Adicionamos o endereço à lista do cliente
-        cliente.adicionarEndereco(endereco);
+        // 1. Define o "dono" do endereço (o lado @ManyToOne)
+        endereco.setCliente(cliente);
 
-        // 2. Salvamos o cliente (que tem CascadeType.ALL)
-        // Isso irá salvar o novo endereço e definir o 'cliente_id' nele.
-        clienteRepository.save(cliente);
-        // --- FIM DA CORREÇÃO ---
-
-        return endereco;
+        // 2. Salva o próprio endereço, que agora contém o cliente_id
+        return enderecoRepository.save(endereco);
     }
+    // --- FIM DO BLOCO ---
 
     @Transactional
     public Endereco atualizarEndereco(Long id, EnderecoRequest request) {
         Cliente cliente = authenticationService.getClienteLogado();
 
-        // A query findByIdAndClienteId garante que o cliente só possa
-        // editar um endereço que é dele
         Endereco endereco = enderecoRepository.findByIdAndClienteId(id, cliente.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Endereço com ID " + id + " não encontrado ou não pertence a você."));
 
@@ -69,7 +63,6 @@ public class EnderecoService {
         enderecoRepository.delete(endereco);
     }
 
-    // Método auxiliar para mapear o DTO para a entidade
     private void mapRequestToEndereco(EnderecoRequest request, Endereco endereco) {
         endereco.setCep(request.getCep());
         endereco.setLogradouro(request.getLogradouro());

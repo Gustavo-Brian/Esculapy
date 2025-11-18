@@ -1,40 +1,32 @@
 package ucb.app.esculapy.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ucb.app.esculapy.dto.ApiResponse;
 import ucb.app.esculapy.model.Produto;
-import ucb.app.esculapy.service.CatalogoService; // --- ALTERAÇÃO ---
-
-import java.util.List;
+import ucb.app.esculapy.service.CatalogoService;
 
 @RestController
 @RequestMapping("/api/catalogo") // Path público
 @RequiredArgsConstructor
 public class CatalogoController {
 
-    private final CatalogoService catalogoService; // --- ALTERAÇÃO ---
+    private final CatalogoService catalogoService;
 
-    /**
-     * NOVO ENDPOINT (Seu Pedido)
-     * Retorna uma lista de todos os produtos ativos do catálogo central.
-     */
     @GetMapping
-    public ResponseEntity<List<Produto>> getCatalogoCompleto() {
-        List<Produto> catalogo = catalogoService.getCatalogoCompletoAtivo(); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(catalogo);
+    public ApiResponse<Page<Produto>> getCatalogoCompleto(Pageable pageable) {
+        Page<Produto> catalogo = catalogoService.getCatalogoCompletoAtivo(pageable);
+        return ApiResponse.success(catalogo);
     }
 
-    /**
-     * MOVIDO (Era /api/produtos/{id})
-     * Retorna um produto específico do catálogo central.
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> getProdutoDoCatalogoPorId(@PathVariable Long id) {
-        Produto produto = catalogoService.getProdutoDoCatalogoPorId(id); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(produto);
+    public ApiResponse<Produto> getProdutoDoCatalogoPorId(@PathVariable Long id) {
+        Produto produto = catalogoService.getProdutoDoCatalogoPorId(id);
+        return ApiResponse.success(produto);
     }
 }

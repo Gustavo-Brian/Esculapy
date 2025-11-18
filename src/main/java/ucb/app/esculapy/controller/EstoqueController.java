@@ -1,61 +1,42 @@
 package ucb.app.esculapy.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import ucb.app.esculapy.dto.ApiResponse;
 import ucb.app.esculapy.dto.EstoqueResponse;
 import ucb.app.esculapy.model.EstoqueLojista;
-import ucb.app.esculapy.service.CatalogoService; // --- ALTERAÇÃO ---
-
-import java.util.List;
+import ucb.app.esculapy.service.CatalogoService;
 
 @RestController
 @RequestMapping("/api/estoque") // Path público
 @RequiredArgsConstructor
 public class EstoqueController {
 
-    // --- ALTERAÇÃO ---
-    // Removemos as duas dependências de serviço e injetamos apenas uma
     private final CatalogoService catalogoService;
-    // --- FIM DA ALTERAÇÃO ---
 
-    /**
-     * MOVIDO (Era /api/produtos/buscar)
-     * Busca estoque por nome do produto.
-     */
     @GetMapping("/buscar-por-nome")
-    public ResponseEntity<List<EstoqueResponse>> buscarEstoquePorNome(@RequestParam String nome) {
-        List<EstoqueResponse> estoques = catalogoService.buscarEstoquePorNomeProduto(nome); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(estoques);
+    public ApiResponse<Page<EstoqueResponse>> buscarEstoquePorNome(@RequestParam String nome, Pageable pageable) {
+        Page<EstoqueResponse> estoques = catalogoService.buscarEstoquePorNomeProduto(nome, pageable);
+        return ApiResponse.success(estoques);
     }
 
-    /**
-     * MOVIDO (Era /api/produtos/{id}/ofertas)
-     * Busca estoque por ID do catálogo.
-     */
     @GetMapping("/buscar-por-catalogo/{catalogoId}")
-    public ResponseEntity<List<EstoqueResponse>> getEstoqueParaProduto(@PathVariable Long catalogoId) {
-        List<EstoqueResponse> estoques = catalogoService.buscarEstoquePorCatalogoId(catalogoId); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(estoques);
+    public ApiResponse<Page<EstoqueResponse>> getEstoqueParaProduto(@PathVariable Long catalogoId, Pageable pageable) {
+        Page<EstoqueResponse> estoques = catalogoService.buscarEstoquePorCatalogoId(catalogoId, pageable);
+        return ApiResponse.success(estoques);
     }
 
-    /**
-     * NOVO ENDPOINT (Seu Pedido)
-     * Retorna todo o estoque de uma farmácia específica.
-     */
     @GetMapping("/farmacia/{farmaciaId}")
-    public ResponseEntity<List<EstoqueLojista>> getEstoqueDaFarmacia(@PathVariable Long farmaciaId) {
-        List<EstoqueLojista> estoque = catalogoService.getEstoquePublicoDaFarmacia(farmaciaId); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(estoque);
+    public ApiResponse<Page<EstoqueLojista>> getEstoqueDaFarmacia(@PathVariable Long farmaciaId, Pageable pageable) {
+        Page<EstoqueLojista> estoque = catalogoService.getEstoquePublicoDaFarmacia(farmaciaId, pageable);
+        return ApiResponse.success(estoque);
     }
 
-    /**
-     * NOVO ENDPOINT (Seu Pedido)
-     * Retorna um item de estoque específico.
-     */
     @GetMapping("/{estoqueId}")
-    public ResponseEntity<EstoqueLojista> getEstoquePorId(@PathVariable Long estoqueId) {
-        EstoqueLojista estoque = catalogoService.getEstoquePublicoPorId(estoqueId); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(estoque);
+    public ApiResponse<EstoqueLojista> getEstoquePorId(@PathVariable Long estoqueId) {
+        EstoqueLojista estoque = catalogoService.getEstoquePublicoPorId(estoqueId);
+        return ApiResponse.success(estoque);
     }
 }

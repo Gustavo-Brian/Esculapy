@@ -29,11 +29,11 @@ public class DataInitializer implements CommandLineRunner {
         garantirRole("ROLE_FARMACEUTICO");
         garantirRole("ROLE_ADMIN");
 
-        // 2. CRIAR USUÁRIO ADMIN MASTER RANDÔMICO
-        String senhaPadrao = UUID.randomUUID().toString().substring(0, 8);
-        String emailPadrao = "admin_" + UUID.randomUUID().toString().substring(0, 4) + "@esculapy.com";
+        // 2. CRIAR USUÁRIO ADMIN MASTER RANDÔMICO (SE NÃO HOUVER USUÁRIOS)
+        if (usuarioRepository.count() == 0) {
+            String senhaPadrao = UUID.randomUUID().toString().substring(0, 8);
+            String emailPadrao = "admin_" + UUID.randomUUID().toString().substring(0, 4) + "@esculapy.com";
 
-        if (usuarioRepository.count() == 0) { // Cria apenas se o banco estiver vazio
             Role adminRole = roleRepository.findByNome("ROLE_ADMIN")
                     .orElseThrow(() -> new RuntimeException("ROLE_ADMIN não encontrada."));
 

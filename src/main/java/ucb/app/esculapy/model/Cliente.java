@@ -1,22 +1,12 @@
 package ucb.app.esculapy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,15 +43,16 @@ public class Cliente {
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", unique = true)
     private Usuario usuario;
 
+    // --- BLOCO CORRIGIDO ---
     @JsonIgnore
     @OneToMany(
-            // mappedBy = "cliente", // --- ALTERAÇÃO: Removido
+            mappedBy = "cliente", // <-- CORREÇÃO: Mapeado pelo campo "cliente" em Endereco.java
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    @JoinColumn(name = "cliente_id") // --- ALTERAÇÃO: Adicionado
     private List<Endereco> enderecos = new ArrayList<>();
+    // --- FIM DO BLOCO ---
 
     @JsonIgnore
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
@@ -69,5 +60,7 @@ public class Cliente {
 
     public void adicionarEndereco(Endereco endereco) {
         this.enderecos.add(endereco);
+        // Boa prática: definir os dois lados da relação
+        endereco.setCliente(this);
     }
 }

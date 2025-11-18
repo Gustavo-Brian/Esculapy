@@ -2,15 +2,14 @@ package ucb.app.esculapy.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*; // Importação atualizada
+import org.springframework.web.bind.annotation.*;
+import ucb.app.esculapy.dto.ApiResponse;
 import ucb.app.esculapy.dto.ValidacaoReceitaRequest;
 import ucb.app.esculapy.model.Pedido;
-import ucb.app.esculapy.service.PedidoService; // --- ALTERAÇÃO ---
-// import ucb.app.esculapy.service.ReceitaService; // --- DELETADO ---
-
-import java.util.List;
+import ucb.app.esculapy.service.PedidoService;
 
 @RestController
 @RequestMapping("/api/farmaceutico")
@@ -18,36 +17,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FarmaceuticoController {
 
-    private final PedidoService pedidoService; // --- ALTERAÇÃO ---
+    private final PedidoService pedidoService;
 
-    /**
-     * Busca pedidos pendentes de validação farmacêutica
-     * que sejam da farmácia deste farmacêutico logado.
-     */
     @GetMapping("/pedidos/pendentes")
-    public ResponseEntity<List<Pedido>> getPedidosPendentes() {
-        List<Pedido> pedidos = pedidoService.getPedidosPendentesFarmaceutico(); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(pedidos);
+    public ApiResponse<Page<Pedido>> getPedidosPendentes(Pageable pageable) {
+        Page<Pedido> pedidos = pedidoService.getPedidosPendentesFarmaceutico(pageable);
+        return ApiResponse.success(pedidos);
     }
 
-    /**
-     * Aprova uma receita de um pedido.
-     */
+    // --- ENDPOINT ADICIONADO (da lista) ---
+    @GetMapping("/pedidos/{pedidoId}")
+    public ApiResponse<Pedido> getPedidoDetalhes(@PathVariable Long pedidoId) {
+        Pedido pedido = pedidoService.getPedidoDetalhesFarmaceutico(pedidoId);
+        return ApiResponse.success(pedido);
+    }
+
     @PostMapping("/pedidos/{pedidoId}/receita/aprovar")
-    public ResponseEntity<Pedido> aprovarReceita(@PathVariable Long pedidoId) {
-        Pedido pedido = pedidoService.aprovarReceita(pedidoId); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(pedido);
+    public ApiResponse<Pedido> aprovarReceita(@PathVariable Long pedidoId) {
+        Pedido pedido = pedidoService.aprovarReceita(pedidoId);
+        return ApiResponse.success(pedido);
     }
 
-    /**
-     * Rejeita uma receita de um pedido.
-     */
     @PostMapping("/pedidos/{pedidoId}/receita/rejeitar")
-    public ResponseEntity<Pedido> rejeitarReceita(
+    public ApiResponse<Pedido> rejeitarReceita(
             @PathVariable Long pedidoId,
             @Valid @RequestBody ValidacaoReceitaRequest request
     ) {
-        Pedido pedido = pedidoService.rejeitarReceita(pedidoId, request.getJustificativa()); // --- ALTERAÇÃO ---
-        return ResponseEntity.ok(pedido);
+        Pedido pedido = pedidoService.rejeitarReceita(pedidoId, request.getJustificativa());
+        return ApiResponse.success(pedido);
     }
 }

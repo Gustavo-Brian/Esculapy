@@ -1,14 +1,18 @@
 package ucb.app.esculapy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "enderecos")
@@ -35,4 +39,11 @@ public class Endereco {
      * ou "COMERCIAL" (para Farmacia)
      */
     private String tipo;
+
+    // --- BLOCO ADICIONADO ---
+    @JsonIgnore // Para evitar loops infinitos na serialização JSON
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id") // Esta é a coluna do banco de dados
+    private Cliente cliente;
+    // --- FIM DO BLOCO ---
 }

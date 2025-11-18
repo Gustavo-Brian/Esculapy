@@ -27,29 +27,38 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        // Endpoints públicos de Autenticação e Navegação
+                        // --- ROTAS PÚBLICAS ---
+
+                        // Autenticação
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // Catálogo e Estoque (Visualização)
                         .requestMatchers(HttpMethod.GET, "/api/catalogo/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/estoque/**").permitAll()
 
-                        // --- LINHA ADICIONADA ---
+                        // Farmácias (Listagem pública)
                         .requestMatchers(HttpMethod.GET, "/api/farmacias/**").permitAll()
-                        // ------------------------
 
+                        // Webhooks (Pagamento, etc)
                         .requestMatchers("/api/webhooks/**").permitAll()
-                        .requestMatchers("/error").permitAll()
 
-                        // O resto exige autenticação
+                        // Tratamento de Erros e Swagger (se houver)
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+
+                        // --- ROTAS PROTEGIDAS ---
+                        // Qualquer outra requisição exige autenticação
                         .anyRequest().authenticated()
                 )
 
-                // --- RESTANTE DO ARQUIVO COMPLETADO ---
+                // --- CONFIGURAÇÃO DE SESSÃO ---
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
+                // --- FILTROS ---
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        // --- FIM DA COMPLETAÇÃO ---
 
         return http.build();
     }

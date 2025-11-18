@@ -7,23 +7,32 @@ public enum PedidoStatus {
     /**
      * O pedido foi criado, mas aguarda o upload e validação da receita.
      */
-    AGUARDANDO_VALIDACAO_FARMACEUTICA,
+    AGUARDANDO_RECEITA,
 
     /**
-     * A receita foi aprovada (ou não era necessária). Aguardando pagamento.
+     * O pedido aguarda pagamento (sem receita ou receita já aprovada).
      */
     AGUARDANDO_PAGAMENTO,
 
     /**
-     * Pagamento confirmado, aguardando separação.
+     * Pagamento confirmado, aguardando aceite da farmácia.
      */
-    PAGAMENTO_APROVADO,
+    AGUARDANDO_CONFIRMACAO,
 
     /**
-     * Pagamento aprovado, pedido está sendo separado no estoque.
-     * (Este era o status que faltava)
+     * Farmácia aceitou o pedido.
      */
-    EM_SEPARACAO,
+    CONFIRMADO,
+
+    /**
+     * Farmácia está separando os itens.
+     */
+    EM_PREPARACAO,
+
+    /**
+     * Pedido pronto para retirada ou entrega.
+     */
+    PRONTO_PARA_ENTREGA,
 
     /**
      * Pedido em rota de entrega.
@@ -36,7 +45,12 @@ public enum PedidoStatus {
     ENTREGUE,
 
     /**
-     * O pedido foi cancelado (ex: receita rejeitada, falta de pagamento).
+     * O pedido foi cancelado (ex: receita rejeitada, falta de pagamento, cliente desistiu).
      */
-    CANCELADO
+    CANCELADO,
+
+    /**
+     * O pedido foi recusado pela farmácia (ex: falta de estoque).
+     */
+    RECUSADO
 }

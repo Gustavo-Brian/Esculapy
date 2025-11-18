@@ -1,8 +1,9 @@
 package ucb.app.esculapy.repository;
 
 import ucb.app.esculapy.model.Farmaceutico;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List; // Add import
 import java.util.Optional;
 
 public interface FarmaceuticoRepository extends JpaRepository<Farmaceutico, Long> {
@@ -11,6 +12,6 @@ public interface FarmaceuticoRepository extends JpaRepository<Farmaceutico, Long
     Boolean existsByCpf(String cpf);
     Boolean existsByCrfP(String crfP);
 
-    // --- MÉTODO ADICIONADO ---
-    List<Farmaceutico> findAllByFarmaciaId(Long farmaciaId);
+    // Lista paginada de farmacêuticos de uma farmácia
+    Page<Farmaceutico> findAllByFarmaciaId(Long farmaciaId, Pageable pageable);
 }
