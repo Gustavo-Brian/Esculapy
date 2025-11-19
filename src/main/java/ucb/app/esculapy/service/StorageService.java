@@ -2,6 +2,9 @@ package ucb.app.esculapy.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Interface para serviços de armazenamento de arquivos (ex: local, S3).
+ */
 public interface StorageService {
 
     /**
@@ -10,9 +13,10 @@ public interface StorageService {
     void init();
 
     /**
-     * Faz o upload de um arquivo e retorna a URL pública.
+     * Faz o upload de um arquivo e retorna a URL pública/caminho.
+     *
      * @param file O arquivo enviado na requisição
-     * @return A URL onde o arquivo pode ser acessado
+     * @return A URL/caminho onde o arquivo pode ser acessado
      */
     String upload(MultipartFile file);
 }

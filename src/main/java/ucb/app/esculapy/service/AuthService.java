@@ -27,6 +27,9 @@ import ucb.app.esculapy.security.jwt.JwtService;
 
 import java.util.Set;
 
+/**
+ * Serviço responsável pela lógica de Autenticação e Registro (login, registro de cliente/farmácia).
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -40,6 +43,14 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
+    /**
+     * Realiza o registro de um novo usuário do tipo cliente.
+     *
+     * @param request O DTO contendo os dados do cliente.
+     * @return O {@link AuthResponse} com o token JWT.
+     * @throws ConflictException Se o e-mail ou CPF já estiver em uso.
+     * @throws ResourceNotFoundException Se a Role de cliente não for encontrada.
+     */
     @Transactional
     public AuthResponse registerCliente(RegisterClienteRequest request) {
         if (usuarioRepository.existsByEmail(request.getEmail())) {
@@ -71,6 +82,14 @@ public class AuthService {
         return new AuthResponse(jwtToken, savedUser.getId(), savedUser.getEmail());
     }
 
+    /**
+     * Realiza o registro de um novo administrador de farmácia (lojista).
+     *
+     * @param request O DTO contendo os dados da farmácia e do administrador.
+     * @return O {@link AuthResponse} com o token JWT.
+     * @throws ConflictException Se o e-mail, CNPJ ou CRF-J já estiver em uso.
+     * @throws ResourceNotFoundException Se a Role de lojista não for encontrada.
+     */
     @Transactional
     public AuthResponse registerFarmacia(RegisterFarmaciaRequest request) {
         if (usuarioRepository.existsByEmail(request.getEmail())) {
@@ -108,6 +127,12 @@ public class AuthService {
         return new AuthResponse(jwtToken, savedUser.getId(), savedUser.getEmail());
     }
 
+    /**
+     * Realiza o login do usuário usando o {@link AuthenticationManager}.
+     *
+     * @param request O DTO contendo e-mail e senha.
+     * @return O {@link AuthResponse} com o token JWT.
+     */
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -124,10 +149,21 @@ public class AuthService {
         return new AuthResponse(jwtToken, usuario.getId(), usuario.getEmail());
     }
 
+    /**
+     * Inicia o processo de recuperação de senha (simulação de envio de e-mail).
+     *
+     * @param email O e-mail para o qual o link deve ser enviado.
+     */
     public void forgotPassword(String email) {
         userService.forgotPassword(email);
     }
 
+    /**
+     * Redefine a senha do usuário usando um token de recuperação.
+     *
+     * @param token O token de recuperação.
+     * @param novaSenha A nova senha.
+     */
     public void resetPassword(String token, String novaSenha) {
         userService.resetPassword(token, novaSenha);
     }

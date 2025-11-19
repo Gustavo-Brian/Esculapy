@@ -4,6 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * DTO para solicitar autenticação (login) de um usuário.
+ */
 @Data
 public class LoginRequest {
     @NotBlank

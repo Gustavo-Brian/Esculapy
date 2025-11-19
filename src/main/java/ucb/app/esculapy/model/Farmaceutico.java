@@ -9,6 +9,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entidade que representa um Farmacêutico, um funcionário de uma Farmácia.
+ */
 @Entity
 @Table(name = "farmaceuticos", uniqueConstraints = {
         @UniqueConstraint(columnNames = "cpf"),
@@ -31,7 +34,7 @@ public class Farmaceutico {
     private String cpf;
 
     @Column(nullable = false, unique = true)
-    private String crfP; // CRF Pessoal (do profissional)
+    private String crfP;
 
     @Column(nullable = false)
     private String numeroCelular;

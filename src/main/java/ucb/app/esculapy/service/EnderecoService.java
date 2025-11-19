@@ -12,21 +12,35 @@ import ucb.app.esculapy.model.Endereco;
 import ucb.app.esculapy.repository.ClienteRepository;
 import ucb.app.esculapy.repository.EnderecoRepository;
 
+/**
+ * Serviço responsável pela lógica de gerenciamento de endereços por parte do cliente.
+ */
 @Service
 @RequiredArgsConstructor
 public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
     private final AuthenticationService authenticationService;
-    private final ClienteRepository clienteRepository; // Manter para o getClienteLogado()
+    private final ClienteRepository clienteRepository;
 
+    /**
+     * Lista paginada dos endereços do cliente logado.
+     *
+     * @param pageable As informações de paginação.
+     * @return Uma página de endereços.
+     */
     @Transactional(readOnly = true)
     public Page<Endereco> getMeusEnderecos(Pageable pageable) {
         Cliente cliente = authenticationService.getClienteLogado();
         return enderecoRepository.findByClienteId(cliente.getId(), pageable);
     }
 
-    // --- BLOCO CORRIGIDO ---
+    /**
+     * Adiciona um novo endereço para o cliente logado.
+     *
+     * @param request O DTO contendo os dados do novo endereço.
+     * @return O objeto {@link Endereco} salvo.
+     */
     @Transactional
     public Endereco adicionarEndereco(EnderecoRequest request) {
         Cliente cliente = authenticationService.getClienteLogado();
@@ -34,14 +48,19 @@ public class EnderecoService {
         Endereco endereco = new Endereco();
         mapRequestToEndereco(request, endereco);
 
-        // 1. Define o "dono" do endereço (o lado @ManyToOne)
         endereco.setCliente(cliente);
 
-        // 2. Salva o próprio endereço, que agora contém o cliente_id
         return enderecoRepository.save(endereco);
     }
-    // --- FIM DO BLOCO ---
 
+    /**
+     * Atualiza um endereço existente do cliente logado.
+     *
+     * @param id O ID do endereço a ser atualizado.
+     * @param request O DTO com os novos dados.
+     * @return O objeto {@link Endereco} atualizado.
+     * @throws ResourceNotFoundException Se o endereço não for encontrado ou não pertencer ao cliente.
+     */
     @Transactional
     public Endereco atualizarEndereco(Long id, EnderecoRequest request) {
         Cliente cliente = authenticationService.getClienteLogado();
@@ -53,6 +72,12 @@ public class EnderecoService {
         return enderecoRepository.save(endereco);
     }
 
+    /**
+     * Deleta um endereço do cliente logado.
+     *
+     * @param id O ID do endereço a ser deletado.
+     * @throws ResourceNotFoundException Se o endereço não for encontrado ou não pertencer ao cliente.
+     */
     @Transactional
     public void deletarEndereco(Long id) {
         Cliente cliente = authenticationService.getClienteLogado();
@@ -63,6 +88,12 @@ public class EnderecoService {
         enderecoRepository.delete(endereco);
     }
 
+    /**
+     * Mapeia os dados de um {@link EnderecoRequest} para um objeto {@link Endereco}.
+     *
+     * @param request O DTO de requisição.
+     * @param endereco O objeto Endereco de destino.
+     */
     private void mapRequestToEndereco(EnderecoRequest request, Endereco endereco) {
         endereco.setCep(request.getCep());
         endereco.setLogradouro(request.getLogradouro());

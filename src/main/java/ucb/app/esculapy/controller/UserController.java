@@ -16,6 +16,9 @@ import ucb.app.esculapy.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controlador REST para o gerenciamento de perfis e informações do usuário logado.
+ */
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -27,6 +30,10 @@ public class UserController {
     // --- Classes Internas (DTOs de Resposta Específicos para /me) ---
     // ========================================================================
 
+    /**
+     * DTO de resposta para o endpoint "/me", contendo informações básicas do usuário
+     * e os perfis específicos (Cliente, FarmaciaAdmin, Farmaceutico) se existirem.
+     */
     @Data
     private static class MeResponse {
         private Long id;
@@ -36,6 +43,11 @@ public class UserController {
         private FarmaciaAdminProfile farmaciaAdmin;
         private FarmaceuticoProfile farmaceutico;
 
+        /**
+         * Construtor que popula o DTO a partir do objeto {@link Usuario}.
+         *
+         * @param usuario O objeto {@link Usuario} autenticado.
+         */
         public MeResponse(Usuario usuario) {
             this.id = usuario.getId();
             this.email = usuario.getEmail();
@@ -55,6 +67,9 @@ public class UserController {
         }
     }
 
+    /**
+     * Perfil de Cliente simplificado para o DTO {@link MeResponse}.
+     */
     @Data
     private static class ClienteProfile {
         private Long id;
@@ -67,6 +82,9 @@ public class UserController {
         }
     }
 
+    /**
+     * Perfil de Farmácia Administrador simplificado para o DTO {@link MeResponse}.
+     */
     @Data
     private static class FarmaciaAdminProfile {
         private Long id;
@@ -81,6 +99,9 @@ public class UserController {
         }
     }
 
+    /**
+     * Perfil de Farmacêutico simplificado para o DTO {@link MeResponse}.
+     */
     @Data
     private static class FarmaceuticoProfile {
         private Long id;
@@ -101,7 +122,9 @@ public class UserController {
     // ========================================================================
 
     /**
-     * Retorna as informações do usuário logado e seus perfis associados.
+     * Retorna as informações completas do usuário logado (incluindo perfis e roles).
+     *
+     * @return Uma resposta de API contendo o DTO {@link MeResponse}.
      */
     @GetMapping("/me")
     public ApiResponse<MeResponse> getMyInfo() {
@@ -111,7 +134,9 @@ public class UserController {
     }
 
     /**
-     * Retorna o perfil editável do usuário (atualmente focado no Cliente).
+     * Retorna o perfil editável do usuário logado (atualmente focado no Cliente/Usuário comum).
+     *
+     * @return Uma resposta de API contendo o DTO {@link ProfileResponse}.
      */
     @GetMapping("/profile")
     public ApiResponse<ProfileResponse> getProfile() {
@@ -119,7 +144,10 @@ public class UserController {
     }
 
     /**
-     * Atualiza os dados do perfil do usuário (Nome, Telefone).
+     * Atualiza os dados do perfil do usuário (Nome, Telefone, etc.).
+     *
+     * @param request O DTO com os dados de atualização.
+     * @return Uma resposta de API contendo o DTO {@link ProfileResponse} atualizado.
      */
     @PutMapping("/profile")
     public ApiResponse<ProfileResponse> updateProfile(@Valid @RequestBody ProfileUpdateRequest request) {
@@ -128,6 +156,9 @@ public class UserController {
 
     /**
      * Atualiza a senha do usuário logado.
+     *
+     * @param request O DTO contendo a senha atual e a nova senha.
+     * @return Uma resposta de API de sucesso.
      */
     @PutMapping("/password")
     public ApiResponse<Object> updatePassword(@Valid @RequestBody PasswordUpdateRequest request) {

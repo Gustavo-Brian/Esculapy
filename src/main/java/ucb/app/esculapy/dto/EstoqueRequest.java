@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import java.math.BigDecimal;
 
+/**
+ * DTO para solicitar a criação ou atualização de um item de estoque por um lojista.
+ */
 @Data
 public class EstoqueRequest {
 

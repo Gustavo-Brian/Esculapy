@@ -3,8 +3,12 @@ package ucb.app.esculapy.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * DTO de resposta contendo informações para iniciar um pagamento externo,
+ * como a URL de redirecionamento para o gateway de pagamento.
+ */
 @Data
-@AllArgsConstructor // Para facilitar a criação
+@AllArgsConstructor
 public class PagamentoResponse {
 
     /**

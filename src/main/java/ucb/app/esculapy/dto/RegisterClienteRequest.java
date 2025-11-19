@@ -8,6 +8,9 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 
+/**
+ * DTO para solicitar o registro de um novo usuário do tipo cliente.
+ */
 @Data
 public class RegisterClienteRequest {
     @NotBlank @Size(min = 3)
@@ -20,6 +23,7 @@ public class RegisterClienteRequest {
     private String senha;
 
     @NotBlank
+    @CPF
     private String cpf;
 
     private String numeroCelular;

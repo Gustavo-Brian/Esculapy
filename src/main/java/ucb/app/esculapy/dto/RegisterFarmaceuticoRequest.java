@@ -6,22 +6,27 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CPF;
 
+/**
+ * DTO para solicitar o registro de um novo usuário do tipo farmacêutico
+ * (realizado pelo administrador da farmácia).
+ */
 @Data
 public class RegisterFarmaceuticoRequest {
     @NotBlank
     private String nome;
 
     @NotBlank @Email
-    private String email; // Email de login
+    private String email;
 
     @NotBlank @Size(min = 6)
     private String senha;
 
     @NotBlank
+    @CPF
     private String cpf;
 
     @NotBlank
-    private String crfP; // CRF Pessoal
+    private String crfP;
 
     @NotBlank
     private String numeroCelular;

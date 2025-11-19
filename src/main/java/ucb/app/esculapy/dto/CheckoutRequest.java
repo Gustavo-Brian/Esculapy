@@ -1,8 +1,13 @@
 package ucb.app.esculapy.dto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Data; // Usamos @Data para get/set
+import lombok.Data;
 
+/**
+ * DTO usado em endpoints de checkout/pagamento.
+ *
+ *
+ */
 @Data
 public class CheckoutRequest {
         @NotNull(message = "O ID do pedido é obrigatório.")

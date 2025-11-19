@@ -16,6 +16,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Filtro que intercepta todas as requisições para extrair e validar o JWT.
+ * Se o token for válido, autentica o usuário no contexto do Spring Security.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -23,6 +27,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Lógica de filtragem interna.
+     *
+     * @param request A requisição HTTP.
+     * @param response A resposta HTTP.
+     * @param filterChain A cadeia de filtros.
+     * @throws ServletException Se ocorrer um erro de servlet.
+     * @throws IOException Se ocorrer um erro de I/O.
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -39,18 +52,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Extrai o token (remove o prefixo "Bearer ")
         jwt = authHeader.substring(7);
 
         try {
-            userEmail = jwtService.extractUsername(jwt); // Pode lançar exceção se token inválido
+            userEmail = jwtService.extractUsername(jwt);
 
-            // Se o usuário foi extraído e ainda não está autenticado no contexto
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // Carrega o usuário do banco
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-                // Valida o token
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
@@ -60,14 +69,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authToken.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request)
                     );
-                    // Autentica no contexto
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
         } catch (Exception e) {
-            // Em caso de token inválido ou expirado, não autenticamos.
-            // O Spring Security tratará isso (403 Forbidden) se a rota for protegida.
-            // Log para debug:
             System.out.println("Erro na validação do JWT: " + e.getMessage());
         }
 

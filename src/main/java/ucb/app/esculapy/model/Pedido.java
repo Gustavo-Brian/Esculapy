@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entidade que representa um Pedido feito por um Cliente.
+ */
 @Entity
 @Table(name = "pedidos")
 @Getter

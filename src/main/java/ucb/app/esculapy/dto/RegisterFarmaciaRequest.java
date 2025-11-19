@@ -6,15 +6,19 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CNPJ;
 
+/**
+ * DTO para solicitar o registro de uma nova farmácia e seu administrador (lojista).
+ */
 @Data
 public class RegisterFarmaciaRequest {
     @NotBlank @Email
-    private String email; // Email do Dono (Admin)
+    private String email;
 
     @NotBlank @Size(min = 6)
     private String senha;
 
     @NotBlank
+    @CNPJ
     private String cnpj;
 
     @NotBlank
@@ -24,7 +28,7 @@ public class RegisterFarmaciaRequest {
     private String nomeFantasia;
 
     @NotBlank
-    private String crfJ; // CRF da Farmácia
+    private String crfJ;
 
     @NotBlank @Email
     private String emailContato;

@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+/**
+ * DTO para receber a notificação de webhook de um gateway de pagamento.
+ */
 @Data
 public class WebhookPagamentoRequest {
 
@@ -11,7 +14,7 @@ public class WebhookPagamentoRequest {
     private Long pedidoId;
 
     /**
-     * O status enviado pelo gateway, ex: "PAGO", "RECUSADO"
+     * O status enviado pelo gateway, ex: "PAGO", "RECUSADO".
      */
     @NotBlank
     private String statusPagamento;

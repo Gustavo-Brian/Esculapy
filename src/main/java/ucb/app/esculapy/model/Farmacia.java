@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entidade que representa uma Farmácia, a loja parceira na plataforma.
+ */
 @Entity
 @Table(name = "farmacias", uniqueConstraints = {
         @UniqueConstraint(columnNames = "cnpj"),
@@ -37,7 +40,7 @@ public class Farmacia {
     private String nomeFantasia;
 
     @Column(nullable = false, unique = true)
-    private String crfJ; // CRF da Pessoa Jurídica (Farmácia)
+    private String crfJ;
 
     @Column(nullable = false)
     private String emailContato;
@@ -57,12 +60,12 @@ public class Farmacia {
     @JoinColumn(name = "usuario_admin_id", referencedColumnName = "id", unique = true)
     private Usuario usuarioAdmin;
 
-    @JsonIgnore // Carregar sob demanda via Controller
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "endereco_comercial_id", referencedColumnName = "id")
     private Endereco enderecoComercial;
 
-    @JsonIgnore // Carregar sob demanda via Controller
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "conta_bancaria_id", referencedColumnName = "id")
     private ContaBancaria contaBancaria;

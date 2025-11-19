@@ -15,6 +15,9 @@ import ucb.app.esculapy.model.Usuario;
 import ucb.app.esculapy.repository.ClienteRepository;
 import ucb.app.esculapy.repository.UsuarioRepository;
 
+/**
+ * Serviço responsável pela lógica de gerenciamento do perfil do usuário logado (cliente).
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -24,6 +27,11 @@ public class UserService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Obtém o perfil completo do cliente logado.
+     *
+     * @return O DTO {@link ProfileResponse}.
+     */
     @Transactional(readOnly = true)
     public ProfileResponse getMeuProfile() {
         Usuario usuario = authenticationService.getUsuarioLogado();
@@ -31,6 +39,12 @@ public class UserService {
         return new ProfileResponse(usuario, cliente);
     }
 
+    /**
+     * Atualiza o nome e o número de celular do perfil do cliente.
+     *
+     * @param request O DTO com os novos dados.
+     * @return O DTO {@link ProfileResponse} atualizado.
+     */
     @Transactional
     public ProfileResponse updateMeuProfile(ProfileUpdateRequest request) {
         Usuario usuario = authenticationService.getUsuarioLogado();
@@ -43,6 +57,13 @@ public class UserService {
         return new ProfileResponse(usuario, clienteSalvo);
     }
 
+    /**
+     * Atualiza a senha do usuário logado.
+     *
+     * @param request O DTO contendo a senha atual e a nova senha.
+     * @throws ForbiddenException Se a senha atual estiver incorreta.
+     * @throws ConflictException Se a nova senha for igual à senha atual.
+     */
     @Transactional
     public void updateMinhaSenha(PasswordUpdateRequest request) {
         Usuario usuario = authenticationService.getUsuarioLogado();
@@ -59,29 +80,30 @@ public class UserService {
         usuarioRepository.save(usuario);
     }
 
+    /**
+     * Simula o início do fluxo de recuperação de senha (Forgot Password).
+     *
+     * @param email O e-mail do usuário.
+     */
     @Transactional
     public void forgotPassword(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
         if (usuario != null) {
-            // Simulação: Em produção, enviaríamos um e-mail.
             System.out.println("LOG: Enviando e-mail de recuperação para " + email);
         }
-        // Não retornamos erro se o e-mail não existir por segurança (Enumeration Attack)
     }
 
+    /**
+     * Simula o processo de redefinição de senha (Reset Password).
+     *
+     * @param token O token de recuperação.
+     * @param novaSenha A nova senha.
+     * @throws ResourceNotFoundException Se o token for inválido (simulação).
+     */
     @Transactional
     public void resetPassword(String token, String novaSenha) {
-        // Simulação: Em produção, validaríamos o token no banco.
-        // Aqui, aceitamos qualquer token para fins de teste/MVP.
         if (token == null || token.isEmpty()) {
             throw new ResourceNotFoundException("Token inválido.");
         }
-
-        // Como não temos o token ligado ao usuário nesta simulação,
-        // não podemos realmente mudar a senha de ninguém aqui.
-        // Em um código real:
-        // Token t = tokenRepo.findByToken(token);
-        // Usuario u = t.getUser();
-        // u.setSenha(...);
     }
 }

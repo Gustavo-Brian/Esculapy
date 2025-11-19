@@ -15,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ucb.app.esculapy.repository.UsuarioRepository;
 import ucb.app.esculapy.service.StorageService;
 
+/**
+ * Classe de configuração principal para beans da aplicação, incluindo segurança e inicialização.
+ */
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
@@ -23,7 +26,8 @@ public class ApplicationConfig {
 
     /**
      * Define como o Spring Security deve carregar um usuário.
-     * Ele usa o UsuarioRepository para buscar por e-mail.
+     *
+     * @return Uma implementação de {@link UserDetailsService} que busca o usuário por e-mail.
      */
     @Bean
     public UserDetailsService userDetailsService() {
@@ -32,9 +36,9 @@ public class ApplicationConfig {
     }
 
     /**
-     * Define o provedor de autenticação.
-     * Ele informa ao Spring para usar o userDetailsService (para buscar)
-     * e o passwordEncoder (para comparar as senhas).
+     * Define o provedor de autenticação usado pelo Spring Security.
+     *
+     * @return Uma instância de {@link AuthenticationProvider} configurada com o {@code userDetailsService} e o {@code passwordEncoder}.
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -45,8 +49,11 @@ public class ApplicationConfig {
     }
 
     /**
-     * Expõe o AuthenticationManager como um Bean.
-     * Este é o bean que o AuthService injeta para processar o login.
+     * Expõe o {@link AuthenticationManager} como um Bean para ser usado no processo de autenticação (login).
+     *
+     * @param config A configuração de autenticação do Spring.
+     * @return O {@link AuthenticationManager}.
+     * @throws Exception Se ocorrer um erro ao obter o AuthenticationManager.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -54,8 +61,9 @@ public class ApplicationConfig {
     }
 
     /**
-     * Define o algoritmo de criptografia de senhas.
-     * Usar BCrypt é o padrão moderno.
+     * Define o algoritmo de criptografia de senhas (BCrypt).
+     *
+     * @return Uma instância de {@link PasswordEncoder}.
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -65,6 +73,9 @@ public class ApplicationConfig {
     /**
      * Inicializa o serviço de storage (cria a pasta 'uploads' se necessário)
      * quando a aplicação inicia.
+     *
+     * @param storageService O serviço de storage a ser inicializado.
+     * @return Uma implementação de {@link CommandLineRunner} que executa a inicialização.
      */
     @Bean
     CommandLineRunner initStorage(StorageService storageService) {

@@ -4,7 +4,10 @@ import lombok.Data;
 import ucb.app.esculapy.model.Cliente;
 import ucb.app.esculapy.model.Usuario;
 
-// DTO focado nos dados do Cliente (o único perfil editável por enquanto)
+/**
+ * DTO de resposta contendo os dados do perfil do cliente e do usuário
+ * para exibição na tela de perfil.
+ */
 @Data
 public class ProfileResponse {
 
@@ -15,6 +18,12 @@ public class ProfileResponse {
     private String cpf;
     private String numeroCelular;
 
+    /**
+     * Construtor que mapeia as entidades {@link Usuario} e {@link Cliente} para o DTO.
+     *
+     * @param u A entidade Usuario.
+     * @param c A entidade Cliente.
+     */
     public ProfileResponse(Usuario u, Cliente c) {
         this.usuarioId = u.getId();
         this.email = u.getEmail();

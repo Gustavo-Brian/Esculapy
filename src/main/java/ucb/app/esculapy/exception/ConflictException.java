@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(HttpStatus.CONFLICT)
 public class ConflictException extends RuntimeException {
+    /**
+     * Cria uma nova exceção com uma mensagem detalhada.
+     *
+     * @param message A mensagem de erro.
+     */
     public ConflictException(String message) {
         super(message);
     }

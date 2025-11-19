@@ -3,6 +3,9 @@ package ucb.app.esculapy.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * DTO para solicitar a atualização ou criação dos dados de conta bancária de uma farmácia.
+ */
 @Data
 public class ContaBancariaRequest {
 
@@ -19,11 +22,11 @@ public class ContaBancariaRequest {
     private String digitoVerificador;
 
     @NotBlank
-    private String tipoConta; // "CORRENTE" ou "POUPANCA"
+    private String tipoConta;
 
     @NotBlank
-    private String documentoTitular; // CNPJ da farmácia
+    private String documentoTitular;
 
     @NotBlank
-    private String nomeTitular; // Razão Social
+    private String nomeTitular;
 }

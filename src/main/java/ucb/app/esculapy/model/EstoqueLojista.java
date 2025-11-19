@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
 
+/**
+ * Entidade que representa o estoque de um produto em uma farmácia específica.
+ * A combinação farmacia_id e produto_id é única.
+ */
 @Entity
 @Table(name = "estoque_lojista", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"farmacia_id", "produto_id"})
@@ -38,5 +42,6 @@ public class EstoqueLojista {
     @Column(nullable = false)
     private Integer quantidade;
 
+    @Column(nullable = false)
     private boolean ativo = true;
 }

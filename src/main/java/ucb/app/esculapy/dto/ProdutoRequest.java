@@ -6,11 +6,14 @@ import lombok.Data;
 import ucb.app.esculapy.model.enums.TipoProduto;
 import ucb.app.esculapy.model.enums.TipoReceita;
 
+/**
+ * DTO para solicitar a criação ou atualização de um produto no catálogo mestre (uso do Admin).
+ */
 @Data
 public class ProdutoRequest {
 
     @NotBlank
-    private String ean; // Código de barras
+    private String ean;
 
     @NotBlank
     private String nome;
@@ -24,7 +27,7 @@ public class ProdutoRequest {
     private String descricao;
 
     @NotBlank
-    private String codigoRegistroMS; // ANVISA
+    private String codigoRegistroMS;
 
     private String bulaUrl;
 

@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidade que representa um Produto no Catálogo Mestre da plataforma.
+ */
 @Entity
 @Table(name = "produtos_catalogo", uniqueConstraints = {
         @UniqueConstraint(columnNames = "ean"),

@@ -9,6 +9,10 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+/**
+ * Entidade que armazena os detalhes de um item dentro de um pedido específico.
+ * Inclui o preço unitário no momento da compra (snapshot).
+ */
 @Entity
 @Table(name = "itens_pedido")
 @Getter
@@ -27,7 +31,7 @@ public class ItemPedido {
     private Pedido pedido;
 
     /**
-     * Link para o item de estoque da farmácia.
+     * Link para o item de estoque da farmácia de onde o produto foi retirado.
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "estoque_lojista_id")
@@ -37,5 +41,5 @@ public class ItemPedido {
     private Integer quantidade;
 
     @Column(nullable = false)
-    private BigDecimal precoUnitario; // Snapshot do preço no momento da compra
+    private BigDecimal precoUnitario;
 }

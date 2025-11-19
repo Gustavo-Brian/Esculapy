@@ -18,6 +18,9 @@ import ucb.app.esculapy.repository.EstoqueLojistaRepository;
 import ucb.app.esculapy.repository.FarmaciaRepository;
 import ucb.app.esculapy.repository.ProdutoRepository;
 
+/**
+ * Serviço responsável por toda a lógica de Catálogo Mestre (Admin) e Estoque (Lojista/Público).
+ */
 @Service
 @RequiredArgsConstructor
 public class CatalogoService {
@@ -31,23 +34,51 @@ public class CatalogoService {
     // --- Lógica PÚBLICA (Paginada) ---
     // ========================================================================
 
+    /**
+     * Obtém o catálogo mestre de produtos ativos para visualização pública.
+     *
+     * @param pageable As informações de paginação.
+     * @return Uma página de {@link Produto} ativos.
+     */
     @Transactional(readOnly = true)
     public Page<Produto> getCatalogoCompletoAtivo(Pageable pageable) {
         return produtoRepository.findAllByAtivoTrue(pageable);
     }
 
+    /**
+     * Obtém os detalhes de um produto do catálogo por ID.
+     *
+     * @param id O ID do produto.
+     * @return O objeto {@link Produto}.
+     * @throws ResourceNotFoundException Se o produto não for encontrado.
+     */
     @Transactional(readOnly = true)
     public Produto getProdutoDoCatalogoPorId(Long id) {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto com ID " + id + " não encontrado no catálogo."));
     }
 
+    /**
+     * Busca o estoque disponível em todas as farmácias por nome do produto.
+     *
+     * @param nome O nome do produto.
+     * @param pageable As informações de paginação.
+     * @return Uma página de {@link EstoqueResponse}.
+     */
     @Transactional(readOnly = true)
     public Page<EstoqueResponse> buscarEstoquePorNomeProduto(String nome, Pageable pageable) {
         Page<EstoqueLojista> estoques = estoqueLojistaRepository.findByProdutoNomeContendo(nome, pageable);
         return estoques.map(EstoqueResponse::new);
     }
 
+    /**
+     * Busca todas as ofertas de estoque para um produto específico no catálogo.
+     *
+     * @param catalogoId O ID do produto no catálogo.
+     * @param pageable As informações de paginação.
+     * @return Uma página de {@link EstoqueResponse}.
+     * @throws ResourceNotFoundException Se o produto não for encontrado no catálogo.
+     */
     @Transactional(readOnly = true)
     public Page<EstoqueResponse> buscarEstoquePorCatalogoId(Long catalogoId, Pageable pageable) {
         if (!produtoRepository.existsById(catalogoId)) {
@@ -57,6 +88,14 @@ public class CatalogoService {
         return estoques.map(EstoqueResponse::new);
     }
 
+    /**
+     * Obtém o estoque público (ativo) de uma farmácia específica.
+     *
+     * @param farmaciaId O ID da farmácia.
+     * @param pageable As informações de paginação.
+     * @return Uma página de {@link EstoqueLojista}.
+     * @throws ResourceNotFoundException Se a farmácia não for encontrada.
+     */
     @Transactional(readOnly = true)
     public Page<EstoqueLojista> getEstoquePublicoDaFarmacia(Long farmaciaId, Pageable pageable) {
         if (!farmaciaRepository.existsById(farmaciaId)) {
@@ -65,6 +104,13 @@ public class CatalogoService {
         return estoqueLojistaRepository.findPublicoByFarmaciaId(farmaciaId, pageable);
     }
 
+    /**
+     * Obtém um item de estoque específico, garantindo que ele esteja ativo (para o público).
+     *
+     * @param estoqueId O ID do item de estoque.
+     * @return O objeto {@link EstoqueLojista}.
+     * @throws ResourceNotFoundException Se o item não for encontrado ou estiver inativo.
+     */
     @Transactional(readOnly = true)
     public EstoqueLojista getEstoquePublicoPorId(Long estoqueId) {
         return estoqueLojistaRepository.findPublicoById(estoqueId)
@@ -75,6 +121,13 @@ public class CatalogoService {
     // --- Lógica de ADMIN (CRUD Catálogo) ---
     // ========================================================================
 
+    /**
+     * Cria um novo produto no catálogo mestre.
+     *
+     * @param request O DTO {@link ProdutoRequest}.
+     * @return O objeto {@link Produto} criado.
+     * @throws ConflictException Se o EAN ou Código de Registro MS já estiverem em uso.
+     */
     @Transactional
     public Produto criarProdutoCatalogo(ProdutoRequest request) {
         if (produtoRepository.findByEan(request.getEan()).isPresent()) {
@@ -89,6 +142,15 @@ public class CatalogoService {
         return mapDtoToProduto(produto, request);
     }
 
+    /**
+     * Atualiza um produto existente no catálogo mestre.
+     *
+     * @param id O ID do produto.
+     * @param request O DTO {@link ProdutoRequest}.
+     * @return O objeto {@link Produto} atualizado.
+     * @throws ResourceNotFoundException Se o produto não for encontrado.
+     * @throws ConflictException Se o EAN ou Código de Registro MS pertencerem a outro produto.
+     */
     @Transactional
     public Produto updateProdutoCatalogo(Long id, ProdutoRequest request) {
         Produto produto = getProdutoDoCatalogoPorId(id);
@@ -107,16 +169,37 @@ public class CatalogoService {
         return mapDtoToProduto(produto, request);
     }
 
+    /**
+     * Desativa um produto no catálogo.
+     *
+     * @param id O ID do produto.
+     * @return O objeto {@link Produto} desativado.
+     * @throws ResourceNotFoundException Se o produto não for encontrado.
+     */
     @Transactional
     public Produto desativarProdutoCatalogo(Long id) {
         return setProdutoAtivo(id, false);
     }
 
+    /**
+     * Reativa um produto no catálogo.
+     *
+     * @param id O ID do produto.
+     * @return O objeto {@link Produto} reativado.
+     * @throws ResourceNotFoundException Se o produto não for encontrado.
+     */
     @Transactional
     public Produto reativarProdutoCatalogo(Long id) {
         return setProdutoAtivo(id, true);
     }
 
+    /**
+     * Deleta permanentemente um produto do catálogo.
+     *
+     * @param id O ID do produto.
+     * @throws ResourceNotFoundException Se o produto não for encontrado.
+     * @throws ConflictException Se o produto estiver em uso no estoque de alguma farmácia.
+     */
     @Transactional
     public void deleteProdutoCatalogo(Long id) {
         Produto produto = getProdutoDoCatalogoPorId(id);
@@ -130,12 +213,26 @@ public class CatalogoService {
     // --- Lógica de LOJISTA_ADMIN (CRUD Estoque) ---
     // ========================================================================
 
+    /**
+     * Lista o estoque privado (completo, ativo/inativo) da farmácia do lojista logado.
+     *
+     * @param pageable As informações de paginação.
+     * @return Uma página de {@link EstoqueLojista}.
+     */
     @Transactional(readOnly = true)
     public Page<EstoqueLojista> getEstoquePrivadoDaFarmaciaLogada(Pageable pageable) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
         return estoqueLojistaRepository.findByFarmaciaId(farmacia.getId(), pageable);
     }
 
+    /**
+     * Adiciona um novo item de estoque para a farmácia logada.
+     *
+     * @param request O DTO {@link EstoqueRequest}.
+     * @return O objeto {@link EstoqueLojista} criado.
+     * @throws ResourceNotFoundException Se o produto não for encontrado.
+     * @throws ConflictException Se o produto já existir no estoque da farmácia.
+     */
     @Transactional
     public EstoqueLojista adicionarItemEstoque(EstoqueRequest request) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
@@ -155,6 +252,16 @@ public class CatalogoService {
         return estoqueLojistaRepository.save(novoItem);
     }
 
+    /**
+     * Atualiza o preço e/ou quantidade de um item de estoque existente.
+     *
+     * @param estoqueId O ID do item de estoque.
+     * @param request O DTO {@link EstoqueRequest}.
+     * @return O objeto {@link EstoqueLojista} atualizado.
+     * @throws ResourceNotFoundException Se o item não for encontrado.
+     * @throws ForbiddenException Se o item não pertencer à farmácia logada.
+     * @throws ConflictException Se houver tentativa de mudar o produto associado.
+     */
     @Transactional
     public EstoqueLojista updateEstoque(Long estoqueId, EstoqueRequest request) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
@@ -170,6 +277,13 @@ public class CatalogoService {
         return estoqueLojistaRepository.save(item);
     }
 
+    /**
+     * Deleta um item de estoque.
+     *
+     * @param estoqueId O ID do item de estoque.
+     * @throws ResourceNotFoundException Se o item não for encontrado.
+     * @throws ForbiddenException Se o item não pertencer à farmácia logada.
+     */
     @Transactional
     public void deleteEstoque(Long estoqueId) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
@@ -177,6 +291,15 @@ public class CatalogoService {
         estoqueLojistaRepository.delete(item);
     }
 
+    /**
+     * Ativa ou desativa um item de estoque para visibilidade pública.
+     *
+     * @param estoqueId O ID do item de estoque.
+     * @param ativo O novo estado de ativação.
+     * @return O objeto {@link EstoqueLojista} atualizado.
+     * @throws ResourceNotFoundException Se o item não for encontrado.
+     * @throws ForbiddenException Se o item não pertencer à farmácia logada.
+     */
     @Transactional
     public EstoqueLojista setEstoqueAtivo(Long estoqueId, boolean ativo) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
@@ -189,6 +312,15 @@ public class CatalogoService {
     // --- Métodos Auxiliares Privados ---
     // ========================================================================
 
+    /**
+     * Busca um item de estoque e valida se ele pertence à farmácia especificada.
+     *
+     * @param estoqueId O ID do item de estoque.
+     * @param farmaciaId O ID da farmácia esperada.
+     * @return O objeto {@link EstoqueLojista}.
+     * @throws ResourceNotFoundException Se o item de estoque não for encontrado.
+     * @throws ForbiddenException Se o item não pertencer à farmácia.
+     */
     private EstoqueLojista getEstoquePrivadoValidado(Long estoqueId, Long farmaciaId) {
         EstoqueLojista item = estoqueLojistaRepository.findById(estoqueId)
                 .orElseThrow(() -> new ResourceNotFoundException("Item de estoque com ID " + estoqueId + " não encontrado."));
@@ -199,6 +331,13 @@ public class CatalogoService {
         return item;
     }
 
+    /**
+     * Mapeia os dados de um {@link ProdutoRequest} para um objeto {@link Produto} e o salva.
+     *
+     * @param produto O objeto Produto de destino.
+     * @param request O DTO de requisição.
+     * @return O objeto {@link Produto} salvo.
+     */
     private Produto mapDtoToProduto(Produto produto, ProdutoRequest request) {
         produto.setNome(request.getNome());
         produto.setEan(request.getEan());
@@ -212,6 +351,14 @@ public class CatalogoService {
         return produtoRepository.save(produto);
     }
 
+    /**
+     * Altera o status de ativação (ativo) de um produto no catálogo.
+     *
+     * @param id O ID do produto.
+     * @param ativo O novo estado.
+     * @return O objeto {@link Produto} salvo.
+     * @throws ResourceNotFoundException Se o produto não for encontrado.
+     */
     private Produto setProdutoAtivo(Long id, boolean ativo) {
         Produto produto = getProdutoDoCatalogoPorId(id);
         produto.setAtivo(ativo);

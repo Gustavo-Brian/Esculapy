@@ -4,6 +4,10 @@ import lombok.Data;
 import ucb.app.esculapy.model.Endereco;
 import ucb.app.esculapy.model.Farmacia;
 
+/**
+ * DTO de resposta para consulta pública de farmácias, contendo apenas informações essenciais
+ * como ID, nome e endereço comercial.
+ */
 @Data
 public class FarmaciaPublicaResponse {
 
@@ -11,6 +15,11 @@ public class FarmaciaPublicaResponse {
     private String nomeFantasia;
     private Endereco enderecoComercial;
 
+    /**
+     * Construtor que mapeia a entidade {@link Farmacia} para o DTO de resposta pública.
+     *
+     * @param farmacia A entidade Farmacia.
+     */
     public FarmaciaPublicaResponse(Farmacia farmacia) {
         this.id = farmacia.getId();
         this.nomeFantasia = farmacia.getNomeFantasia();

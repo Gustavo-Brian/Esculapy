@@ -5,10 +5,13 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import java.util.List;
 
+/**
+ * DTO que representa o conteúdo de um carrinho de compras, contendo uma lista de itens.
+ */
 @Data
 public class CarrinhoRequest {
 
-    @Valid // Garante que os itens dentro da lista sejam validados
-    @NotEmpty // Garante que a lista não esteja vazia
+    @Valid
+    @NotEmpty
     private List<ItemCarrinho> itens;
 }

@@ -14,6 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidade que representa um endereço, podendo estar associada a um Cliente ou a uma Farmácia.
+ */
 @Entity
 @Table(name = "enderecos")
 @Getter
@@ -36,14 +39,15 @@ public class Endereco {
 
     /**
      * Tipo do endereço, ex: "CASA", "TRABALHO" (para Cliente)
-     * ou "COMERCIAL" (para Farmacia)
+     * ou "COMERCIAL" (para Farmacia).
      */
     private String tipo;
 
-    // --- BLOCO ADICIONADO ---
-    @JsonIgnore // Para evitar loops infinitos na serialização JSON
+    /**
+     * O cliente ao qual este endereço pertence. Pode ser nulo se for um endereço de Farmácia.
+     */
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id") // Esta é a coluna do banco de dados
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
-    // --- FIM DO BLOCO ---
 }

@@ -6,6 +6,10 @@ import ucb.app.esculapy.model.EstoqueLojista;
 
 import java.math.BigDecimal;
 
+/**
+ * DTO de resposta para consulta de itens de estoque disponíveis ao público.
+ * Inclui informações do produto e da farmácia onde o item está estocado.
+ */
 @Getter
 @Setter
 public class EstoqueResponse {
@@ -19,7 +23,9 @@ public class EstoqueResponse {
     private Integer quantidade;
 
     /**
-     * Construtor que mapeia a entidade EstoqueLojista para este DTO.
+     * Construtor que mapeia a entidade {@link EstoqueLojista} para este DTO.
+     *
+     * @param estoque A entidade EstoqueLojista.
      */
     public EstoqueResponse(EstoqueLojista estoque) {
         this.estoqueId = estoque.getId();

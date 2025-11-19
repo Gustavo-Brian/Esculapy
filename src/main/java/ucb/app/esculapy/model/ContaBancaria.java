@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidade que armazena os dados bancários de uma Farmácia para fins de pagamento.
+ */
 @Entity
 @Table(name = "contas_bancarias")
 @Getter
@@ -32,10 +35,10 @@ public class ContaBancaria {
     private String digitoVerificador;
 
     @Column(nullable = false)
-    private String tipoConta; // "CORRENTE" ou "POUPANCA"
+    private String tipoConta;
 
     @Column(nullable = false)
-    private String documentoTitular; // CPF ou CNPJ do titular
+    private String documentoTitular;
 
     @Column(nullable = false)
     private String nomeTitular;

@@ -3,6 +3,9 @@ package ucb.app.esculapy.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * DTO para solicitar a criação ou atualização de um endereço.
+ */
 @Data
 public class EnderecoRequest {
 
@@ -27,7 +30,7 @@ public class EnderecoRequest {
     private String estado;
 
     /**
-     * Tipo do endereço, ex: "CASA", "TRABALHO"
+     * Tipo do endereço, ex: "CASA", "TRABALHO".
      */
     @NotBlank
     private String tipo;

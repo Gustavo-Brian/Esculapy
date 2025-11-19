@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Componente de inicialização de dados que executa tarefas ao iniciar a aplicação.
+ * Responsável por garantir a existência de roles básicas e criar um usuário administrador mestre
+ * se não houver usuários cadastrados.
+ */
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -20,16 +25,20 @@ public class DataInitializer implements CommandLineRunner {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Executa a lógica de inicialização de dados.
+     *
+     * @param args Argumentos de linha de comando.
+     * @throws Exception Se ocorrer um erro durante a execução.
+     */
     @Override
     public void run(String... args) throws Exception {
 
-        // 1. GARANTIR ROLES BÁSICAS
         garantirRole("ROLE_CLIENTE");
         garantirRole("ROLE_LOJISTA_ADMIN");
         garantirRole("ROLE_FARMACEUTICO");
         garantirRole("ROLE_ADMIN");
 
-        // 2. CRIAR USUÁRIO ADMIN MASTER RANDÔMICO (SE NÃO HOUVER USUÁRIOS)
         if (usuarioRepository.count() == 0) {
             String senhaPadrao = UUID.randomUUID().toString().substring(0, 8);
             String emailPadrao = "admin_" + UUID.randomUUID().toString().substring(0, 4) + "@esculapy.com";
@@ -52,6 +61,12 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
+    /**
+     * Verifica e garante que uma Role com o nome especificado existe no banco de dados.
+     * Se não existir, a Role é criada.
+     *
+     * @param nomeRole O nome da Role (ex: "ROLE_ADMIN").
+     */
     private void garantirRole(String nomeRole) {
         if (roleRepository.findByNome(nomeRole).isEmpty()) {
             roleRepository.save(new Role(nomeRole));

@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Serviço responsável pela lógica de negócios da Farmácia, tanto para consultas públicas
+ * quanto para o gerenciamento interno pelo lojista (Admin da Farmácia).
+ */
 @Service
 @RequiredArgsConstructor
 public class FarmaciaService {
@@ -36,12 +40,25 @@ public class FarmaciaService {
     // --- LÓGICA PÚBLICA ---
     // ========================================================================
 
+    /**
+     * Lista todas as farmácias ativas para consulta pública.
+     *
+     * @param pageable As informações de paginação.
+     * @return Uma página de {@link FarmaciaPublicaResponse}.
+     */
     @Transactional(readOnly = true)
     public Page<FarmaciaPublicaResponse> listarFarmaciasPublico(Pageable pageable) {
         Page<Farmacia> farmacias = farmaciaRepository.findAllByStatusComEndereco(LojistaStatus.ATIVO, pageable);
         return farmacias.map(FarmaciaPublicaResponse::new);
     }
 
+    /**
+     * Obtém os detalhes de uma farmácia ativa por ID para consulta pública.
+     *
+     * @param id O ID da farmácia.
+     * @return O DTO {@link FarmaciaPublicaResponse}.
+     * @throws ResourceNotFoundException Se a farmácia não for encontrada ou não estiver ativa.
+     */
     @Transactional(readOnly = true)
     public FarmaciaPublicaResponse getFarmaciaPublicaPorId(Long id) {
         Farmacia farmacia = farmaciaRepository.findPublicaById(id)
@@ -53,11 +70,22 @@ public class FarmaciaService {
     // --- LÓGICA PRIVADA (LOJISTA) ---
     // ========================================================================
 
+    /**
+     * Obtém os detalhes completos da farmácia do usuário logado.
+     *
+     * @return O objeto {@link Farmacia}.
+     */
     @Transactional(readOnly = true)
     public Farmacia getMinhaFarmaciaCompleta() {
         return authenticationService.getFarmaciaAdminLogada();
     }
 
+    /**
+     * Atualiza as informações de contato e nome fantasia da farmácia.
+     *
+     * @param request O DTO {@link FarmaciaInfoRequest}.
+     * @return O DTO de requisição.
+     */
     @Transactional
     public FarmaciaInfoRequest updateInfo(FarmaciaInfoRequest request) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
@@ -68,6 +96,12 @@ public class FarmaciaService {
         return request;
     }
 
+    /**
+     * Atualiza ou cria o endereço comercial da farmácia.
+     *
+     * @param request O DTO {@link EnderecoRequest}.
+     * @return O objeto {@link Endereco} atualizado.
+     */
     @Transactional
     public Endereco updateEndereco(EnderecoRequest request) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
@@ -88,6 +122,12 @@ public class FarmaciaService {
         return endereco;
     }
 
+    /**
+     * Atualiza ou cria a conta bancária da farmácia.
+     *
+     * @param request O DTO {@link ContaBancariaRequest}.
+     * @return O objeto {@link ContaBancaria} atualizado.
+     */
     @Transactional
     public ContaBancaria updateContaBancaria(ContaBancariaRequest request) {
         Farmacia farmacia = authenticationService.getFarmaciaAdminLogada();
@@ -110,6 +150,14 @@ public class FarmaciaService {
 
     // --- Gerenciamento de Funcionários ---
 
+    /**
+     * Adiciona um novo farmacêutico à farmácia do lojista logado.
+     *
+     * @param request O DTO {@link RegisterFarmaceuticoRequest}.
+     * @return O objeto {@link Farmaceutico} criado.
+     * @throws ConflictException Se e-mail, CPF ou CRF-P já estiverem em uso.
+     * @throws ResourceNotFoundException Se a Role não for encontrada.
+     */
     @Transactional
     public Farmaceutico adicionarFarmaceutico(RegisterFarmaceuticoRequest request) {
         Farmacia farmaciaDono = authenticationService.getFarmaciaAdminLogada();
@@ -146,12 +194,27 @@ public class FarmaciaService {
         return farmaceutico;
     }
 
+    /**
+     * Lista todos os farmacêuticos associados à farmácia logada.
+     *
+     * @param pageable As informações de paginação.
+     * @return Uma página de {@link Farmaceutico}.
+     */
     @Transactional(readOnly = true)
     public Page<Farmaceutico> listarFarmaceuticos(Pageable pageable) {
         Farmacia farmaciaDono = authenticationService.getFarmaciaAdminLogada();
         return farmaceuticoRepository.findAllByFarmaciaId(farmaciaDono.getId(), pageable);
     }
 
+    /**
+     * Atualiza as informações básicas de um farmacêutico.
+     *
+     * @param farmaceuticoId O ID do farmacêutico.
+     * @param request O DTO {@link FarmaceuticoUpdateRequest}.
+     * @return O objeto {@link Farmaceutico} atualizado.
+     * @throws ResourceNotFoundException Se o farmacêutico não for encontrado.
+     * @throws ForbiddenException Se o farmacêutico não pertencer à farmácia logada.
+     */
     @Transactional
     public Farmaceutico atualizarFarmaceutico(Long farmaceuticoId, FarmaceuticoUpdateRequest request) {
         Farmacia farmaciaDono = authenticationService.getFarmaciaAdminLogada();
@@ -163,27 +226,49 @@ public class FarmaciaService {
         return farmaceuticoRepository.save(farmaceutico);
     }
 
+    /**
+     * Desativa a conta de login de um farmacêutico.
+     *
+     * @param farmaceuticoId O ID do farmacêutico.
+     */
     @Transactional
     public void desativarFarmaceutico(Long farmaceuticoId) {
         setFarmaceuticoAtivo(farmaceuticoId, false);
     }
 
+    /**
+     * Reativa a conta de login de um farmacêutico.
+     *
+     * @param farmaceuticoId O ID do farmacêutico.
+     */
     @Transactional
     public void reativarFarmaceutico(Long farmaceuticoId) {
         setFarmaceuticoAtivo(farmaceuticoId, true);
     }
 
+    /**
+     * Deleta permanentemente o farmacêutico e seu usuário associado.
+     *
+     * @param farmaceuticoId O ID do farmacêutico.
+     * @throws ResourceNotFoundException Se o farmacêutico não for encontrado.
+     * @throws ForbiddenException Se o farmacêutico não pertencer à farmácia logada.
+     */
     @Transactional
     public void deletarFarmaceutico(Long farmaceuticoId) {
         Farmacia farmaciaDono = authenticationService.getFarmaciaAdminLogada();
         Farmaceutico farmaceutico = getFarmaceuticoValidado(farmaceuticoId, farmaciaDono.getId());
 
-        // Hard delete: Remove o Usuario, que cascateia para Farmaceutico e Perfis
         usuarioRepository.delete(farmaceutico.getUsuario());
     }
 
     // --- Métodos Auxiliares ---
 
+    /**
+     * Altera o status de habilitação (enabled) do usuário do farmacêutico.
+     *
+     * @param farmaceuticoId O ID do farmacêutico.
+     * @param ativo O novo estado (true para ativo, false para desativado).
+     */
     private void setFarmaceuticoAtivo(Long farmaceuticoId, boolean ativo) {
         Farmacia farmaciaDono = authenticationService.getFarmaciaAdminLogada();
         Farmaceutico farmaceutico = getFarmaceuticoValidado(farmaceuticoId, farmaciaDono.getId());
@@ -193,6 +278,15 @@ public class FarmaciaService {
         usuarioRepository.save(usuario);
     }
 
+    /**
+     * Busca um farmacêutico pelo ID e verifica se ele pertence à farmácia especificada.
+     *
+     * @param farmaceuticoId O ID do farmacêutico.
+     * @param farmaciaId O ID da farmácia esperada.
+     * @return O objeto {@link Farmaceutico}.
+     * @throws ResourceNotFoundException Se o farmacêutico não for encontrado.
+     * @throws ForbiddenException Se o farmacêutico não pertencer à farmácia.
+     */
     private Farmaceutico getFarmaceuticoValidado(Long farmaceuticoId, Long farmaciaId) {
         Farmaceutico farmaceutico = farmaceuticoRepository.findById(farmaceuticoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Farmacêutico com ID " + farmaceuticoId + " não encontrado."));

@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
 
+/**
+ * Entidade que armazena os dados de uma receita médica anexada a um pedido,
+ * incluindo seu status de validação.
+ */
 @Entity
 @Table(name = "receitas")
 @Getter
@@ -27,7 +31,7 @@ public class Receita {
     private Pedido pedido;
 
     @Column(nullable = false)
-    private String arquivoUrl; // URL (ex: S3) onde o PDF/JPG foi salvo
+    private String arquivoUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -35,7 +39,9 @@ public class Receita {
 
     private LocalDateTime dataUpload = LocalDateTime.now();
 
-    // Quem validou?
+    /**
+     * O farmacêutico que realizou a validação (se já validada).
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "farmaceutico_id")
     private Farmaceutico farmaceuticoValidador;

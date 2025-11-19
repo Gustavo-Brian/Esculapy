@@ -8,16 +8,35 @@ import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
 
+/**
+ * Implementação de {@link EnvironmentPostProcessor} para inicialização interativa de configurações.
+ * Permite que o usuário insira configurações essenciais (porta, DB, JWT secret) via console na inicialização.
+ */
 public class InteractiveConfigInitializer implements EnvironmentPostProcessor {
 
     private static final String PROPERTY_SOURCE_NAME = "interactiveConfig";
 
+    /**
+     * Lê uma entrada do console com um valor padrão.
+     *
+     * @param reader O leitor de entrada.
+     * @param prompt A mensagem de prompt.
+     * @param defaultValue O valor padrão.
+     * @return O valor lido ou o valor padrão.
+     * @throws Exception Se ocorrer um erro de I/O.
+     */
     private String readInput(BufferedReader reader, String prompt, String defaultValue) throws Exception {
         System.out.print("  " + prompt + " [" + defaultValue + "]: ");
         String input = reader.readLine();
         return (input == null || input.trim().isEmpty()) ? defaultValue : input.trim();
     }
 
+    /**
+     * Processa o ambiente de configuração antes da inicialização do Spring.
+     *
+     * @param environment O ambiente configurável.
+     * @param application A aplicação Spring.
+     */
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 
@@ -36,15 +55,10 @@ public class InteractiveConfigInitializer implements EnvironmentPostProcessor {
             String serverPort = readInput(reader, "[1/6] Porta do Servidor", "8080");
             props.setProperty("server.port", serverPort);
 
-            // --- ESTA LINHA LÊ DO 'application.properties' PRIMEIRO ---
-            // Se o arquivo .properties estiver correto (Passo 1), esta linha funcionará.
-            // O valor padrão (segundo argumento) só é usado se a propriedade não existir lá.
             String defaultDbUrl = environment.getProperty(
                     "spring.datasource.url",
                     "jdbc:mysql://localhost:3306/esculapy?allowPublicKeyRetrieval=true&useSSL=false"
             );
-            // --------------------------------------------------------
-
             String dbUrl = readInput(reader, "[2/6] URL do Banco de Dados", defaultDbUrl);
             props.setProperty("spring.datasource.url", dbUrl);
 

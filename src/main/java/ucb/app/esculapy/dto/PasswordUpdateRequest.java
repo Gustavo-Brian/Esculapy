@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+/**
+ * DTO para solicitar a alteração da senha do usuário logado.
+ */
 @Data
 public class PasswordUpdateRequest {
 
