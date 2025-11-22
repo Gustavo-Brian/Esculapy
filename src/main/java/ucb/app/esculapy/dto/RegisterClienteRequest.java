@@ -23,7 +23,6 @@ public class RegisterClienteRequest {
     private String senha;
 
     @NotBlank
-    @CPF
     private String cpf;
 
     private String numeroCelular;

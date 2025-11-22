@@ -18,7 +18,6 @@ public class RegisterFarmaciaRequest {
     private String senha;
 
     @NotBlank
-    @CNPJ
     private String cnpj;
 
     @NotBlank

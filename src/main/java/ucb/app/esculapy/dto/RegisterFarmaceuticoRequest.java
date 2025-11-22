@@ -22,7 +22,6 @@ public class RegisterFarmaceuticoRequest {
     private String senha;
 
     @NotBlank
-    @CPF
     private String cpf;
 
     @NotBlank
