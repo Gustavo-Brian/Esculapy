@@ -58,7 +58,7 @@ Esta etapa **não é estritamente necessária** para o ambiente de execução da
 
 ## 4. Inicialização do Frontend
 
-Com o backend ativo, o firewall configurado e o banco de dados populado, você pode prosseguir para a inicialização da interface de usuário.
+Com o backend ativo e o banco de dados populado, você pode prosseguir para a inicialização da interface de usuário.
 
 1.  **Instalar Dependências:**
     Abra um **novo terminal** e navegue até a pasta do frontend. Instale todas as dependências necessárias:
