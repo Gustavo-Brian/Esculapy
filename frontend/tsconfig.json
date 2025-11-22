@@ -1,0 +1,35 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@/src/*": [
+        "./src/*"
+      ],
+      "@/servicos/*": [
+        "./src/servicos/*"
+      ],
+      "@/tipos/*": [
+        "./src/tipos/*"
+      ],
+      "@/estilos/*": [
+        "./src/estilos/*"
+      ],
+      "@/constantes/*": [
+        "./src/constantes/*"
+      ],
+      "@/componentes/*": [
+        "./src/componentes/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
+}

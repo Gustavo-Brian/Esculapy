@@ -1,0 +1,1514 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tela de Login - Testes Simples Snapshots CabecalhoLogin renderiza corretamente 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "paddingBottom": 32,
+      "paddingTop": 60,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 50,
+        "elevation": 2,
+        "height": 100,
+        "justifyContent": "center",
+        "marginBottom": 16,
+        "shadowColor": "#000",
+        "shadowOffset": {
+          "height": 2,
+          "width": 0,
+        },
+        "shadowOpacity": 0.1,
+        "shadowRadius": 4,
+        "width": 100,
+      }
+    }
+  >
+    <Text />
+  </View>
+  <Text
+    style={
+      {
+        "color": "#6366F1",
+        "fontSize": 28,
+        "fontWeight": "700",
+        "marginBottom": 8,
+      }
+    }
+  >
+    Esculapi
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#6B7280",
+        "fontSize": 16,
+      }
+    }
+  >
+    Faça login na sua conta
+  </Text>
+</View>
+`;
+
+exports[`Tela de Login - Testes Simples Snapshots FormularioLogin com erros renderiza corretamente 1`] = `
+<View
+  style={
+    {
+      "marginBottom": 16,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "marginBottom": 16,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#F9FAFB",
+            "borderColor": "#E5E7EB",
+            "borderRadius": 12,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "paddingHorizontal": 12,
+          },
+          false,
+          {
+            "borderColor": "#EF4444",
+          },
+        ]
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        selectable={false}
+        style={
+          [
+            {
+              "color": "#9CA3AF",
+              "fontSize": 20,
+            },
+            {
+              "marginRight": 8,
+            },
+            {
+              "fontFamily": "ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="email-address"
+        onBlur={[MockFunction]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        placeholder="Email"
+        placeholderTextColor="#9CA3AF"
+        style={
+          {
+            "color": "#111827",
+            "flex": 1,
+            "fontSize": 16,
+            "height": 50,
+          }
+        }
+        testID="input-email"
+        value=""
+      />
+    </View>
+    <Text
+      style={
+        {
+          "color": "#EF4444",
+          "fontSize": 14,
+          "marginLeft": 4,
+          "marginTop": 4,
+        }
+      }
+    >
+      Email inválido
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "marginBottom": 16,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#F9FAFB",
+            "borderColor": "#E5E7EB",
+            "borderRadius": 12,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "paddingHorizontal": 12,
+          },
+          false,
+          {
+            "borderColor": "#EF4444",
+          },
+        ]
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        selectable={false}
+        style={
+          [
+            {
+              "color": "#9CA3AF",
+              "fontSize": 20,
+            },
+            {
+              "marginRight": 8,
+            },
+            {
+              "fontFamily": "ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+      <TextInput
+        autoCapitalize="none"
+        onBlur={[MockFunction]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        placeholder="Senha"
+        placeholderTextColor="#9CA3AF"
+        secureTextEntry={true}
+        style={
+          [
+            {
+              "color": "#111827",
+              "flex": 1,
+              "fontSize": 16,
+              "height": 50,
+            },
+            {
+              "flex": 1,
+            },
+          ]
+        }
+        testID="input-senha"
+        value=""
+      />
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+            "padding": 8,
+          }
+        }
+        testID="toggle-senha"
+      >
+        <Text
+          allowFontScaling={false}
+          selectable={false}
+          style={
+            [
+              {
+                "color": "#9CA3AF",
+                "fontSize": 20,
+              },
+              undefined,
+              {
+                "fontFamily": "ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+    </View>
+    <Text
+      style={
+        {
+          "color": "#EF4444",
+          "fontSize": 14,
+          "marginLeft": 4,
+          "marginTop": 4,
+        }
+      }
+    >
+      Senha obrigatória
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#6366F1",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "marginBottom": 16,
+          "textAlign": "right",
+        }
+      }
+    >
+      Esqueceu sua senha?
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#6366F1",
+        "borderRadius": 12,
+        "elevation": 1,
+        "opacity": 1,
+        "paddingVertical": 16,
+        "shadowColor": "#000",
+        "shadowOffset": {
+          "height": 1,
+          "width": 0,
+        },
+        "shadowOpacity": 0.05,
+        "shadowRadius": 2,
+      }
+    }
+    testID="botao-entrar"
+  >
+    <Text
+      style={
+        {
+          "color": "#FFFFFF",
+          "fontSize": 18,
+          "fontWeight": "700",
+        }
+      }
+    >
+      Entrar
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "marginVertical": 16,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#E5E7EB",
+          "flex": 1,
+          "height": 1,
+        }
+      }
+    />
+    <Text
+      style={
+        {
+          "color": "#6B7280",
+          "fontSize": 14,
+          "fontWeight": "500",
+          "marginHorizontal": 12,
+        }
+      }
+    >
+      OU
+    </Text>
+    <View
+      style={
+        {
+          "backgroundColor": "#E5E7EB",
+          "flex": 1,
+          "height": 1,
+        }
+      }
+    />
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "transparent",
+        "borderColor": "#E5E7EB",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "opacity": 1,
+        "paddingVertical": 16,
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "#6B7280",
+            "fontSize": 20,
+          },
+          {
+            "marginRight": 8,
+          },
+          {
+            "fontFamily": "ionicons",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#6B7280",
+          "fontSize": 16,
+          "fontWeight": "600",
+        }
+      }
+    >
+      Entrar como Visitante
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Tela de Login - Testes Simples Snapshots FormularioLogin em estado de carregamento renderiza corretamente 1`] = `
+<View
+  style={
+    {
+      "marginBottom": 16,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "marginBottom": 16,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#F9FAFB",
+            "borderColor": "#E5E7EB",
+            "borderRadius": 12,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "paddingHorizontal": 12,
+          },
+          false,
+          undefined,
+        ]
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        selectable={false}
+        style={
+          [
+            {
+              "color": "#9CA3AF",
+              "fontSize": 20,
+            },
+            {
+              "marginRight": 8,
+            },
+            {
+              "fontFamily": "ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="email-address"
+        onBlur={[MockFunction]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        placeholder="Email"
+        placeholderTextColor="#9CA3AF"
+        style={
+          {
+            "color": "#111827",
+            "flex": 1,
+            "fontSize": 16,
+            "height": 50,
+          }
+        }
+        testID="input-email"
+        value=""
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "marginBottom": 16,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#F9FAFB",
+            "borderColor": "#E5E7EB",
+            "borderRadius": 12,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "paddingHorizontal": 12,
+          },
+          false,
+          undefined,
+        ]
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        selectable={false}
+        style={
+          [
+            {
+              "color": "#9CA3AF",
+              "fontSize": 20,
+            },
+            {
+              "marginRight": 8,
+            },
+            {
+              "fontFamily": "ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+      <TextInput
+        autoCapitalize="none"
+        onBlur={[MockFunction]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        placeholder="Senha"
+        placeholderTextColor="#9CA3AF"
+        secureTextEntry={true}
+        style={
+          [
+            {
+              "color": "#111827",
+              "flex": 1,
+              "fontSize": 16,
+              "height": 50,
+            },
+            {
+              "flex": 1,
+            },
+          ]
+        }
+        testID="input-senha"
+        value=""
+      />
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+            "padding": 8,
+          }
+        }
+        testID="toggle-senha"
+      >
+        <Text
+          allowFontScaling={false}
+          selectable={false}
+          style={
+            [
+              {
+                "color": "#9CA3AF",
+                "fontSize": 20,
+              },
+              undefined,
+              {
+                "fontFamily": "ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#6366F1",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "marginBottom": 16,
+          "textAlign": "right",
+        }
+      }
+    >
+      Esqueceu sua senha?
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={false}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#6366F1",
+        "borderRadius": 12,
+        "elevation": 1,
+        "opacity": 0.6,
+        "paddingVertical": 16,
+        "shadowColor": "#000",
+        "shadowOffset": {
+          "height": 1,
+          "width": 0,
+        },
+        "shadowOpacity": 0.05,
+        "shadowRadius": 2,
+      }
+    }
+    testID="botao-entrar"
+  >
+    <Text
+      style={
+        {
+          "color": "#FFFFFF",
+          "fontSize": 18,
+          "fontWeight": "700",
+        }
+      }
+    >
+      Entrando...
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "marginVertical": 16,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#E5E7EB",
+          "flex": 1,
+          "height": 1,
+        }
+      }
+    />
+    <Text
+      style={
+        {
+          "color": "#6B7280",
+          "fontSize": 14,
+          "fontWeight": "500",
+          "marginHorizontal": 12,
+        }
+      }
+    >
+      OU
+    </Text>
+    <View
+      style={
+        {
+          "backgroundColor": "#E5E7EB",
+          "flex": 1,
+          "height": 1,
+        }
+      }
+    />
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "transparent",
+        "borderColor": "#E5E7EB",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "opacity": 1,
+        "paddingVertical": 16,
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "#6B7280",
+            "fontSize": 20,
+          },
+          {
+            "marginRight": 8,
+          },
+          {
+            "fontFamily": "ionicons",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#6B7280",
+          "fontSize": 16,
+          "fontWeight": "600",
+        }
+      }
+    >
+      Entrar como Visitante
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Tela de Login - Testes Simples Snapshots FormularioLogin renderiza corretamente 1`] = `
+<View
+  style={
+    {
+      "marginBottom": 16,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "marginBottom": 16,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#F9FAFB",
+            "borderColor": "#E5E7EB",
+            "borderRadius": 12,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "paddingHorizontal": 12,
+          },
+          false,
+          undefined,
+        ]
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        selectable={false}
+        style={
+          [
+            {
+              "color": "#9CA3AF",
+              "fontSize": 20,
+            },
+            {
+              "marginRight": 8,
+            },
+            {
+              "fontFamily": "ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="email-address"
+        onBlur={[MockFunction]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        placeholder="Email"
+        placeholderTextColor="#9CA3AF"
+        style={
+          {
+            "color": "#111827",
+            "flex": 1,
+            "fontSize": 16,
+            "height": 50,
+          }
+        }
+        testID="input-email"
+        value=""
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "marginBottom": 16,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#F9FAFB",
+            "borderColor": "#E5E7EB",
+            "borderRadius": 12,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "paddingHorizontal": 12,
+          },
+          false,
+          undefined,
+        ]
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        selectable={false}
+        style={
+          [
+            {
+              "color": "#9CA3AF",
+              "fontSize": 20,
+            },
+            {
+              "marginRight": 8,
+            },
+            {
+              "fontFamily": "ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+      <TextInput
+        autoCapitalize="none"
+        onBlur={[MockFunction]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        placeholder="Senha"
+        placeholderTextColor="#9CA3AF"
+        secureTextEntry={true}
+        style={
+          [
+            {
+              "color": "#111827",
+              "flex": 1,
+              "fontSize": 16,
+              "height": 50,
+            },
+            {
+              "flex": 1,
+            },
+          ]
+        }
+        testID="input-senha"
+        value=""
+      />
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+            "padding": 8,
+          }
+        }
+        testID="toggle-senha"
+      >
+        <Text
+          allowFontScaling={false}
+          selectable={false}
+          style={
+            [
+              {
+                "color": "#9CA3AF",
+                "fontSize": 20,
+              },
+              undefined,
+              {
+                "fontFamily": "ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#6366F1",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "marginBottom": 16,
+          "textAlign": "right",
+        }
+      }
+    >
+      Esqueceu sua senha?
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#6366F1",
+        "borderRadius": 12,
+        "elevation": 1,
+        "opacity": 1,
+        "paddingVertical": 16,
+        "shadowColor": "#000",
+        "shadowOffset": {
+          "height": 1,
+          "width": 0,
+        },
+        "shadowOpacity": 0.05,
+        "shadowRadius": 2,
+      }
+    }
+    testID="botao-entrar"
+  >
+    <Text
+      style={
+        {
+          "color": "#FFFFFF",
+          "fontSize": 18,
+          "fontWeight": "700",
+        }
+      }
+    >
+      Entrar
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "marginVertical": 16,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#E5E7EB",
+          "flex": 1,
+          "height": 1,
+        }
+      }
+    />
+    <Text
+      style={
+        {
+          "color": "#6B7280",
+          "fontSize": 14,
+          "fontWeight": "500",
+          "marginHorizontal": 12,
+        }
+      }
+    >
+      OU
+    </Text>
+    <View
+      style={
+        {
+          "backgroundColor": "#E5E7EB",
+          "flex": 1,
+          "height": 1,
+        }
+      }
+    />
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "transparent",
+        "borderColor": "#E5E7EB",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "opacity": 1,
+        "paddingVertical": 16,
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "#6B7280",
+            "fontSize": 20,
+          },
+          {
+            "marginRight": 8,
+          },
+          {
+            "fontFamily": "ionicons",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#6B7280",
+          "fontSize": 16,
+          "fontWeight": "600",
+        }
+      }
+    >
+      Entrar como Visitante
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Tela de Login - Testes Simples Snapshots RodapeLogin renderiza corretamente 1`] = `
+<View
+  style={
+    {
+      "marginTop": 24,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "marginBottom": 16,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#6B7280",
+          "fontSize": 16,
+        }
+      }
+    >
+      Não tem uma conta? 
+    </Text>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+      testID="link-cadastro"
+    >
+      <Text
+        style={
+          {
+            "color": "#6366F1",
+            "fontSize": 16,
+            "fontWeight": "600",
+          }
+        }
+      >
+        Escolha seu tipo de conta
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "paddingTop": 16,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#9CA3AF",
+          "fontSize": 12,
+          "lineHeight": 18,
+          "textAlign": "center",
+        }
+      }
+    >
+      Ao continuar, você concorda com nossos
+       
+      <Text
+        style={
+          {
+            "color": "#6366F1",
+            "fontWeight": "600",
+          }
+        }
+      >
+        Termos de Serviço
+      </Text>
+       e
+       
+      <Text
+        style={
+          {
+            "color": "#6366F1",
+            "fontWeight": "600",
+          }
+        }
+      >
+        Política de Privacidade
+      </Text>
+      .
+    </Text>
+  </View>
+</View>
+`;
