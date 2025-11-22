@@ -1,6 +1,6 @@
 # Esculapy
 
-Este documento é um guia de inicialização passo a passo para colocar o projeto **Esculapy** em funcionamento. É crucial seguir a ordem de inicialização: o **backend** deve ser iniciado antes do frontend.
+Este documento é um guia de inicialização passo a passo para colocar o projeto **Esculapy** em funcionamento. É crucial seguir a ordem de inicialização: o **backend** deve ser iniciado antes do **frontend**.
 
 ---
 
